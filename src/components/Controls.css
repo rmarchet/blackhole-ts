@@ -1,0 +1,38 @@
+.controls-container {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  text-align: left;
+}
+
+.controls-title {
+  font-size: 12px;
+  margin: 0 0 10px 0;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 8px 10px;
+}
+
+.control-group {
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-label {
+  display: block;
+}
+
+.slider-input {
+  width: 100%;
+  margin-top: 0;
+} 
