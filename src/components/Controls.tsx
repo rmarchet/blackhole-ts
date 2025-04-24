@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useBloom } from '../hooks/useBloom';
-import { useBloomCheckbox } from '../hooks/useBloomCheckbox';
 import { useDiskTexture, DISK_TEXTURE_OPTIONS } from '../hooks/useDiskTexture';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import './Controls.css';
 
 export function Controls() {
@@ -14,24 +14,40 @@ export function Controls() {
         setRadius
     } = useBloom();
 
-    const {
-        enabled,
-        setEnabled
-    } = useBloomCheckbox();
+    // Use useLocalStorage directly instead of useBloomCheckbox
+    const [bloomEnabled, setBloomEnabled] = useLocalStorage<boolean>(
+      'bloomEnabled', true, { reloadOnChange: true }
+    );
 
     const {
         selectedTexture,
         setSelectedTexture
     } = useDiskTexture();
 
+    // Use useLocalStorage directly instead of the useBeaming hook
+    const [beamingEnabled, setBeamingEnabled] = useLocalStorage<boolean>(
+      'beamingEnabled', true, { reloadOnChange: true }
+    );
+
+    // Add stars background toggle
+    const [starsEnabled, setStarsEnabled] = useLocalStorage<boolean>(
+      'starsEnabled', true, { reloadOnChange: true }
+    );
+
+    // Add Milky Way background toggle
+    const [milkywayEnabled, setMilkywayEnabled] = useLocalStorage<boolean>(
+      'milkywayEnabled', true, { reloadOnChange: true }
+    );
+
     // State to track which control groups are expanded
     const [expandedGroups, setExpandedGroups] = useState({
         bloom: true,
-        diskTexture: true
+        diskTexture: true,
+        effects: true
     });
 
     // Toggle the expanded state of a control group
-    const toggleGroup = (groupName: 'bloom' | 'diskTexture') => {
+    const toggleGroup = (groupName: 'bloom' | 'diskTexture' | 'effects') => {
         setExpandedGroups(prev => ({
             ...prev,
             [groupName]: !prev[groupName]
@@ -58,18 +74,18 @@ export function Controls() {
                 <>
                     <div className="control-group">
                         <label className="checkbox-label">
+                            <span>Bloom</span>
                             <input
                                 type="checkbox"
-                                checked={enabled}
-                                onChange={(e) => setEnabled(e.target.checked)}
+                                checked={bloomEnabled}
+                                onChange={(e) => setBloomEnabled(e.target.checked)}
                             />
-                            Enable Bloom
                         </label>
                     </div>
 
                     <div className="control-group">
                         <label className="slider-label">
-                            Intensity: {intensity.toFixed(2)}
+                            <span>Intensity:</span>
                             <input
                                 type="range"
                                 min="0"
@@ -79,12 +95,13 @@ export function Controls() {
                                 onChange={(e) => setIntensity(parseFloat(e.target.value))}
                                 className="slider-input"
                             />
+                            <span>{intensity.toFixed(2)}</span>
                         </label>
                     </div>
 
                     <div className="control-group">
                         <label className="slider-label">
-                            Threshold: {threshold.toFixed(2)}
+                            <span>Threshold:</span>
                             <input
                                 type="range"
                                 min="0"
@@ -94,12 +111,13 @@ export function Controls() {
                                 onChange={(e) => setThreshold(parseFloat(e.target.value))}
                                 className="slider-input"
                             />
+                            <span>{threshold.toFixed(2)}</span>
                         </label>
                     </div>
 
                     <div className="control-group">
                         <label className="slider-label">
-                            Radius: {radius.toFixed(2)}
+                            <span>Radius:</span>
                             <input
                                 type="range"
                                 min="0"
@@ -109,6 +127,7 @@ export function Controls() {
                                 onChange={(e) => setRadius(parseFloat(e.target.value))}
                                 className="slider-input"
                             />
+                            <span>{radius.toFixed(2)}</span>
                         </label>
                     </div>
                 </>
@@ -116,29 +135,72 @@ export function Controls() {
 
             <h3 
                 className="controls-title" 
+                onClick={() => toggleGroup('effects')}
+                style={{ cursor: 'pointer' }}
+            >
+                Effects Controls {expandedGroups.effects ? '▼' : '▶'}
+            </h3>
+            
+            {expandedGroups.effects && (
+                <div className="control-group">
+                    <label className="checkbox-label">
+                        <span>Beaming</span>
+                        <input
+                            type="checkbox"
+                            checked={beamingEnabled}
+                            onChange={(e) => setBeamingEnabled(e.target.checked)}
+                        />
+                    </label>
+                </div>
+            )}
+
+            <h3 
+                className="controls-title" 
                 onClick={() => toggleGroup('diskTexture')}
                 style={{ cursor: 'pointer' }}
             >
-                Disk Controls {expandedGroups.diskTexture ? '▼' : '▶'}
+                Textures Controls {expandedGroups.diskTexture ? '▼' : '▶'}
             </h3>
             
             {expandedGroups.diskTexture && (
-                <div className="control-group">
-                    <label className="select-label">
-                        Disk Texture:
-                        <select 
-                            value={selectedTexture}
-                            onChange={handleTextureChange}
-                            className="select-input"
-                        >
-                            {DISK_TEXTURE_OPTIONS.map(option => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                </div>
+                <>
+                    <div className="control-group">
+                        <label className="select-label">
+                            <span>Disk:</span>
+                            <select 
+                                value={selectedTexture}
+                                onChange={handleTextureChange}
+                                className="select-input"
+                            >
+                                {DISK_TEXTURE_OPTIONS.map(option => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    </div>
+                    <div className="control-group">
+                        <label className="checkbox-label">
+                            <span>Stars</span>
+                            <input
+                                type="checkbox"
+                                checked={starsEnabled}
+                                onChange={(e) => setStarsEnabled(e.target.checked)}
+                            />
+                        </label>
+                    </div>
+                    <div className="control-group">
+                        <label className="checkbox-label">
+                            <span>Milky Way</span>
+                            <input
+                                type="checkbox"
+                                checked={milkywayEnabled}
+                                onChange={(e) => setMilkywayEnabled(e.target.checked)}
+                            />
+                        </label>
+                    </div>
+                </>
             )}
         </div>
     );

@@ -124,7 +124,7 @@ void main()	{
     // green = lum
     // blue = vel 
     vec4 star_color = texture2D(star_texture, tex_coord);
-    if (star_color.g > 0.0){
+    if (show_stars && star_color.g > 0.0){
       float star_temperature = (MIN_TEMPERATURE + TEMPERATURE_RANGE*star_color.r);
       // arbitrarily sets background stars' velocity for random shifts
       float star_velocity = star_color.b - 0.5;

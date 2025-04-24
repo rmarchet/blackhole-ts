@@ -3,11 +3,6 @@
 #define ROT_Y(a) mat3(1, 0, 0, 0, cos(a), sin(a), 0, -sin(a), cos(a))
 #define ROT_Z(a) mat3(cos(a), -sin(a), 0, sin(a), cos(a), 0, 0, 0, 1)
 
-// Bloom parameters
-#define BLOOM_INTENSITY 1.5
-#define BLOOM_THRESHOLD 0.6
-#define BLOOM_RADIUS 0.5
-
 // Disk parameters
 const float DISK_IN = 2.0;
 const float DISK_WIDTH = 4.0;
@@ -32,7 +27,13 @@ uniform bool use_disk_texture;
 uniform bool doppler_shift;
 uniform bool lorentz_transform;
 uniform bool beaming;
+uniform bool show_stars;
+uniform bool show_milkyway;
 uniform float bg_intensity;
+// Add bloom parameter uniforms
+uniform float bloom_intensity;
+uniform float bloom_threshold;
+uniform float bloom_radius;
 uniform sampler2D bg_texture;
 uniform sampler2D star_texture;
 uniform sampler2D disk_texture; 

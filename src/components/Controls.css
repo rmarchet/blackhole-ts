@@ -1,24 +1,38 @@
+:root {
+  --label-width: 75px;
+  --controls-width: 240px;
+  --select-width: 120px;
+  --slider-width: 100px;
+  --label-color: #ffffff88;
+  --title-color: #ffffff;
+}
+
 .controls-container {
   position: fixed;
   top: 10px;
   left: 10px;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 4px;
-  color: white;
+  color: var(--label-color);
   font-family: Arial, sans-serif;
   font-size: 12px;
   text-align: left;
+  width: var(--controls-width);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .controls-title {
   font-size: 12px;
-  margin: 0 0 10px 0;
+  margin: 0 0;
   background: rgba(0, 0, 0, 0.4);
   padding: 8px 10px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--title-color);
 }
 
 .controls-title:hover {
@@ -27,43 +41,60 @@
 
 .control-group {
   padding: 0 10px;
-  margin-bottom: 10px;
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
   overflow: hidden;
 }
 
 .checkbox-label {
   display: flex;
+  color: var(--label-color);
   align-items: center;
-  gap: 8px;
+  gap: 7px;
+}
+
+.checkbox-label span {
+  min-width: var(--label-width);
 }
 
 .slider-label {
-  display: block;
-  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--label-color);
+}
+
+.slider-label span {
+  min-width: var(--label-width);
 }
 
 .slider-input {
-  width: 100%;
+  flex: 1;
   margin-top: 0;
+  width: var(--slider-width);
 }
 
 .select-label {
   display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  font-weight: 500;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--label-color);
+}
+
+.select-label span {
+  min-width: var(--label-width);
 }
 
 .select-input {
-  margin-top: 5px;
+  margin-top: 0;
   padding: 4px;
   border-radius: 4px;
   border: 1px solid #ccc;
   background-color: #2a2a2a;
   color: #fff;
-  font-size: 14px;
-  width: 100%;
+  font-size: 12px;
+  width: var(--select-width);
 }
 
 /* Add a subtle transition for the arrow indicator */

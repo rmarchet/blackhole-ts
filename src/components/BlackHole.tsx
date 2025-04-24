@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree, extend } from '@react-three/fiber';
 import { ShaderMaterial, Mesh, BackSide, Vector3, Vector2, TextureLoader, NearestFilter, LinearFilter, ClampToEdgeWrapping, WebGLRenderer, Scene, Camera } from 'three';
@@ -15,6 +15,9 @@ import diskUrl01 from '../assets/accretion_disk01.png';
 import diskUrl02 from '../assets/accretion_disk02.png';
 import { useBloom } from '../hooks/useBloom';
 import { useDiskTexture } from '../hooks/useDiskTexture';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+
+const DEFAULT_BG_INTENSITY = 0.38;
 
 // Extend R3F with post-processing components
 extend({ EffectComposer, RenderPass, UnrealBloomPass });
@@ -44,22 +47,11 @@ export const BlackHole = () => {
     const { intensity, threshold, radius } = useBloom();
     const { selectedTexture, useBlackbody, hideDisk } = useDiskTexture();
     
-    // Replace useMemo with useState and useEffect for bloomEnabled
-    const [bloomEnabled, setBloomEnabled] = useState(() => {
-      const savedValue = localStorage.getItem('bloomEnabled');
-      return savedValue !== null ? savedValue === 'true' : true;
-    });
-
-    // Add effect to listen for storage changes
-    useEffect(() => {
-      const handleStorageChange = () => {
-        const savedValue = localStorage.getItem('bloomEnabled');
-        setBloomEnabled(savedValue !== null ? savedValue === 'true' : true);
-      };
-
-      window.addEventListener('storage', handleStorageChange);
-      return () => window.removeEventListener('storage', handleStorageChange);
-    }, []);
+    // Use useLocalStorage directly for beaming, bloom, stars, and milkyway
+    const [beamingEnabled] = useLocalStorage<boolean>('beamingEnabled', true);
+    const [bloomEnabled] = useLocalStorage<boolean>('bloomEnabled', true);
+    const [starsEnabled] = useLocalStorage<boolean>('starsEnabled', true);
+    const [milkywayEnabled] = useLocalStorage<boolean>('milkywayEnabled', true);
 
     // Load textures
     const textures = useMemo(() => {
@@ -103,8 +95,14 @@ export const BlackHole = () => {
       use_disk_texture: { value: !useBlackbody },
       lorentz_transform: { value: true },
       doppler_shift: { value: true },
-      beaming: { value: true },
-      bg_intensity: { value: 0.38 },
+      beaming: { value: beamingEnabled },
+      bg_intensity: { value: milkywayEnabled ? DEFAULT_BG_INTENSITY : 0.005 },
+      show_stars: { value: starsEnabled },
+      show_milkyway: { value: milkywayEnabled },
+      // Add bloom parameters as uniforms
+      bloom_intensity: { value: intensity },
+      bloom_threshold: { value: threshold },
+      bloom_radius: { value: radius },
     }
 
     // Define shader material with textures
@@ -112,6 +110,7 @@ export const BlackHole = () => {
       const defines = `
         #define STEP 0.08
         #define NSTEPS 350
+        // Remove hard-coded bloom parameters from here
       `;
 
       return new ShaderMaterial({
@@ -151,6 +150,44 @@ export const BlackHole = () => {
         materialRef.current.needsUpdate = true;
       }
     }, [hideDisk]);
+
+    // Update bloom parameters when they change
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.bloom_intensity.value = intensity;
+        materialRef.current.uniforms.bloom_threshold.value = threshold;
+        materialRef.current.uniforms.bloom_radius.value = radius;
+        // Force a re-render
+        materialRef.current.needsUpdate = true;
+      }
+    }, [intensity, threshold, radius]);
+
+    // Update beaming uniform when it changes
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.beaming.value = beamingEnabled;
+        // Force a re-render
+        materialRef.current.needsUpdate = true;
+      }
+    }, [beamingEnabled]);
+
+    // Update stars uniform when it changes
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.show_stars.value = starsEnabled;
+        // Force a re-render
+        materialRef.current.needsUpdate = true;
+      }
+    }, [starsEnabled]);
+
+    // Update milkyway uniform when it changes
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.bg_intensity.value = milkywayEnabled ? DEFAULT_BG_INTENSITY : 0.005;
+        // Force a re-render
+        materialRef.current.needsUpdate = true;
+      }
+    }, [milkywayEnabled]);
 
     useFrame((state) => {
       if (materialRef.current) {
