@@ -65,8 +65,8 @@ void main()	{
       break;
     }
     
-    // intersect accretion disk
-    if (accretion_disk){
+    // Check if the disk should be rendered
+    if (accretion_disk) {
       if (oldpoint.y * point.y < 0.0){
         // move along y axis
         float lambda = - oldpoint.y/velocity.y;

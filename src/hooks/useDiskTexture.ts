@@ -1,29 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useLocalStorageString } from './useLocalStorage';
+
+// Define the available texture options
+export const DISK_TEXTURE_OPTIONS = [
+  { value: 'no_disk', label: 'No Disk' },
+  { value: 'none', label: 'No Texture (Blackbody)' },
+  { value: 'accretion_disk.png', label: 'Natural' },
+  { value: 'accretion_disk00.png', label: 'Red stripes' },
+  { value: 'accretion_disk01.png', label: 'Red-Purple stripes' },
+  { value: 'accretion_disk02.png', label: 'Arrows' }
+];
 
 export function useDiskTexture() {
-    // Initialize state from localStorage or default to false
-    const [useStripes, setUseStripesState] = useState(() => {
-        const savedValue = localStorage.getItem('useStripes');
-        return savedValue !== null ? savedValue === 'true' : false;
+    // Use the generic localStorage hook for string values with page reload enabled
+    const [selectedTexture, setSelectedTexture] = useLocalStorageString('diskTexture', 'accretion_disk.png', {
+        reloadOnChange: true,
+        reloadDelay: 100
     });
     
-    // Update localStorage when state changes
-    useEffect(() => {
-        localStorage.setItem('useStripes', useStripes.toString());
-    }, [useStripes]);
+    // Helper function to check if we're using stripes texture
+    const useStripes = selectedTexture === 'accretion_disk01.png';
     
-    // Wrapper function to update state and reload the page
-    const setUseStripes = (value: boolean) => {
-        setUseStripesState(value);
-        localStorage.setItem('useStripes', value.toString());
-        // Reload the page after a short delay to ensure localStorage is updated
-        setTimeout(() => {
-            window.location.reload();
-        }, 100);
-    };
-
+    // Helper function to check if we're using no texture (blackbody)
+    const useBlackbody = selectedTexture === 'none';
+    
+    // Helper function to check if we're hiding the disk completely
+    const hideDisk = selectedTexture === 'no_disk';
+    
     return {
+        selectedTexture,
+        setSelectedTexture,
         useStripes,
-        setUseStripes
+        useBlackbody,
+        hideDisk,
+        // For backward compatibility
+        setUseStripes: (value: boolean) => {
+            setSelectedTexture(value ? 'accretion_disk01.png' : 'accretion_disk.png');
+        }
     };
 } 

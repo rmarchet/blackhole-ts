@@ -15,11 +15,21 @@
   margin: 0 0 10px 0;
   background: rgba(0, 0, 0, 0.4);
   padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controls-title:hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .control-group {
   padding: 0 10px;
   margin-bottom: 10px;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
 }
 
 .checkbox-label {
@@ -30,9 +40,44 @@
 
 .slider-label {
   display: block;
+  margin-bottom: 5px;
 }
 
 .slider-input {
   width: 100%;
   margin-top: 0;
+}
+
+.select-label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.select-input {
+  margin-top: 5px;
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Add a subtle transition for the arrow indicator */
+.controls-title span {
+  transition: transform 0.3s ease;
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+.select-input option {
+  background-color: #2a2a2a;
+  color: #fff;
+  padding: 8px;
 } 

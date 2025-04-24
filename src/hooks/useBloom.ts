@@ -1,16 +1,20 @@
-import { useApp } from '../context/AppContext';
+import { useLocalStorageBoolean, useLocalStorageNumber } from './useLocalStorage';
 
 export function useBloom() {
-    const { bloom, setBloomEnabled, setBloomIntensity, setBloomThreshold, setBloomRadius } = useApp();
+    // Use the generic localStorage hooks for all bloom settings
+    const [enabled, setEnabled] = useLocalStorageBoolean('bloomEnabled', true);
+    const [intensity, setIntensity] = useLocalStorageNumber('bloomIntensity', 1.5);
+    const [threshold, setThreshold] = useLocalStorageNumber('bloomThreshold', 0.3);
+    const [radius, setRadius] = useLocalStorageNumber('bloomRadius', 0.8);
 
     return {
-        enabled: bloom.enabled,
-        intensity: bloom.intensity,
-        threshold: bloom.threshold,
-        radius: bloom.radius,
-        setEnabled: setBloomEnabled,
-        setIntensity: setBloomIntensity,
-        setThreshold: setBloomThreshold,
-        setRadius: setBloomRadius
+        enabled,
+        intensity,
+        threshold,
+        radius,
+        setEnabled,
+        setIntensity,
+        setThreshold,
+        setRadius
     };
 } 
