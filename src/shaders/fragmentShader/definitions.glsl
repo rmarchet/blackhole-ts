@@ -30,6 +30,7 @@ uniform bool beaming;
 uniform bool show_stars;
 uniform bool show_milkyway;
 uniform float bg_intensity;
+uniform float disk_intensity;
 // Add bloom parameter uniforms
 uniform float bloom_intensity;
 uniform float bloom_threshold;

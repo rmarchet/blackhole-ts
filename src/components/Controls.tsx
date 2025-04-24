@@ -44,16 +44,32 @@ export function Controls() {
       'orbitEnabled', false, { reloadOnChange: true }
     );
 
+    // Add performance mode toggle
+    const [performanceMode, setPerformanceMode] = useLocalStorage<boolean>(
+      'performanceMode', false, { reloadOnChange: true }
+    );
+
+    // Add disk intensity control
+    const [diskIntensity, setDiskIntensity] = useLocalStorage<number>(
+      'diskIntensity', 1.0, { reloadOnChange: true }
+    );
+
+    // Add Doppler shift toggle
+    const [dopplerShiftEnabled, setDopplerShiftEnabled] = useLocalStorage<boolean>(
+      'dopplerShiftEnabled', false, { reloadOnChange: true }
+    );
+
     // State to track which control groups are expanded
     const [expandedGroups, setExpandedGroups] = useState({
         bloom: true,
         diskTexture: true,
         effects: true,
-        camera: true
+        camera: true,
+        performance: true
     });
 
     // Toggle the expanded state of a control group
-    const toggleGroup = (groupName: 'bloom' | 'diskTexture' | 'effects' | 'camera') => {
+    const toggleGroup = (groupName: 'bloom' | 'diskTexture' | 'effects' | 'camera' | 'performance') => {
         setExpandedGroups(prev => ({
             ...prev,
             [groupName]: !prev[groupName]
@@ -68,6 +84,30 @@ export function Controls() {
 
     return (
         <div className="controls-container">
+            <h3 
+                className="controls-title" 
+                onClick={() => toggleGroup('performance')}
+                style={{ cursor: 'pointer' }}
+            >
+                Performance Controls {expandedGroups.performance ? '▼' : '▶'}
+            </h3>
+            
+            {expandedGroups.performance && (
+                <div className="control-group">
+                    <label className="checkbox-label">
+                        <span>Performance Mode</span>
+                        <input
+                            type="checkbox"
+                            checked={performanceMode}
+                            onChange={(e) => setPerformanceMode(e.target.checked)}
+                        />
+                    </label>
+                    <div className="control-description">
+                        Reduces quality to improve performance
+                    </div>
+                </div>
+            )}
+
             <h3 
                 className="controls-title" 
                 onClick={() => toggleGroup('bloom')}
@@ -152,16 +192,31 @@ export function Controls() {
             </h3>
             
             {expandedGroups.effects && (
-                <div className="control-group">
-                    <label className="checkbox-label">
-                        <span>Beaming</span>
-                        <input
-                            type="checkbox"
-                            checked={beamingEnabled}
-                            onChange={(e) => setBeamingEnabled(e.target.checked)}
-                        />
-                    </label>
-                </div>
+                <>
+                    <div className="control-group">
+                        <label className="checkbox-label">
+                            <span>Beaming</span>
+                            <input
+                                type="checkbox"
+                                checked={beamingEnabled}
+                                onChange={(e) => setBeamingEnabled(e.target.checked)}
+                            />
+                        </label>
+                    </div>
+                    <div className="control-group">
+                        <label className="checkbox-label">
+                            <span>Doppler Shift</span>
+                            <input
+                                type="checkbox"
+                                checked={dopplerShiftEnabled}
+                                onChange={(e) => setDopplerShiftEnabled(e.target.checked)}
+                            />
+                        </label>
+                        <div className="control-description">
+                            Shows red and blue shifts in the accretion disk
+                        </div>
+                    </div>
+                </>
             )}
 
             <h3 
@@ -190,6 +245,25 @@ export function Controls() {
                             </select>
                         </label>
                     </div>
+                    
+                    {selectedTexture !== 'no_disk' && (
+                        <div className="control-group">
+                            <label className="slider-label">
+                                <span>Disk Brightness:</span>
+                                <input
+                                    type="range"
+                                    min="0.1"
+                                    max="2.0"
+                                    step="0.1"
+                                    value={diskIntensity}
+                                    onChange={(e) => setDiskIntensity(parseFloat(e.target.value))}
+                                    className="slider-input"
+                                />
+                                <span>{diskIntensity?.toFixed(2)}</span>
+                            </label>
+                        </div>
+                    )}
+                    
                     <div className="control-group">
                         <label className="checkbox-label">
                             <span>Stars</span>

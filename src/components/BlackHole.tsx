@@ -21,6 +21,12 @@ const DEFAULT_BG_INTENSITY = 0.38;
 const ORBIT_RADIUS = 15;
 const ORBIT_SPEED = 0.2;
 
+// Performance settings
+const HIGH_QUALITY_STEPS = 350;
+const LOW_QUALITY_STEPS = 150;
+const HIGH_QUALITY_SEGMENTS = 64;
+const LOW_QUALITY_SEGMENTS = 32;
+
 // Extend R3F with post-processing components
 extend({ EffectComposer, RenderPass, UnrealBloomPass });
 
@@ -55,6 +61,9 @@ export const BlackHole = () => {
     const [starsEnabled] = useLocalStorage<boolean>('starsEnabled', true);
     const [milkywayEnabled] = useLocalStorage<boolean>('milkywayEnabled', true);
     const [orbitEnabled] = useLocalStorage<boolean>('orbitEnabled', false);
+    const [performanceMode] = useLocalStorage<boolean>('performanceMode', false);
+    const [diskIntensity] = useLocalStorage<number>('diskIntensity', 1.0);
+    const [dopplerShiftEnabled] = useLocalStorage<boolean>('dopplerShiftEnabled', false);
 
     // Load textures
     const textures = useMemo(() => {
@@ -91,17 +100,27 @@ export const BlackHole = () => {
       camera.lookAt(0, 0, 0);
     }, [camera]);
 
+    // Determine quality settings based on performance mode
+    const qualitySettings = useMemo(() => {
+      return {
+        steps: performanceMode ? LOW_QUALITY_STEPS : HIGH_QUALITY_STEPS,
+        segments: performanceMode ? LOW_QUALITY_SEGMENTS : HIGH_QUALITY_SEGMENTS,
+        stepSize: performanceMode ? 0.12 : 0.08
+      };
+    }, [performanceMode]);
+
     const uniforms = {
       time: { value: 0 },
       fov: { value: 60.0 },
       accretion_disk: { value: !hideDisk },
       use_disk_texture: { value: !useBlackbody },
       lorentz_transform: { value: true },
-      doppler_shift: { value: true },
+      doppler_shift: { value: dopplerShiftEnabled },
       beaming: { value: beamingEnabled },
       bg_intensity: { value: milkywayEnabled ? DEFAULT_BG_INTENSITY : 0.005 },
       show_stars: { value: starsEnabled },
       show_milkyway: { value: milkywayEnabled },
+      disk_intensity: { value: diskIntensity },
       // Add bloom parameters as uniforms
       bloom_intensity: { value: intensity },
       bloom_threshold: { value: threshold },
@@ -111,8 +130,8 @@ export const BlackHole = () => {
     // Define shader material with textures
     const shaderMaterial = () => {
       const defines = `
-        #define STEP 0.08
-        #define NSTEPS 350
+        #define STEP ${qualitySettings.stepSize}
+        #define NSTEPS ${qualitySettings.steps}
         // Remove hard-coded bloom parameters from here
       `;
 
@@ -192,6 +211,35 @@ export const BlackHole = () => {
       }
     }, [milkywayEnabled]);
 
+    // Update disk intensity when it changes
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.disk_intensity.value = diskIntensity;
+        // Force a re-render
+        materialRef.current.needsUpdate = true;
+      }
+    }, [diskIntensity]);
+
+    // Update doppler shift uniform when it changes
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.doppler_shift.value = dopplerShiftEnabled;
+        // Force a re-render
+        materialRef.current.needsUpdate = true;
+      }
+    }, [dopplerShiftEnabled]);
+
+    // Update shader when performance mode changes
+    useEffect(() => {
+      if (materialRef.current) {
+        // Recreate the shader material with new quality settings
+        const newMaterial = shaderMaterial();
+        materialRef.current.fragmentShader = newMaterial.fragmentShader;
+        materialRef.current.uniforms = newMaterial.uniforms;
+        materialRef.current.needsUpdate = true;
+      }
+    }, [performanceMode]);
+
     useFrame((state) => {
       if (materialRef.current) {
         const uniforms = materialRef.current.uniforms;
@@ -239,7 +287,7 @@ export const BlackHole = () => {
     return (
       <>
         <mesh ref={meshRef}>
-          <sphereGeometry args={[20, 64, 64]} />
+          <sphereGeometry args={[20, qualitySettings.segments, qualitySettings.segments]} />
           <shaderMaterial ref={materialRef} {...shaderMaterial()} />
         </mesh>
         
