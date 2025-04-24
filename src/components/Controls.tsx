@@ -39,15 +39,21 @@ export function Controls() {
       'milkywayEnabled', true, { reloadOnChange: true }
     );
 
+    // Add orbit toggle
+    const [orbitEnabled, setOrbitEnabled] = useLocalStorage<boolean>(
+      'orbitEnabled', false, { reloadOnChange: true }
+    );
+
     // State to track which control groups are expanded
     const [expandedGroups, setExpandedGroups] = useState({
         bloom: true,
         diskTexture: true,
-        effects: true
+        effects: true,
+        camera: true
     });
 
     // Toggle the expanded state of a control group
-    const toggleGroup = (groupName: 'bloom' | 'diskTexture' | 'effects') => {
+    const toggleGroup = (groupName: 'bloom' | 'diskTexture' | 'effects' | 'camera') => {
         setExpandedGroups(prev => ({
             ...prev,
             [groupName]: !prev[groupName]
@@ -83,53 +89,57 @@ export function Controls() {
                         </label>
                     </div>
 
-                    <div className="control-group">
-                        <label className="slider-label">
-                            <span>Intensity:</span>
-                            <input
-                                type="range"
-                                min="0"
-                                max="2"
-                                step="0.1"
-                                value={intensity}
-                                onChange={(e) => setIntensity(parseFloat(e.target.value))}
-                                className="slider-input"
-                            />
-                            <span>{intensity.toFixed(2)}</span>
-                        </label>
-                    </div>
+                    {bloomEnabled && (
+                        <>
+                            <div className="control-group">
+                                <label className="slider-label">
+                                    <span>Intensity:</span>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="2"
+                                        step="0.1"
+                                        value={intensity}
+                                        onChange={(e) => setIntensity(parseFloat(e.target.value))}
+                                        className="slider-input"
+                                    />
+                                    <span>{intensity.toFixed(2)}</span>
+                                </label>
+                            </div>
 
-                    <div className="control-group">
-                        <label className="slider-label">
-                            <span>Threshold:</span>
-                            <input
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.1"
-                                value={threshold}
-                                onChange={(e) => setThreshold(parseFloat(e.target.value))}
-                                className="slider-input"
-                            />
-                            <span>{threshold.toFixed(2)}</span>
-                        </label>
-                    </div>
+                            <div className="control-group">
+                                <label className="slider-label">
+                                    <span>Threshold:</span>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="1"
+                                        step="0.1"
+                                        value={threshold}
+                                        onChange={(e) => setThreshold(parseFloat(e.target.value))}
+                                        className="slider-input"
+                                    />
+                                    <span>{threshold.toFixed(2)}</span>
+                                </label>
+                            </div>
 
-                    <div className="control-group">
-                        <label className="slider-label">
-                            <span>Radius:</span>
-                            <input
-                                type="range"
-                                min="0"
-                                max="2"
-                                step="0.1"
-                                value={radius}
-                                onChange={(e) => setRadius(parseFloat(e.target.value))}
-                                className="slider-input"
-                            />
-                            <span>{radius.toFixed(2)}</span>
-                        </label>
-                    </div>
+                            <div className="control-group">
+                                <label className="slider-label">
+                                    <span>Radius:</span>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="2"
+                                        step="0.1"
+                                        value={radius}
+                                        onChange={(e) => setRadius(parseFloat(e.target.value))}
+                                        className="slider-input"
+                                    />
+                                    <span>{radius.toFixed(2)}</span>
+                                </label>
+                            </div>
+                        </>
+                    )}
                 </>
             )}
 
@@ -201,6 +211,27 @@ export function Controls() {
                         </label>
                     </div>
                 </>
+            )}
+
+            <h3 
+                className="controls-title" 
+                onClick={() => toggleGroup('camera')}
+                style={{ cursor: 'pointer' }}
+            >
+                Camera Controls {expandedGroups.camera ? '▼' : '▶'}
+            </h3>
+            
+            {expandedGroups.camera && (
+                <div className="control-group">
+                    <label className="checkbox-label">
+                        <span>Orbit Camera</span>
+                        <input
+                            type="checkbox"
+                            checked={orbitEnabled}
+                            onChange={(e) => setOrbitEnabled(e.target.checked)}
+                        />
+                    </label>
+                </div>
             )}
         </div>
     );

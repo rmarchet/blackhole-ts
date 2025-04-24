@@ -18,6 +18,8 @@ import { useDiskTexture } from '../hooks/useDiskTexture';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const DEFAULT_BG_INTENSITY = 0.38;
+const ORBIT_RADIUS = 15;
+const ORBIT_SPEED = 0.2;
 
 // Extend R3F with post-processing components
 extend({ EffectComposer, RenderPass, UnrealBloomPass });
@@ -52,6 +54,7 @@ export const BlackHole = () => {
     const [bloomEnabled] = useLocalStorage<boolean>('bloomEnabled', true);
     const [starsEnabled] = useLocalStorage<boolean>('starsEnabled', true);
     const [milkywayEnabled] = useLocalStorage<boolean>('milkywayEnabled', true);
+    const [orbitEnabled] = useLocalStorage<boolean>('orbitEnabled', false);
 
     // Load textures
     const textures = useMemo(() => {
@@ -201,7 +204,16 @@ export const BlackHole = () => {
           uniforms.resolution.value.set(width, height);
         }
         
-        // Update camera uniforms with fixed values
+        // Update camera position for orbit if enabled
+        if (orbitEnabled) {
+          const time = state.clock.elapsedTime * ORBIT_SPEED;
+          const x = Math.sin(time) * ORBIT_RADIUS;
+          const z = Math.cos(time) * ORBIT_RADIUS;
+          camera.position.set(x, 1, z);
+          camera.lookAt(0, 0, 0);
+        }
+        
+        // Update camera uniforms
         uniforms.cam_pos.value.copy(camera.position);
         uniforms.cam_dir.value.copy(camera.getWorldDirection(new Vector3()));
         uniforms.cam_up.value.copy(camera.up);
