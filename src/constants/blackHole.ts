@@ -42,16 +42,6 @@ export const QUALITY = {
 // Type definition for quality settings
 export type QualitySettings = typeof QUALITY.HIGH | typeof QUALITY.LOW;
 
-// Disk texture mapping
-export const DISK_TEXTURES = {
-  DEFAULT: 'accretion_disk.png',
-  DISK_00: 'accretion_disk00.png',
-  DISK_01: 'accretion_disk01.png',
-  DISK_02: 'accretion_disk02.png',
-  DISK_03: 'accretion_disk03.png',
-  DISK_04: 'accretion_disk04.png'
-} as const;
-
 // Default values for various features
 export const DEFAULTS = {
   BLOOM: {

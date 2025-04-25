@@ -72,7 +72,7 @@ export function BlackHole() {
         return texture;
       };
 
-      const diskTextureUrl = DISK_TEXTURE_MAP[selectedTexture as keyof typeof DISK_TEXTURE_MAP] || IMAGES.diskUrl;
+      const diskTextureUrl = DISK_TEXTURE_MAP[selectedTexture as keyof typeof DISK_TEXTURE_MAP] || IMAGES.diskNaturalUrl;
 
       return {
         bgTexture: loadTexture(IMAGES.milkywayUrl, NearestFilter),

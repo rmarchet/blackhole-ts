@@ -1,42 +1,46 @@
 import starUrl from '../assets/star_noise.png';
 import milkywayUrl from '../assets/milkyway.jpg';
-import diskUrl from '../assets/accretion_disk.png';
-import diskUrl00 from '../assets/accretion_disk00.png';
-import diskUrl01 from '../assets/accretion_disk01.png';
-import diskUrl02 from '../assets/accretion_disk02.png';
-import diskUrl03 from '../assets/accretion_disk03.png';
-import diskUrl04 from '../assets/accretion_disk04.png';
+import diskNaturalUrl from '../assets/accretion_disk_natural.png';
+import diskRedWhiteUrl from '../assets/accretion_disk_red_white.png';
+import diskRedWhitePurpleUrl from '../assets/accretion_disk_red_white_purple.png';
+import diskArrowsUrl from '../assets/accretion_disk_arrows.png';
+import diskYellowUrl from '../assets/accretion_disk_yellow.png';
+import diskBlueUrl from '../assets/accretion_disk_blue.png';
+import diskGridUrl from '../assets/accretion_disk_grid.png';
 
 export const IMAGES = {
   starUrl,
   milkywayUrl,
-  diskUrl,
-  diskUrl00,
-  diskUrl01,
-  diskUrl02,
-  diskUrl03,
-  diskUrl04,
+  diskNaturalUrl,
+  diskRedWhiteUrl,
+  diskRedWhitePurpleUrl,
+  diskArrowsUrl,
+  diskYellowUrl,
+  diskBlueUrl,
+  diskGridUrl,
 }
 
 export const DISK_TEXTURES = {
   NO_DISK: { value: 'no_disk', label: 'No Disk' },
   NONE: { value: 'none', label: 'No Texture (Blackbody)' },
-  NATURAL: { value: 'accretion_disk.png', label: 'Natural' },
-  RED_STRIPES: { value: 'accretion_disk00.png', label: 'Red stripes' },
-  RED_PURPLE_STRIPES: { value: 'accretion_disk01.png', label: 'Red-Purple stripes' },
-  ARROWS: { value: 'accretion_disk02.png', label: 'Arrows' },
-  YELLOW: { value: 'accretion_disk03.png', label: 'Yellow' },
-  BLUE: { value: 'accretion_disk04.png', label: 'Blue' },
+  NATURAL: { value: 'accretion_disk_natural.png', label: 'Natural' },
+  RED_STRIPES: { value: 'accretion_disk_red_white.png', label: 'Red stripes' },
+  RED_PURPLE_STRIPES: { value: 'accretion_disk_red_white_purple.png', label: 'Red-Purple stripes' },
+  GRID: { value: 'accretion_disk_grid.png', label: 'Grid' },
+  ARROWS: { value: 'accretion_disk_arrows.png', label: 'Arrows' },
+  YELLOW: { value: 'accretion_disk_yellow.png', label: 'Yellow' },
+  BLUE: { value: 'accretion_disk_blue.png', label: 'Blue' },
 };
 
 // Map texture selection to URL
 export const DISK_TEXTURE_MAP = {
-  [DISK_TEXTURES.NATURAL.value]: diskUrl,
-  [DISK_TEXTURES.RED_STRIPES.value]: diskUrl00,
-  [DISK_TEXTURES.RED_PURPLE_STRIPES.value]: diskUrl01,
-  [DISK_TEXTURES.ARROWS.value]: diskUrl02,
-  [DISK_TEXTURES.YELLOW.value]: diskUrl03,
-  [DISK_TEXTURES.BLUE.value]: diskUrl04,
+  [DISK_TEXTURES.NATURAL.value]: diskNaturalUrl,
+  [DISK_TEXTURES.RED_STRIPES.value]: diskRedWhiteUrl,
+  [DISK_TEXTURES.RED_PURPLE_STRIPES.value]: diskRedWhitePurpleUrl,
+  [DISK_TEXTURES.GRID.value]: diskGridUrl,
+  [DISK_TEXTURES.ARROWS.value]: diskArrowsUrl,
+  [DISK_TEXTURES.YELLOW.value]: diskYellowUrl,
+  [DISK_TEXTURES.BLUE.value]: diskBlueUrl,
 };
 
 // Define the available texture options

@@ -3,9 +3,12 @@ import { DISK_TEXTURES } from '../constants/textures';
 
 export function useDiskTexture() {
   // Use the generic localStorage hook for string values with page reload enabled
-  const [selectedTexture, setSelectedTexture] = useLocalStorageString('diskTexture', 'accretion_disk.png', {
-    reloadOnChange: true,
-    reloadDelay: 100,
+  const [selectedTexture, setSelectedTexture] = useLocalStorageString(
+    'diskTexture', 
+    DISK_TEXTURES.NATURAL.value, 
+    {
+      reloadOnChange: true,
+      reloadDelay: 100,
   });
   
   // Helper function to check if we're using stripes texture
