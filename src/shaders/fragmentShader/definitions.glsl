@@ -35,6 +35,8 @@ uniform float disk_intensity;
 uniform float bloom_intensity;
 uniform float bloom_threshold;
 uniform float bloom_radius;
+// Add glow parameter uniforms
+uniform float glow_intensity;
 uniform sampler2D bg_texture;
 uniform sampler2D star_texture;
 uniform sampler2D disk_texture; 

@@ -2,6 +2,18 @@ import React, { useState } from 'react';
 import { useBloom } from '../hooks/useBloom';
 import { useDiskTexture, DISK_TEXTURE_OPTIONS } from '../hooks/useDiskTexture';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import {
+    DEFAULT_EXPANDED_GROUPS,
+    BLOOM_DEFAULTS,
+    GLOW_DEFAULTS,
+    DISK_DEFAULTS,
+    BACKGROUND_DEFAULTS,
+    CAMERA_DEFAULTS,
+    PERFORMANCE_DEFAULTS,
+    SLIDER_RANGES,
+    type ControlGroup,
+    type ExpandedGroups
+} from '../constants/controls';
 import './Controls.css';
 
 export function Controls() {
@@ -14,9 +26,14 @@ export function Controls() {
         setRadius
     } = useBloom();
 
-    // Use useLocalStorage directly instead of useBloomCheckbox
+    const [glowIntensity, setGlowIntensity] = useLocalStorage<number>(
+        'glowIntensity', GLOW_DEFAULTS.intensity, { reloadOnChange: true }
+    );
+
+    const glowEnabled = glowIntensity > 0;
+
     const [bloomEnabled, setBloomEnabled] = useLocalStorage<boolean>(
-      'bloomEnabled', true, { reloadOnChange: true }
+        'bloomEnabled', BLOOM_DEFAULTS.enabled, { reloadOnChange: true }
     );
 
     const {
@@ -24,52 +41,37 @@ export function Controls() {
         setSelectedTexture
     } = useDiskTexture();
 
-    // Use useLocalStorage directly instead of the useBeaming hook
     const [beamingEnabled, setBeamingEnabled] = useLocalStorage<boolean>(
-      'beamingEnabled', true, { reloadOnChange: true }
+        'beamingEnabled', DISK_DEFAULTS.beaming, { reloadOnChange: true }
     );
 
-    // Add stars background toggle
     const [starsEnabled, setStarsEnabled] = useLocalStorage<boolean>(
-      'starsEnabled', true, { reloadOnChange: true }
+        'starsEnabled', BACKGROUND_DEFAULTS.stars, { reloadOnChange: true }
     );
 
-    // Add Milky Way background toggle
     const [milkywayEnabled, setMilkywayEnabled] = useLocalStorage<boolean>(
-      'milkywayEnabled', true, { reloadOnChange: true }
+        'milkywayEnabled', BACKGROUND_DEFAULTS.milkyway, { reloadOnChange: true }
     );
 
-    // Add orbit toggle
     const [orbitEnabled, setOrbitEnabled] = useLocalStorage<boolean>(
-      'orbitEnabled', false, { reloadOnChange: true }
+        'orbitEnabled', CAMERA_DEFAULTS.orbit, { reloadOnChange: true }
     );
 
-    // Add performance mode toggle
     const [performanceMode, setPerformanceMode] = useLocalStorage<boolean>(
-      'performanceMode', false, { reloadOnChange: true }
+        'performanceMode', PERFORMANCE_DEFAULTS.enabled, { reloadOnChange: true }
     );
 
-    // Add disk intensity control
     const [diskIntensity, setDiskIntensity] = useLocalStorage<number>(
-      'diskIntensity', 1.0, { reloadOnChange: true }
+        'diskIntensity', DISK_DEFAULTS.intensity, { reloadOnChange: true }
     );
 
-    // Add Doppler shift toggle
     const [dopplerShiftEnabled, setDopplerShiftEnabled] = useLocalStorage<boolean>(
-      'dopplerShiftEnabled', false, { reloadOnChange: true }
+        'dopplerShiftEnabled', DISK_DEFAULTS.dopplerShift, { reloadOnChange: true }
     );
 
-    // State to track which control groups are expanded
-    const [expandedGroups, setExpandedGroups] = useState({
-        bloom: true,
-        diskTexture: true,
-        effects: true,
-        camera: true,
-        performance: true
-    });
+    const [expandedGroups, setExpandedGroups] = useState<ExpandedGroups>(DEFAULT_EXPANDED_GROUPS);
 
-    // Toggle the expanded state of a control group
-    const toggleGroup = (groupName: 'bloom' | 'diskTexture' | 'effects' | 'camera' | 'performance') => {
+    const toggleGroup = (groupName: ControlGroup) => {
         setExpandedGroups(prev => ({
             ...prev,
             [groupName]: !prev[groupName]
@@ -136,9 +138,9 @@ export function Controls() {
                                     <span>Intensity:</span>
                                     <input
                                         type="range"
-                                        min="0"
-                                        max="2"
-                                        step="0.1"
+                                        min={SLIDER_RANGES.bloomIntensity.min}
+                                        max={SLIDER_RANGES.bloomIntensity.max}
+                                        step={SLIDER_RANGES.bloomIntensity.step}
                                         value={intensity}
                                         onChange={(e) => setIntensity(parseFloat(e.target.value))}
                                         className="slider-input"
@@ -152,9 +154,9 @@ export function Controls() {
                                     <span>Threshold:</span>
                                     <input
                                         type="range"
-                                        min="0"
-                                        max="1"
-                                        step="0.1"
+                                        min={SLIDER_RANGES.bloomThreshold.min}
+                                        max={SLIDER_RANGES.bloomThreshold.max}
+                                        step={SLIDER_RANGES.bloomThreshold.step}
                                         value={threshold}
                                         onChange={(e) => setThreshold(parseFloat(e.target.value))}
                                         className="slider-input"
@@ -168,9 +170,9 @@ export function Controls() {
                                     <span>Radius:</span>
                                     <input
                                         type="range"
-                                        min="0"
-                                        max="2"
-                                        step="0.1"
+                                        min={SLIDER_RANGES.bloomRadius.min}
+                                        max={SLIDER_RANGES.bloomRadius.max}
+                                        step={SLIDER_RANGES.bloomRadius.step}
                                         value={radius}
                                         onChange={(e) => setRadius(parseFloat(e.target.value))}
                                         className="slider-input"
@@ -193,6 +195,38 @@ export function Controls() {
             
             {expandedGroups.effects && (
                 <>
+
+                    <div className="control-group">
+                        <label className="checkbox-label">
+                            <span>Glow</span>
+                            <input
+                                type="checkbox"
+                                checked={glowEnabled}
+                                onChange={() => {
+                                    setGlowIntensity(glowEnabled ? 0 : 1)
+                                }}
+                            />
+                        </label>
+                    </div>
+
+                    {glowEnabled && (
+                        <div className="control-group">
+                            <label className="slider-label">
+                                <span>Glow Intensity:</span>
+                                <input
+                                    type="range"
+                                    min={GLOW_DEFAULTS.min}
+                                    max={GLOW_DEFAULTS.max}
+                                    step={GLOW_DEFAULTS.step}
+                                    value={glowIntensity}
+                                    onChange={(e) => setGlowIntensity(parseFloat(e.target.value))}
+                                    className="slider-input"
+                                />
+                                <span>{(glowIntensity ?? 0).toFixed(2)}</span>
+                            </label>
+                        </div>
+                    )}
+
                     <div className="control-group">
                         <label className="checkbox-label">
                             <span>Beaming</span>

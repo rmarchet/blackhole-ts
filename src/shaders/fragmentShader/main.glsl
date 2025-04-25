@@ -134,9 +134,9 @@ void main()	{
             if (beaming)
               disk_alpha /= pow(disk_doppler_factor,3.0);
             
-            // Apply bloom to disk color
-            vec3 bloomed_color = applyBloom(disk_color.rgb * disk_intensity);
-            color += vec4(bloomed_color, disk_alpha);
+            // Apply glow to disk color
+            vec3 glowing_color = applyGlow(disk_color.rgb * disk_intensity, glow_intensity);
+            color += vec4(glowing_color, disk_alpha);
           } else {
             // use blackbody 
             float disk_temperature = 10000.0*(pow(r/DISK_IN, -3.0/4.0));
@@ -159,9 +159,9 @@ void main()	{
             if (beaming)
               disk_alpha /= pow(disk_doppler_factor,3.0);
               
-            // Apply bloom to disk color
-            vec3 bloomed_color = applyBloom(disk_color * disk_intensity);
-            color += vec4(bloomed_color, 1.0)*disk_alpha;
+            // Apply glow to disk color
+            vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
+            color += vec4(glowing_color, disk_alpha);
           }
         }
       }

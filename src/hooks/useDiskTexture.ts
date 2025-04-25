@@ -7,7 +7,9 @@ export const DISK_TEXTURE_OPTIONS = [
   { value: 'accretion_disk.png', label: 'Natural' },
   { value: 'accretion_disk00.png', label: 'Red stripes' },
   { value: 'accretion_disk01.png', label: 'Red-Purple stripes' },
-  { value: 'accretion_disk02.png', label: 'Arrows' }
+  { value: 'accretion_disk02.png', label: 'Arrows' },
+  { value: 'accretion_disk03.png', label: 'Yellow' },
+  { value: 'accretion_disk04.png', label: 'Blue' },
 ];
 
 export function useDiskTexture() {

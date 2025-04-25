@@ -13,19 +13,12 @@ import diskUrl from '../assets/accretion_disk.png';
 import diskUrl00 from '../assets/accretion_disk00.png';
 import diskUrl01 from '../assets/accretion_disk01.png';
 import diskUrl02 from '../assets/accretion_disk02.png';
+import diskUrl03 from '../assets/accretion_disk03.png';
+import diskUrl04 from '../assets/accretion_disk04.png';
 import { useBloom } from '../hooks/useBloom';
 import { useDiskTexture } from '../hooks/useDiskTexture';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-
-const DEFAULT_BG_INTENSITY = 0.38;
-const ORBIT_RADIUS = 15;
-const ORBIT_SPEED = 0.2;
-
-// Performance settings
-const HIGH_QUALITY_STEPS = 350;
-const LOW_QUALITY_STEPS = 150;
-const HIGH_QUALITY_SEGMENTS = 64;
-const LOW_QUALITY_SEGMENTS = 32;
+import { BACKGROUND, CAMERA, QUALITY, DISK_TEXTURES, DEFAULTS } from '../constants/blackHole';
 
 // Extend R3F with post-processing components
 extend({ EffectComposer, RenderPass, UnrealBloomPass });
@@ -47,23 +40,26 @@ declare module '@react-three/fiber' {
   }
 }
 
-export const BlackHole = () => {
+export function BlackHole() {
     const meshRef = useRef<Mesh>(null);
     const materialRef = useRef<ShaderMaterial>(null);
     const composerRef = useRef<EffectComposer>(null);
     const { camera, gl, scene } = useThree();
     const { intensity, threshold, radius } = useBloom();
+
+    const [glowIntensity] = useLocalStorage<number>('glowIntensity', DEFAULTS.GLOW.INTENSITY);
+    const glowEnabled = glowIntensity > 0;
     const { selectedTexture, useBlackbody, hideDisk } = useDiskTexture();
     
-    // Use useLocalStorage directly for beaming, bloom, stars, and milkyway
-    const [beamingEnabled] = useLocalStorage<boolean>('beamingEnabled', true);
-    const [bloomEnabled] = useLocalStorage<boolean>('bloomEnabled', true);
-    const [starsEnabled] = useLocalStorage<boolean>('starsEnabled', true);
-    const [milkywayEnabled] = useLocalStorage<boolean>('milkywayEnabled', true);
-    const [orbitEnabled] = useLocalStorage<boolean>('orbitEnabled', false);
-    const [performanceMode] = useLocalStorage<boolean>('performanceMode', false);
-    const [diskIntensity] = useLocalStorage<number>('diskIntensity', 1.0);
-    const [dopplerShiftEnabled] = useLocalStorage<boolean>('dopplerShiftEnabled', false);
+    // Use useLocalStorage for controls with defaults
+    const [beamingEnabled] = useLocalStorage<boolean>('beamingEnabled', DEFAULTS.BEAMING.ENABLED);
+    const [bloomEnabled] = useLocalStorage<boolean>('bloomEnabled', DEFAULTS.BLOOM.ENABLED);
+    const [starsEnabled] = useLocalStorage<boolean>('starsEnabled', DEFAULTS.STARS.ENABLED);
+    const [milkywayEnabled] = useLocalStorage<boolean>('milkywayEnabled', DEFAULTS.MILKYWAY.ENABLED);
+    const [orbitEnabled] = useLocalStorage<boolean>('orbitEnabled', DEFAULTS.ORBIT.ENABLED);
+    const [performanceMode] = useLocalStorage<boolean>('performanceMode', DEFAULTS.PERFORMANCE.ENABLED);
+    const [diskIntensity] = useLocalStorage<number>('diskIntensity', DEFAULTS.DISK.INTENSITY);
+    const [dopplerShiftEnabled] = useLocalStorage<boolean>('dopplerShiftEnabled', DEFAULTS.DISK.DOPPLER_SHIFT);
 
     // Load textures
     const textures = useMemo(() => {
@@ -77,15 +73,17 @@ export const BlackHole = () => {
         return texture;
       };
 
-      // Map the selected texture to the actual texture object
-      let diskTextureUrl = diskUrl; // Default
-      if (selectedTexture === 'accretion_disk00.png') {
-        diskTextureUrl = diskUrl00;
-      } else if (selectedTexture === 'accretion_disk01.png') {
-        diskTextureUrl = diskUrl01;
-      } else if (selectedTexture === 'accretion_disk02.png') {
-        diskTextureUrl = diskUrl02;
-      }
+      // Map texture selection to URL
+      const diskTextureMap = {
+        [DISK_TEXTURES.DEFAULT]: diskUrl,
+        [DISK_TEXTURES.DISK_00]: diskUrl00,
+        [DISK_TEXTURES.DISK_01]: diskUrl01,
+        [DISK_TEXTURES.DISK_02]: diskUrl02,
+        [DISK_TEXTURES.DISK_03]: diskUrl03,
+        [DISK_TEXTURES.DISK_04]: diskUrl04,
+      };
+
+      const diskTextureUrl = diskTextureMap[selectedTexture as keyof typeof diskTextureMap] || diskUrl;
 
       return {
         bgTexture: loadTexture(milkywayUrl, NearestFilter),
@@ -96,17 +94,25 @@ export const BlackHole = () => {
 
     // Set initial camera position
     useEffect(() => {
-      camera.position.set(0, 1, 10);
+      camera.position.set(CAMERA.INITIAL.X, CAMERA.INITIAL.Y, CAMERA.INITIAL.Z);
       camera.lookAt(0, 0, 0);
+
+      // Add zoom limits to the camera
+      camera.addEventListener('change', () => {
+        const distance = camera.position.length();
+        if (distance > CAMERA.DISTANCE.MAX) {
+          const scale = CAMERA.DISTANCE.MAX / distance;
+          camera.position.multiplyScalar(scale);
+        } else if (distance < CAMERA.DISTANCE.MIN) {
+          const scale = CAMERA.DISTANCE.MIN / distance;
+          camera.position.multiplyScalar(scale);
+        }
+      });
     }, [camera]);
 
     // Determine quality settings based on performance mode
     const qualitySettings = useMemo(() => {
-      return {
-        steps: performanceMode ? LOW_QUALITY_STEPS : HIGH_QUALITY_STEPS,
-        segments: performanceMode ? LOW_QUALITY_SEGMENTS : HIGH_QUALITY_SEGMENTS,
-        stepSize: performanceMode ? 0.12 : 0.08
-      };
+      return performanceMode ? QUALITY.LOW : QUALITY.HIGH;
     }, [performanceMode]);
 
     const uniforms = {
@@ -117,22 +123,21 @@ export const BlackHole = () => {
       lorentz_transform: { value: true },
       doppler_shift: { value: dopplerShiftEnabled },
       beaming: { value: beamingEnabled },
-      bg_intensity: { value: milkywayEnabled ? DEFAULT_BG_INTENSITY : 0.005 },
+      bg_intensity: { value: milkywayEnabled ? BACKGROUND.DEFAULT_INTENSITY : BACKGROUND.MIN_INTENSITY },
       show_stars: { value: starsEnabled },
       show_milkyway: { value: milkywayEnabled },
       disk_intensity: { value: diskIntensity },
-      // Add bloom parameters as uniforms
       bloom_intensity: { value: intensity },
       bloom_threshold: { value: threshold },
       bloom_radius: { value: radius },
-    }
+      glow_intensity: { value: glowEnabled ? glowIntensity : 0.0 }
+    };
 
     // Define shader material with textures
     const shaderMaterial = () => {
       const defines = `
         #define STEP ${qualitySettings.stepSize}
         #define NSTEPS ${qualitySettings.steps}
-        // Remove hard-coded bloom parameters from here
       `;
 
       return new ShaderMaterial({
@@ -205,7 +210,7 @@ export const BlackHole = () => {
     // Update milkyway uniform when it changes
     useEffect(() => {
       if (materialRef.current) {
-        materialRef.current.uniforms.bg_intensity.value = milkywayEnabled ? DEFAULT_BG_INTENSITY : 0.005;
+        materialRef.current.uniforms.bg_intensity.value = milkywayEnabled ? BACKGROUND.DEFAULT_INTENSITY : BACKGROUND.MIN_INTENSITY;
         // Force a re-render
         materialRef.current.needsUpdate = true;
       }
@@ -229,6 +234,14 @@ export const BlackHole = () => {
       }
     }, [dopplerShiftEnabled]);
 
+    // Update glow parameters when they change
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.glow_intensity.value = glowEnabled ? glowIntensity : 0.0;
+        materialRef.current.needsUpdate = true;
+      }
+    }, [glowEnabled, glowIntensity]);
+
     // Update shader when performance mode changes
     useEffect(() => {
       if (materialRef.current) {
@@ -245,20 +258,30 @@ export const BlackHole = () => {
         const uniforms = materialRef.current.uniforms;
         uniforms.time.value = state.clock.elapsedTime * 0.2;
         
-        // Only update resolution if it has changed
+        // Update resolution if changed
         const width = gl.domElement.width;
         const height = gl.domElement.height;
         if (uniforms.resolution.value.x !== width || uniforms.resolution.value.y !== height) {
           uniforms.resolution.value.set(width, height);
         }
         
-        // Update camera position for orbit if enabled
+        // Update camera position for orbit
         if (orbitEnabled) {
-          const time = state.clock.elapsedTime * ORBIT_SPEED;
-          const x = Math.sin(time) * ORBIT_RADIUS;
-          const z = Math.cos(time) * ORBIT_RADIUS;
+          const time = state.clock.elapsedTime * CAMERA.ORBIT.SPEED;
+          const x = Math.sin(time) * CAMERA.ORBIT.RADIUS;
+          const z = Math.cos(time) * CAMERA.ORBIT.RADIUS;
           camera.position.set(x, 1, z);
           camera.lookAt(0, 0, 0);
+        }
+
+        // Enforce camera distance limits
+        const distance = camera.position.length();
+        if (distance > CAMERA.DISTANCE.MAX) {
+          const scale = CAMERA.DISTANCE.MAX / distance;
+          camera.position.multiplyScalar(scale);
+        } else if (distance < CAMERA.DISTANCE.MIN) {
+          const scale = CAMERA.DISTANCE.MIN / distance;
+          camera.position.multiplyScalar(scale);
         }
         
         // Update camera uniforms
