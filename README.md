@@ -1,6 +1,6 @@
 # Black Hole Visualization
 
-A real-time 3D visualization of a black hole using React, Three.js, and GLSL shaders. This project simulates gravitational lensing, accretion disk effects, and relativistic beaming around a black hole.
+A real-time 3D visualization of a black hole using React, Three.js, and GLSL shaders. This project simulates gravitational lensing, accretion disk effects, and relativistic beaming around a black hole, inspired by scientifically accurate black hole renderings.
 
 <img src="public/blackhole.svg" width="200" alt="Black Hole Visualization" />
 
@@ -11,12 +11,19 @@ A real-time 3D visualization of a black hole using React, Three.js, and GLSL sha
 ## Features
 
 - Real-time gravitational lensing simulation
-- Accretion disk with doppler shift effects
-- Relativistic beaming
-- Interactive camera controls
+- Accretion disk with multiple texture options
+- Doppler shift and relativistic beaming effects
+- Photon ring at the event horizon
+- Customizable glow effects
+- Interactive camera controls with orbit mode
 - Performance quality adjustment
-- Bloom effect toggle
-- Star field background
+- Post-processing effects:
+  - Bloom with adjustable intensity
+  - Glow with customizable parameters
+- Background options:
+  - Star field with proper parallax
+  - Milky Way background
+- Persistent settings using local storage
 
 ## Technologies Used
 
@@ -25,6 +32,7 @@ A real-time 3D visualization of a black hole using React, Three.js, and GLSL sha
 - React Three Fiber
 - GLSL Shaders
 - Vite
+- Local Storage for persistent settings
 
 ## Getting Started
 
@@ -37,8 +45,8 @@ A real-time 3D visualization of a black hole using React, Three.js, and GLSL sha
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/rmarchet/blackhole-ts.git
-cd blackhole-ts
+git clone https://github.com/rmarchet/black-hole.git
+cd black-hole
 ```
 
 2. Install dependencies:
@@ -59,26 +67,55 @@ yarn dev
 
 ## Controls
 
+### Camera Controls
 - Left-click + drag: Rotate camera
 - Right-click + drag: Pan camera
 - Mouse wheel: Zoom in/out
-- Use the control panel to:
-  - Adjust performance quality
-  - Toggle bloom effect
+- Toggle orbit mode for automatic camera rotation
+
+### Visual Controls
+- Performance Quality:
+  - High quality: More accurate ray marching steps
+  - Low quality: Better performance
+- Bloom Effect:
+  - Adjustable intensity
+  - Configurable threshold and radius
+- Glow Effect:
+  - Toggle glow
+  - Adjustable intensity
+- Accretion Disk:
+  - Multiple texture options
+  - Adjustable intensity
+  - Toggle Doppler shift
+- Background:
+  - Toggle star field
+  - Toggle Milky Way
+  - Adjustable background intensity
 
 ## How It Works
 
-The visualization uses ray marching techniques in GLSL shaders to simulate:
-- Gravitational lensing around the black hole
-- Accretion disk with doppler shift effects
-- Relativistic beaming
+The visualization uses advanced ray marching techniques in GLSL shaders to simulate:
+- Gravitational lensing around the black hole using geodesic calculations
+- Accretion disk with realistic Doppler and relativistic effects
+- Photon ring at the event horizon
+- Relativistic beaming and light aberration
 - Star field background with proper parallax
+- Post-processing effects for enhanced visual quality
+
+## Project Structure
+
+- `src/components/`: React components including the main BlackHole component
+- `src/shaders/`: GLSL shader code for the visualization
+- `src/hooks/`: Custom React hooks for state management
+- `src/constants/`: Configuration and constant values
+- `src/assets/`: Textures and static assets
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- Based on the work of [Your Reference Here]
-- Inspired by real astronomical observations and theoretical physics
+- Inspired by the work of Kip Thorne and the visual effects team of "Interstellar"
+- Based on scientific papers about black hole visualization
+- Thanks to the Three.js and React Three Fiber communities
