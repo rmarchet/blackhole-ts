@@ -27,7 +27,17 @@ export const DISK_TEXTURES = {
   ARROWS: { value: 'accretion_disk02.png', label: 'Arrows' },
   YELLOW: { value: 'accretion_disk03.png', label: 'Yellow' },
   BLUE: { value: 'accretion_disk04.png', label: 'Blue' },
-}
+};
+
+// Map texture selection to URL
+export const DISK_TEXTURE_MAP = {
+  [DISK_TEXTURES.NATURAL.value]: diskUrl,
+  [DISK_TEXTURES.RED_STRIPES.value]: diskUrl00,
+  [DISK_TEXTURES.RED_PURPLE_STRIPES.value]: diskUrl01,
+  [DISK_TEXTURES.ARROWS.value]: diskUrl02,
+  [DISK_TEXTURES.YELLOW.value]: diskUrl03,
+  [DISK_TEXTURES.BLUE.value]: diskUrl04,
+};
 
 // Define the available texture options
 export const DISK_TEXTURE_OPTIONS = Object.values(DISK_TEXTURES)

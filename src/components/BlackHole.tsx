@@ -7,7 +7,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import vertexShader from '../shaders/vertexShader.glsl?raw';
 import { fragmentShader } from '../shaders/fragmentShader/index';
-import { IMAGES } from '../constants/textures';
+import { IMAGES, DISK_TEXTURE_MAP } from '../constants/textures';
 import { useBloom } from '../hooks/useBloom';
 import { useDiskTexture } from '../hooks/useDiskTexture';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -15,7 +15,6 @@ import {
   BACKGROUND,
   CAMERA,
   QUALITY,
-  DISK_TEXTURES,
   DEFAULTS,
   UNIFORMS,
 } from '../constants/blackHole';
@@ -73,17 +72,7 @@ export function BlackHole() {
         return texture;
       };
 
-      // Map texture selection to URL
-      const diskTextureMap = {
-        [DISK_TEXTURES.DEFAULT]: IMAGES.diskUrl,
-        [DISK_TEXTURES.DISK_00]: IMAGES.diskUrl00,
-        [DISK_TEXTURES.DISK_01]: IMAGES.diskUrl01,
-        [DISK_TEXTURES.DISK_02]: IMAGES.diskUrl02,
-        [DISK_TEXTURES.DISK_03]: IMAGES.diskUrl03,
-        [DISK_TEXTURES.DISK_04]: IMAGES.diskUrl04,
-      };
-
-      const diskTextureUrl = diskTextureMap[selectedTexture as keyof typeof diskTextureMap] || IMAGES.diskUrl;
+      const diskTextureUrl = DISK_TEXTURE_MAP[selectedTexture as keyof typeof DISK_TEXTURE_MAP] || IMAGES.diskUrl;
 
       return {
         bgTexture: loadTexture(IMAGES.milkywayUrl, NearestFilter),
