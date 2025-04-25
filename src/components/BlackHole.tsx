@@ -7,18 +7,18 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import vertexShader from '../shaders/vertexShader.glsl?raw';
 import { fragmentShader } from '../shaders/fragmentShader/index';
-import starUrl from '../assets/star_noise.png';
-import milkywayUrl from '../assets/milkyway.jpg';
-import diskUrl from '../assets/accretion_disk.png';
-import diskUrl00 from '../assets/accretion_disk00.png';
-import diskUrl01 from '../assets/accretion_disk01.png';
-import diskUrl02 from '../assets/accretion_disk02.png';
-import diskUrl03 from '../assets/accretion_disk03.png';
-import diskUrl04 from '../assets/accretion_disk04.png';
+import { IMAGES } from '../constants/textures';
 import { useBloom } from '../hooks/useBloom';
 import { useDiskTexture } from '../hooks/useDiskTexture';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { BACKGROUND, CAMERA, QUALITY, DISK_TEXTURES, DEFAULTS } from '../constants/blackHole';
+import { 
+  BACKGROUND,
+  CAMERA,
+  QUALITY,
+  DISK_TEXTURES,
+  DEFAULTS,
+  UNIFORMS,
+} from '../constants/blackHole';
 
 // Extend R3F with post-processing components
 extend({ EffectComposer, RenderPass, UnrealBloomPass });
@@ -75,19 +75,19 @@ export function BlackHole() {
 
       // Map texture selection to URL
       const diskTextureMap = {
-        [DISK_TEXTURES.DEFAULT]: diskUrl,
-        [DISK_TEXTURES.DISK_00]: diskUrl00,
-        [DISK_TEXTURES.DISK_01]: diskUrl01,
-        [DISK_TEXTURES.DISK_02]: diskUrl02,
-        [DISK_TEXTURES.DISK_03]: diskUrl03,
-        [DISK_TEXTURES.DISK_04]: diskUrl04,
+        [DISK_TEXTURES.DEFAULT]: IMAGES.diskUrl,
+        [DISK_TEXTURES.DISK_00]: IMAGES.diskUrl00,
+        [DISK_TEXTURES.DISK_01]: IMAGES.diskUrl01,
+        [DISK_TEXTURES.DISK_02]: IMAGES.diskUrl02,
+        [DISK_TEXTURES.DISK_03]: IMAGES.diskUrl03,
+        [DISK_TEXTURES.DISK_04]: IMAGES.diskUrl04,
       };
 
-      const diskTextureUrl = diskTextureMap[selectedTexture as keyof typeof diskTextureMap] || diskUrl;
+      const diskTextureUrl = diskTextureMap[selectedTexture as keyof typeof diskTextureMap] || IMAGES.diskUrl;
 
       return {
-        bgTexture: loadTexture(milkywayUrl, NearestFilter),
-        starTexture: loadTexture(starUrl, LinearFilter),
+        bgTexture: loadTexture(IMAGES.milkywayUrl, NearestFilter),
+        starTexture: loadTexture(IMAGES.starUrl, LinearFilter),
         diskTexture: loadTexture(diskTextureUrl, LinearFilter)
       };
     }, [selectedTexture]);
@@ -256,7 +256,7 @@ export function BlackHole() {
     useFrame((state) => {
       if (materialRef.current) {
         const uniforms = materialRef.current.uniforms;
-        uniforms.time.value = state.clock.elapsedTime * 0.2;
+        uniforms.time.value = state.clock.elapsedTime * UNIFORMS.TIME;
         
         // Update resolution if changed
         const width = gl.domElement.width;

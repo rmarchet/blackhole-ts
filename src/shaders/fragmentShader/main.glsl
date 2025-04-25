@@ -98,33 +98,29 @@ void main()	{
               vec3 camera_right = normalize(cross(cam_dir, cam_up));
               
               // Determine if we're looking at the left or right side of the disk
-              // based on the dot product of the view direction and camera right vector
               float side_factor = dot(view_dir, camera_right);
               
               // Calculate how perpendicular our view is to the disk plane
-              // 1.0 = viewing edge-on, 0.0 = viewing from above/below
               float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
               
-              // Convert 5 degrees to radians (approximately 0.0873)
-              float five_degrees = 0.0873;
+              float angle_threshold = 0.2618;  // 15 degrees in radians
+              float angle_blend = smoothstep(angle_threshold, angle_threshold * 0.8, disk_angle_factor);
               
-              // Create a smooth transition for the angle factor
-              // This will gradually fade out the effect as we approach 5 degrees
-              float angle_blend = smoothstep(five_degrees, five_degrees * 0.8, disk_angle_factor);
-              
-              // Only apply the Doppler effect if we're viewing at an angle less than 5 degrees
-              // from the disk plane
-              if (disk_angle_factor < five_degrees) {
-                // Create a smooth transition from -1 to 1
-                // Use a smoothstep function to create a gradual transition
-                float smooth_side = smoothstep(-0.3, 0.3, side_factor);
+              if (disk_angle_factor < angle_threshold) {
+                // Invert the side factor to put blue shift on the left
+                float smooth_side = 1.0 - smoothstep(-0.8, 0.8, side_factor);  // Wider transition
                 
-                // Apply subtle color shifts based on which side we're looking at
-                // The central part (around side_factor = 0) will have minimal color alteration
-                // Apply the angle blend to gradually fade out the effect
-                disk_color.r *= 1.0 + (smooth_side - 0.5) * 0.4 * angle_blend;
-                disk_color.g *= 1.0 - abs(smooth_side - 0.5) * 0.2 * angle_blend;
-                disk_color.b *= 1.0 - (smooth_side - 0.5) * 0.4 * angle_blend;
+                // Calculate shift with smoother transition
+                float shift = (smooth_side - 0.5) * 2.0;
+                shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;  // Smoother center transition
+                
+                // Apply color shifts (blue on left, red on right)
+                disk_color.r *= 1.0 + max(-shift, 0.0) * 1.6;  // Reduced red intensity
+                disk_color.b *= 1.0 + max(shift, 0.0) * 2.4;   // Reduced blue intensity
+                
+                // Smooth intensity transition
+                float intensity = shift > 0.0 ? mix(1.0, 1.7, shift) : mix(1.0, 0.6, -shift);  // Reduced intensity range
+                disk_color.rgb *= intensity;
               }
             }
             
@@ -146,10 +142,10 @@ void main()	{
               float doppler_factor = disk_doppler_factor;
               if (doppler_factor < 1.0) {
                 // Red shift - increase temperature for receding material
-                disk_temperature *= 1.0 + (1.0 - doppler_factor);
+                disk_temperature *= 1.0 + (1.0 - doppler_factor) * 2.0;  // Doubled the effect
               } else {
                 // Blue shift - decrease temperature for approaching material
-                disk_temperature /= doppler_factor;
+                disk_temperature /= doppler_factor * 1.5;  // Increased the effect by 50%
               }
             }
 

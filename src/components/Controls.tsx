@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useBloom } from '../hooks/useBloom';
-import { useDiskTexture, DISK_TEXTURE_OPTIONS } from '../hooks/useDiskTexture';
+import { useDiskTexture } from '../hooks/useDiskTexture';
+import { DISK_TEXTURE_OPTIONS } from '../constants/textures';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import {
     DEFAULT_EXPANDED_GROUPS,
