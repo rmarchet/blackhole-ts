@@ -1,8 +1,8 @@
 :root {
-  --label-width: 75px;
-  --controls-width: 240px;
+  --label-width: 90px;
+  --controls-width: 250px;
   --select-width: 120px;
-  --slider-width: 100px;
+  --slider-width: 90px;
   --label-color: #ffffff88;
   --title-color: #ffffff;
 }
@@ -111,4 +111,8 @@
   background-color: #2a2a2a;
   color: #fff;
   padding: 8px;
-} 
+}
+
+.reset-button {
+  font-size: 12px;
+}

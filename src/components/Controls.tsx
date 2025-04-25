@@ -84,6 +84,31 @@ export function Controls() {
         setSelectedTexture(e.target.value);
     };
 
+    const handleReset = () => {
+        // Clear all localStorage values
+        localStorage.clear();
+        
+        // Reset all values to defaults
+        setGlowIntensity(GLOW_DEFAULTS.intensity);
+        setBloomEnabled(BLOOM_DEFAULTS.enabled);
+        setBeamingEnabled(DISK_DEFAULTS.beaming);
+        setStarsEnabled(BACKGROUND_DEFAULTS.stars);
+        setMilkywayEnabled(BACKGROUND_DEFAULTS.milkyway);
+        setOrbitEnabled(CAMERA_DEFAULTS.orbit);
+        setPerformanceMode(PERFORMANCE_DEFAULTS.enabled);
+        setDiskIntensity(DISK_DEFAULTS.intensity);
+        setDopplerShiftEnabled(DISK_DEFAULTS.dopplerShift);
+        setIntensity(SLIDER_RANGES.bloomIntensity.default);
+        setThreshold(SLIDER_RANGES.bloomThreshold.default);
+        setRadius(SLIDER_RANGES.bloomRadius.default);
+        
+        // Reset expanded groups state
+        setExpandedGroups(DEFAULT_EXPANDED_GROUPS);
+        
+        // Force page reload to ensure all components update
+        window.location.reload();
+    };
+
     return (
         <div className="controls-container">
             <h3 
@@ -341,6 +366,17 @@ export function Controls() {
                     </label>
                 </div>
             )}
+
+            <div className="control-group">
+                <hr />
+                <button 
+                    onClick={handleReset}
+                    className="reset-button"
+                    title="Reset all settings to their default values"
+                >
+                    Reset to Defaults
+                </button>
+            </div>
         </div>
     );
 }
