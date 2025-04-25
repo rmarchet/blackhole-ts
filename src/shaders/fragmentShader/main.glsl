@@ -1,6 +1,50 @@
 // https://gist.github.com/fieldOfView/5106319
 // https://gamedev.stackexchange.com/questions/93032/what-causes-this-distortion-in-my-perspective-projection-at-steep-view-angles
 // for reference
+
+// Helper function for Kerr metric calculations
+vec2 calculateKerrEffects(vec3 pos, float a) {
+    float r = length(pos);
+    float r2 = r * r;
+    float a2 = a * a;
+    float cos_theta = pos.y / r;
+    float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
+    float rho2 = r2 + a2 * cos_theta * cos_theta;
+    
+    // Return omega and radial correction factor
+    float omega = -2.0 * a * r / (rho2 * (rho2 + 2.0 * r));
+    float radial_factor = 1.0 + a2 * cos_theta * cos_theta / (r2 * r2);
+    return vec2(omega, radial_factor);
+}
+
+// Calculate acceleration based on black hole rotation
+vec3 calculateAcceleration(vec3 pos, vec3 vel, float h2) {
+    float r = length(pos);
+    float r2 = r * r;
+    
+    // Use original Schwarzschild model when not rotating
+    if (black_hole_rotation == 0.0) {
+        return -1.5 * h2 * pos / (r2 * r2 * sqrt(r2));
+    }
+    
+    // Kerr model for rotating black hole
+    float a = black_hole_rotation * 0.2;  // Scale down rotation effect
+    vec2 kerr_effects = calculateKerrEffects(pos, a);
+    float omega = kerr_effects.x;
+    float radial_factor = kerr_effects.y;
+    
+    // Radial acceleration with Kerr corrections
+    vec3 accel = -1.5 * h2 * pos / (r2 * r2 * sqrt(r2));
+    accel *= radial_factor;
+    
+    // Add frame dragging acceleration
+    vec3 phi_dir = vec3(-pos.x, 0.0, -pos.z);
+    float phi_dot = length(phi_dir) > 0.0 ? dot(vel, phi_dir) / length(phi_dir) : 0.0;
+    accel += cross(vec3(0.0, 1.0, 0.0), pos) * omega * phi_dot * 0.5;
+    
+    return accel;
+}
+
 void main()	{
   // z towards you, y towards up, x towards your left
   float uvfov = tan(fov / 2.0 * DEG_TO_RAD);
@@ -48,9 +92,8 @@ void main()	{
     oldpoint = point; // remember previous point for finding intersection
     point += velocity * STEP;
     
-    // Optimized acceleration calculation
-    float r2 = dot(point, point);
-    vec3 accel = -1.5 * h2 * point / (r2 * r2 * sqrt(r2));
+    // Calculate acceleration based on black hole rotation
+    vec3 accel = calculateAcceleration(point, velocity, h2);
     velocity += accel * STEP;    
     
     // distance from origin
@@ -75,13 +118,20 @@ void main()	{
         if (DISK_IN <= r&&r <= DISK_IN+DISK_WIDTH ){
           float phi = atan(intersection.x, intersection.z);
           
-          vec3 disk_velocity = vec3(-intersection.x, 0.0, intersection.z)/sqrt(2.0*(r-1.0))/(r*r); 
+          // Calculate disk velocity with frame dragging for rotating black hole
+          vec3 disk_velocity = vec3(-intersection.x, 0.0, intersection.z)/sqrt(2.0*(r-1.0))/(r*r);
+          if (black_hole_rotation > 0.0) {
+            float a = black_hole_rotation * 0.1;
+            vec2 kerr_effects = calculateKerrEffects(intersection, a);
+            float omega = kerr_effects.x;
+            disk_velocity += cross(vec3(0.0, 1.0, 0.0), intersection) * omega * 0.8;
+          }
+          
           phi -= time;//length(r);
           phi = mod(phi , PI*2.0);
           float disk_gamma = 1.0/sqrt(1.0-dot(disk_velocity, disk_velocity));
           
           // Calculate the Doppler factor relative to the viewer's perspective
-          // This ensures the effect follows the viewer as they rotate around the black hole
           float disk_doppler_factor = disk_gamma*(1.0+dot(ray_dir, disk_velocity)); 
           
           if (use_disk_texture){

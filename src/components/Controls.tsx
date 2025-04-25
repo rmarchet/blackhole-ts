@@ -15,6 +15,7 @@ import {
     type ControlGroup,
     type ExpandedGroups
 } from '../constants/controls';
+import { BLACK_HOLE, DEFAULTS } from '../constants/blackHole';
 import './Controls.css';
 
 export function Controls() {
@@ -70,6 +71,10 @@ export function Controls() {
         'dopplerShiftEnabled', DISK_DEFAULTS.dopplerShift, { reloadOnChange: true }
     );
 
+    const [blackHoleRotation, setBlackHoleRotation] = useLocalStorage<number>(
+        'blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION, { reloadOnChange: true }
+    );
+
     const [expandedGroups, setExpandedGroups] = useState<ExpandedGroups>(DEFAULT_EXPANDED_GROUPS);
 
     const toggleGroup = (groupName: ControlGroup) => {
@@ -102,6 +107,7 @@ export function Controls() {
         setIntensity(SLIDER_RANGES.bloomIntensity.default);
         setThreshold(SLIDER_RANGES.bloomThreshold.default);
         setRadius(SLIDER_RANGES.bloomRadius.default);
+        setBlackHoleRotation(DEFAULTS.BLACK_HOLE.ROTATION);
         
         // Reset expanded groups state
         setExpandedGroups(DEFAULT_EXPANDED_GROUPS);
@@ -221,7 +227,6 @@ export function Controls() {
             
             {expandedGroups.effects && (
                 <>
-
                     <div className="control-group">
                         <label className="checkbox-label">
                             <span>Glow</span>
@@ -274,6 +279,25 @@ export function Controls() {
                         </label>
                         <div className="control-description">
                             Shows red and blue shifts in the accretion disk
+                        </div>
+                    </div>
+
+                    <div className="control-group">
+                        <label className="slider-label">
+                            <span>Black Hole Rotation:</span>
+                            <input
+                                type="range"
+                                min={BLACK_HOLE.ROTATION.MIN}
+                                max={BLACK_HOLE.ROTATION.MAX}
+                                step={0.001}
+                                value={blackHoleRotation}
+                                onChange={(e) => setBlackHoleRotation(parseFloat(e.target.value))}
+                                className="slider-input"
+                            />
+                            <span>{blackHoleRotation.toFixed(3)}</span>
+                        </label>
+                        <div className="control-description">
+                            Controls the spin of the black hole (0 = non-rotating, 0.998 = maximum rotation)
                         </div>
                     </div>
                 </>

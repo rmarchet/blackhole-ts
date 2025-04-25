@@ -59,6 +59,7 @@ export function BlackHole() {
     const [performanceMode] = useLocalStorage<boolean>('performanceMode', DEFAULTS.PERFORMANCE.ENABLED);
     const [diskIntensity] = useLocalStorage<number>('diskIntensity', DEFAULTS.DISK.INTENSITY);
     const [dopplerShiftEnabled] = useLocalStorage<boolean>('dopplerShiftEnabled', DEFAULTS.DISK.DOPPLER_SHIFT);
+    const [blackHoleRotation] = useLocalStorage<number>('blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION);
 
     // Load textures
     const textures = useMemo(() => {
@@ -119,7 +120,8 @@ export function BlackHole() {
       bloom_intensity: { value: intensity },
       bloom_threshold: { value: threshold },
       bloom_radius: { value: radius },
-      glow_intensity: { value: glowEnabled ? glowIntensity : 0.0 }
+      glow_intensity: { value: glowEnabled ? glowIntensity : 0.0 },
+      black_hole_rotation: { value: blackHoleRotation }
     };
 
     // Define shader material with textures
@@ -230,6 +232,14 @@ export function BlackHole() {
         materialRef.current.needsUpdate = true;
       }
     }, [glowEnabled, glowIntensity]);
+
+    // Update black hole rotation when it changes
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.black_hole_rotation.value = blackHoleRotation;
+        materialRef.current.needsUpdate = true;
+      }
+    }, [blackHoleRotation]);
 
     // Update shader when performance mode changes
     useEffect(() => {

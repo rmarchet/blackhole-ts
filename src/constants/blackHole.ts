@@ -4,6 +4,15 @@ export const BACKGROUND = {
   MIN_INTENSITY: 0.005
 } as const;
 
+// Black hole settings
+export const BLACK_HOLE = {
+  ROTATION: {
+    MIN: 0.0,
+    MAX: 0.998,  // Maximum spin parameter (a*) for a Kerr black hole
+    DEFAULT: 0.5
+  }
+} as const;
+
 // Camera settings
 export const CAMERA = {
   ORBIT: {
@@ -68,5 +77,8 @@ export const DEFAULTS = {
   },
   GLOW: {
     INTENSITY: 1.0
+  },
+  BLACK_HOLE: {
+    ROTATION: BLACK_HOLE.ROTATION.DEFAULT
   }
 } as const;

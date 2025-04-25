@@ -37,6 +37,8 @@ uniform float bloom_threshold;
 uniform float bloom_radius;
 // Add glow parameter uniforms
 uniform float glow_intensity;
+// Add black hole rotation uniform
+uniform float black_hole_rotation;
 uniform sampler2D bg_texture;
 uniform sampler2D star_texture;
 uniform sampler2D disk_texture; 
