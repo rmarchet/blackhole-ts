@@ -1,10 +1,11 @@
 :root {
-  --label-width: 90px;
-  --controls-width: 250px;
+  --label-width: 110px;
+  --controls-width: 270px;
   --select-width: 120px;
   --slider-width: 90px;
-  --label-color: #ffffff88;
+  --label-color: #ffffffaa;
   --title-color: #ffffff;
+  --input-gap: 8px;
 }
 
 .controls-container {
@@ -21,7 +22,6 @@
   width: var(--controls-width);
   display: flex;
   flex-direction: column;
-  gap: 5px;
   transition: all 0.3s ease;
 }
 
@@ -30,27 +30,28 @@
   overflow: hidden;
 }
 
-.controls-header button {
-  display: flex;
-  align-items: center;
-  padding: 8px 10px;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--title-color);
-  font-weight: bold;
-  font-size: 16px;
-  width: 100%;
-}
-.controls-header span {
-  margin-right: auto;
-}
-
 .collapse-button {
-  background: none;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   color: var(--title-color);
   cursor: pointer;
-  padding: 0 5px;
-  font-size: 12px;
+  display: flex;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 10px;
+}
+
+.reset-button {
+  font-size: 11px;
+  padding: 2px 3px;
+  border-radius: 3px;
+  color: var(--title-color);
+  border: 1px solid #ffffff44;
+  background-color: #ffffff22;
+  font-weight: normal;
+  margin-right: auto;
+  margin-left: 8px;
 }
 
 .controls-content {
@@ -73,6 +74,7 @@
   justify-content: space-between;
   align-items: center;
   color: var(--title-color);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .controls-title:hover {
@@ -85,11 +87,18 @@
   overflow: hidden;
 }
 
+.control-description {
+  font-size: 11px;
+  padding-top: 0;
+  padding-bottom: 3px;
+  color: #ffffff66;
+}
+
 .checkbox-label {
   display: flex;
   color: var(--label-color);
   align-items: center;
-  gap: 7px;
+  gap: var(--input-gap);
 }
 
 .checkbox-label span {
@@ -100,7 +109,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--input-gap);
   color: var(--label-color);
 }
 
@@ -117,8 +126,7 @@
 .select-label {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  gap: var(--input-gap);
   color: var(--label-color);
 }
 
@@ -128,10 +136,10 @@
 
 .select-input {
   margin-top: 0;
-  padding: 4px;
+  padding: 2px 4px;
   border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: #2a2a2a;
+  border: 1px solid #ffffff44;
+  background-color: #ffffff22;
   color: #fff;
   font-size: 12px;
   width: var(--select-width);
@@ -151,10 +159,6 @@
   background-color: #2a2a2a;
   color: #fff;
   padding: 8px;
-}
-
-.reset-button {
-  font-size: 12px;
 }
 
 /* Scrollbar styling */

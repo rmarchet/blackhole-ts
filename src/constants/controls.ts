@@ -1,6 +1,6 @@
 // Control groups default state
 export const DEFAULT_EXPANDED_GROUPS = {
-  bloom: true,
+  bloom: false,
   diskTexture: true,
   effects: true,
   camera: false,

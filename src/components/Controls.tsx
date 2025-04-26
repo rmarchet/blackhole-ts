@@ -98,7 +98,8 @@ export function Controls() {
         setSelectedTexture(e.target.value);
     };
 
-    const handleReset = () => {
+    const handleReset = (e) => {
+        e.stopPropagation()
         // Clear all localStorage values
         localStorage.clear();
         
@@ -127,14 +128,22 @@ export function Controls() {
     return (
         <div className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}>
             <div className="controls-header">
-              <button 
+              <div 
                 className="collapse-button"
                 onClick={() => setIsCollapsed(!isCollapsed)}
               >
                 <img src="/icon.svg" alt="App Icon" style={{ width: 24, height: 24, marginRight: 8 }} />
                 <span>Controls</span>
+
+                <button 
+                  onClick={handleReset}
+                  className="reset-button"
+                  title="Reset all settings to their default values"
+                >
+                  Reset to Defaults
+                </button>
                 {isCollapsed ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.UP}
-              </button>
+              </div>
             </div>
 
             <div className={`controls-content ${isCollapsed ? 'hidden' : ''}`}>
@@ -411,17 +420,6 @@ export function Controls() {
                     </label>
                   </div>
                 )}
-
-                <div className="control-group">
-                    <hr />
-                    <button 
-                        onClick={handleReset}
-                        className="reset-button"
-                        title="Reset all settings to their default values"
-                    >
-                        Reset to Defaults
-                    </button>
-                </div>
             </div>
         </div>
     );

@@ -12,8 +12,16 @@ A real-time 3D visualization of a black hole using React, Three.js, and GLSL sha
 
 - Real-time gravitational lensing simulation
 - Accretion disk with multiple texture options
-- Doppler shift and relativistic beaming effects
+  - natural
+  - arrows
+  - stripes
+  - grid
+  - blue
+- Doppler shift effect
+- Relativistic beaming effect
 - Photon ring at the event horizon
+- Rotation to simulate a Kerr black hole
+  - frame dragging effect
 - Customizable glow effects
 - Interactive camera controls with orbit mode
 - Performance quality adjustment
@@ -38,15 +46,15 @@ A real-time 3D visualization of a black hole using React, Three.js, and GLSL sha
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v20 or higher)
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/rmarchet/black-hole.git
-cd black-hole
+git clone https://github.com/rmarchet/blackhole-ts.git
+cd blackhole-ts
 ```
 
 2. Install dependencies:
