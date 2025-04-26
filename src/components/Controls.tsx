@@ -3,6 +3,7 @@ import { useBloom } from '../hooks/useBloom';
 import { useDiskTexture } from '../hooks/useDiskTexture';
 import { DISK_TEXTURE_OPTIONS } from '../constants/textures';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useLocalStorageBoolean } from '../hooks/useLocalStorage';
 import {
     DEFAULT_EXPANDED_GROUPS,
     BLOOM_DEFAULTS,
@@ -83,6 +84,10 @@ export function Controls() {
         'blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION, { reloadOnChange: true }
     );
 
+    const [jetEnabled, setJetEnabled] = useLocalStorageBoolean(
+        'jetEnabled', true, { reloadOnChange: true }
+    );
+
     const [expandedGroups, setExpandedGroups] = useState<ExpandedGroups>(DEFAULT_EXPANDED_GROUPS);
 
     const toggleGroup = (groupName: ControlGroup) => {
@@ -117,6 +122,7 @@ export function Controls() {
         setThreshold(SLIDER_RANGES.bloomThreshold.default);
         setRadius(SLIDER_RANGES.bloomRadius.default);
         setBlackHoleRotation(DEFAULTS.BLACK_HOLE.ROTATION);
+        setJetEnabled(true);
         
         // Reset expanded groups state
         setExpandedGroups(DEFAULT_EXPANDED_GROUPS);
@@ -308,6 +314,20 @@ export function Controls() {
                             </label>
                             <div className="control-description">
                                 Shows red and blue shifts in the accretion disk
+                            </div>
+                        </div>
+
+                        <div className="control-group">
+                            <label className="checkbox-label">
+                                <span>Relativistic Jet</span>
+                                <input
+                                    type="checkbox"
+                                    checked={jetEnabled}
+                                    onChange={e => setJetEnabled(e.target.checked)}
+                                />
+                            </label>
+                            <div className="control-description">
+                                Show or hide the relativistic jet
                             </div>
                         </div>
 

@@ -60,6 +60,7 @@ export function BlackHole() {
     const [diskIntensity] = useLocalStorage<number>('diskIntensity', DEFAULTS.DISK.INTENSITY);
     const [dopplerShiftEnabled] = useLocalStorage<boolean>('dopplerShiftEnabled', DEFAULTS.DISK.DOPPLER_SHIFT);
     const [blackHoleRotation] = useLocalStorage<number>('blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION);
+    const [jetEnabled] = useLocalStorage<boolean>('jetEnabled', DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET);
 
     // Load textures
     const textures = useMemo(() => {
@@ -121,7 +122,8 @@ export function BlackHole() {
       bloom_threshold: { value: threshold },
       bloom_radius: { value: radius },
       glow_intensity: { value: glowEnabled ? glowIntensity : 0.0 },
-      black_hole_rotation: { value: blackHoleRotation }
+      black_hole_rotation: { value: blackHoleRotation },
+      jet_enabled: { value: jetEnabled },
     };
 
     // Define shader material with textures
@@ -240,6 +242,14 @@ export function BlackHole() {
         materialRef.current.needsUpdate = true;
       }
     }, [blackHoleRotation]);
+
+    // Update jet enabled uniform when it changes
+    useEffect(() => {
+      if (materialRef.current) {
+        materialRef.current.uniforms.jet_enabled.value = jetEnabled;
+        materialRef.current.needsUpdate = true;
+      }
+    }, [jetEnabled]);
 
     // Update shader when performance mode changes
     useEffect(() => {

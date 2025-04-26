@@ -87,6 +87,11 @@ void main()	{
   
   float distance = length(point);
 
+  // Jet parameters based on black_hole_rotation
+  float jet_intensity = black_hole_rotation * 2.0;
+  float jet_radius = 0.1 + 0.15 * black_hole_rotation;
+  float jet_length = 3.0 + 8.0 * black_hole_rotation;
+
   // Leapfrog geodesic
   for (int i=0; i<NSTEPS;i++){ 
     oldpoint = point; // remember previous point for finding intersection
@@ -107,6 +112,24 @@ void main()	{
       color += black;
       break;
     }
+
+    // --- Relativistic Jet ---
+    if (jet_enabled && black_hole_rotation > 0.1) {
+      float jet_r = length(point.xz);
+      float jet_y = abs(point.y);
+      float local_radius = jet_radius * mix(0.7, 1.2, jet_y / jet_length);
+      if (jet_y < jet_length && jet_r < local_radius && length(point) > 1.0) {
+          float core = 1.0 - smoothstep(0.0, local_radius * 0.5, jet_r); // bright core
+          float edge = 1.0 - smoothstep(local_radius * 0.7, local_radius, jet_r); // soft edge
+          float t = jet_y / jet_length;
+          vec3 jet_color = mix(vec3(0.3, 0.7, 1.0), vec3(1.0, 1.0, 1.0), t); // blue to white
+          jet_color = mix(jet_color, vec3(1.0, 0.7, 0.5), pow(t, 2.0)); // white to orange/red at tip
+          float intensity = jet_intensity * core * (1.0 - t) + jet_intensity * 0.3 * edge * t;
+          float fade = 1.0 - smoothstep(0.85, 1.0, t); // fade out at the tip
+          color.rgb += jet_color * intensity * fade;
+      }
+    }
+    // --- End Jet ---
     
     // Check if the disk should be rendered
     if (accretion_disk) {
