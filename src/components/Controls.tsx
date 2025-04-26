@@ -18,7 +18,15 @@ import {
 import { BLACK_HOLE, DEFAULTS } from '../constants/blackHole';
 import './Controls.css';
 
+const COLLAPSE_ICONS = {
+  DOWN: '▼',
+  UP: '▲',
+  RIGHT: '▶',
+}
+
+
 export function Controls() {
+    const [isCollapsed, setIsCollapsed] = useState(false);
     const {
         intensity,
         threshold,
@@ -117,290 +125,303 @@ export function Controls() {
     };
 
     return (
-        <div className="controls-container">
-            <h3 
-                className="controls-title" 
-                onClick={() => toggleGroup('performance')}
-                style={{ cursor: 'pointer' }}
-            >
-                Performance Controls {expandedGroups.performance ? '▼' : '▶'}
-            </h3>
-            
-            {expandedGroups.performance && (
-                <div className="control-group">
-                    <label className="checkbox-label">
-                        <span>Performance Mode</span>
-                        <input
-                            type="checkbox"
-                            checked={performanceMode}
-                            onChange={(e) => setPerformanceMode(e.target.checked)}
-                        />
-                    </label>
-                    <div className="control-description">
-                        Reduces quality to improve performance
-                    </div>
-                </div>
-            )}
+        <div className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}>
+            <div className="controls-header">
+              <button 
+                className="collapse-button"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+              >
+                <img src="/icon.svg" alt="App Icon" style={{ width: 24, height: 24, marginRight: 8 }} />
+                <span>Controls</span>
+                {isCollapsed ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.UP}
+              </button>
+            </div>
 
-            <h3 
-                className="controls-title" 
-                onClick={() => toggleGroup('bloom')}
-                style={{ cursor: 'pointer' }}
-            >
-                Bloom Controls {expandedGroups.bloom ? '▼' : '▶'}
-            </h3>
-            
-            {expandedGroups.bloom && (
-                <>
+            <div className={`controls-content ${isCollapsed ? 'hidden' : ''}`}>
+                <h3 
+                  className="controls-title" 
+                  onClick={() => toggleGroup('performance')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <span>Performance Controls</span> {expandedGroups.performance ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+                </h3>
+                
+                {expandedGroups.performance && (
                     <div className="control-group">
                         <label className="checkbox-label">
-                            <span>Bloom</span>
+                            <span>Performance Mode</span>
                             <input
-                                type="checkbox"
-                                checked={bloomEnabled}
-                                onChange={(e) => setBloomEnabled(e.target.checked)}
+                              type="checkbox"
+                              checked={performanceMode}
+                              onChange={(e) => setPerformanceMode(e.target.checked)}
                             />
                         </label>
+                        <div className="control-description">
+                            Reduces quality to improve performance
+                        </div>
                     </div>
+                )}
 
-                    {bloomEnabled && (
-                        <>
-                            <div className="control-group">
-                                <label className="slider-label">
-                                    <span>Intensity:</span>
-                                    <input
-                                        type="range"
-                                        min={SLIDER_RANGES.bloomIntensity.min}
-                                        max={SLIDER_RANGES.bloomIntensity.max}
-                                        step={SLIDER_RANGES.bloomIntensity.step}
-                                        value={intensity}
-                                        onChange={(e) => setIntensity(parseFloat(e.target.value))}
-                                        className="slider-input"
-                                    />
-                                    <span>{intensity.toFixed(2)}</span>
-                                </label>
-                            </div>
+                <h3 
+                    className="controls-title" 
+                    onClick={() => toggleGroup('bloom')}
+                    style={{ cursor: 'pointer' }}
+                >
+                    <span>Bloom Controls</span> {expandedGroups.bloom ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+                </h3>
+                
+                {expandedGroups.bloom && (
+                    <>
+                        <div className="control-group">
+                            <label className="checkbox-label">
+                                <span>Bloom</span>
+                                <input
+                                    type="checkbox"
+                                    checked={bloomEnabled}
+                                    onChange={(e) => setBloomEnabled(e.target.checked)}
+                                />
+                            </label>
+                        </div>
 
-                            <div className="control-group">
-                                <label className="slider-label">
-                                    <span>Threshold:</span>
-                                    <input
-                                        type="range"
-                                        min={SLIDER_RANGES.bloomThreshold.min}
-                                        max={SLIDER_RANGES.bloomThreshold.max}
-                                        step={SLIDER_RANGES.bloomThreshold.step}
-                                        value={threshold}
-                                        onChange={(e) => setThreshold(parseFloat(e.target.value))}
-                                        className="slider-input"
-                                    />
-                                    <span>{threshold.toFixed(2)}</span>
-                                </label>
-                            </div>
+                        {bloomEnabled && (
+                            <>
+                                <div className="control-group">
+                                    <label className="slider-label">
+                                        <span>Intensity:</span>
+                                        <input
+                                            type="range"
+                                            min={SLIDER_RANGES.bloomIntensity.min}
+                                            max={SLIDER_RANGES.bloomIntensity.max}
+                                            step={SLIDER_RANGES.bloomIntensity.step}
+                                            value={intensity}
+                                            onChange={(e) => setIntensity(parseFloat(e.target.value))}
+                                            className="slider-input"
+                                        />
+                                        <span>{intensity.toFixed(2)}</span>
+                                    </label>
+                                </div>
 
-                            <div className="control-group">
-                                <label className="slider-label">
+                                <div className="control-group">
+                                    <label className="slider-label">
+                                        <span>Threshold:</span>
+                                        <input
+                                            type="range"
+                                            min={SLIDER_RANGES.bloomThreshold.min}
+                                            max={SLIDER_RANGES.bloomThreshold.max}
+                                            step={SLIDER_RANGES.bloomThreshold.step}
+                                            value={threshold}
+                                            onChange={(e) => setThreshold(parseFloat(e.target.value))}
+                                            className="slider-input"
+                                        />
+                                        <span>{threshold.toFixed(2)}</span>
+                                    </label>
+                                </div>
+
+                                <div className="control-group">
+                                  <label className="slider-label">
                                     <span>Radius:</span>
                                     <input
-                                        type="range"
-                                        min={SLIDER_RANGES.bloomRadius.min}
-                                        max={SLIDER_RANGES.bloomRadius.max}
-                                        step={SLIDER_RANGES.bloomRadius.step}
-                                        value={radius}
-                                        onChange={(e) => setRadius(parseFloat(e.target.value))}
-                                        className="slider-input"
+                                      type="range"
+                                      min={SLIDER_RANGES.bloomRadius.min}
+                                      max={SLIDER_RANGES.bloomRadius.max}
+                                      step={SLIDER_RANGES.bloomRadius.step}
+                                      value={radius}
+                                      onChange={(e) => setRadius(parseFloat(e.target.value))}
+                                      className="slider-input"
                                     />
                                     <span>{radius.toFixed(2)}</span>
+                                  </label>
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
+
+                <h3 
+                  className="controls-title" 
+                  onClick={() => toggleGroup('effects')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <span>Effects Controls</span> {expandedGroups.effects ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+                </h3>
+                
+                {expandedGroups.effects && (
+                    <>
+                        <div className="control-group">
+                            <label className="checkbox-label">
+                                <span>Glow</span>
+                                <input
+                                    type="checkbox"
+                                    checked={glowEnabled}
+                                    onChange={() => {
+                                        setGlowIntensity(glowEnabled ? 0 : 1)
+                                    }}
+                                />
+                            </label>
+                        </div>
+
+                        {glowEnabled && (
+                            <div className="control-group">
+                                <label className="slider-label">
+                                    <span>Glow Intensity:</span>
+                                    <input
+                                        type="range"
+                                        min={GLOW_DEFAULTS.min}
+                                        max={GLOW_DEFAULTS.max}
+                                        step={GLOW_DEFAULTS.step}
+                                        value={glowIntensity}
+                                        onChange={(e) => setGlowIntensity(parseFloat(e.target.value))}
+                                        className="slider-input"
+                                    />
+                                    <span>{(glowIntensity ?? 0).toFixed(2)}</span>
                                 </label>
                             </div>
-                        </>
-                    )}
-                </>
-            )}
+                        )}
 
-            <h3 
-                className="controls-title" 
-                onClick={() => toggleGroup('effects')}
-                style={{ cursor: 'pointer' }}
-            >
-                Effects Controls {expandedGroups.effects ? '▼' : '▶'}
-            </h3>
-            
-            {expandedGroups.effects && (
-                <>
-                    <div className="control-group">
-                        <label className="checkbox-label">
-                            <span>Glow</span>
-                            <input
-                                type="checkbox"
-                                checked={glowEnabled}
-                                onChange={() => {
-                                    setGlowIntensity(glowEnabled ? 0 : 1)
-                                }}
-                            />
-                        </label>
-                    </div>
-
-                    {glowEnabled && (
                         <div className="control-group">
-                            <label className="slider-label">
-                                <span>Glow Intensity:</span>
+                            <label className="checkbox-label">
+                                <span>Beaming</span>
                                 <input
-                                    type="range"
-                                    min={GLOW_DEFAULTS.min}
-                                    max={GLOW_DEFAULTS.max}
-                                    step={GLOW_DEFAULTS.step}
-                                    value={glowIntensity}
-                                    onChange={(e) => setGlowIntensity(parseFloat(e.target.value))}
-                                    className="slider-input"
+                                    type="checkbox"
+                                    checked={beamingEnabled}
+                                    onChange={(e) => setBeamingEnabled(e.target.checked)}
                                 />
-                                <span>{(glowIntensity ?? 0).toFixed(2)}</span>
                             </label>
                         </div>
-                    )}
-
-                    <div className="control-group">
-                        <label className="checkbox-label">
-                            <span>Beaming</span>
-                            <input
-                                type="checkbox"
-                                checked={beamingEnabled}
-                                onChange={(e) => setBeamingEnabled(e.target.checked)}
-                            />
-                        </label>
-                    </div>
-                    <div className="control-group">
-                        <label className="checkbox-label">
-                            <span>Doppler Shift</span>
-                            <input
-                                type="checkbox"
-                                checked={dopplerShiftEnabled}
-                                onChange={(e) => setDopplerShiftEnabled(e.target.checked)}
-                            />
-                        </label>
-                        <div className="control-description">
-                            Shows red and blue shifts in the accretion disk
+                        <div className="control-group">
+                            <label className="checkbox-label">
+                                <span>Doppler Shift</span>
+                                <input
+                                    type="checkbox"
+                                    checked={dopplerShiftEnabled}
+                                    onChange={(e) => setDopplerShiftEnabled(e.target.checked)}
+                                />
+                            </label>
+                            <div className="control-description">
+                                Shows red and blue shifts in the accretion disk
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="control-group">
-                        <label className="slider-label">
-                            <span>Black Hole Rotation:</span>
-                            <input
-                                type="range"
-                                min={BLACK_HOLE.ROTATION.MIN}
-                                max={BLACK_HOLE.ROTATION.MAX}
-                                step={0.001}
-                                value={blackHoleRotation}
-                                onChange={(e) => setBlackHoleRotation(parseFloat(e.target.value))}
-                                className="slider-input"
-                            />
-                            <span>{blackHoleRotation.toFixed(3)}</span>
-                        </label>
-                        <div className="control-description">
-                            Controls the spin of the black hole (0 = non-rotating, 0.998 = maximum rotation)
-                        </div>
-                    </div>
-                </>
-            )}
-
-            <h3 
-                className="controls-title" 
-                onClick={() => toggleGroup('diskTexture')}
-                style={{ cursor: 'pointer' }}
-            >
-                Textures Controls {expandedGroups.diskTexture ? '▼' : '▶'}
-            </h3>
-            
-            {expandedGroups.diskTexture && (
-                <>
-                    <div className="control-group">
-                        <label className="select-label">
-                            <span>Disk:</span>
-                            <select 
-                                value={selectedTexture}
-                                onChange={handleTextureChange}
-                                className="select-input"
-                            >
-                                {DISK_TEXTURE_OPTIONS.map(option => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                    </div>
-                    
-                    {selectedTexture !== 'no_disk' && (
                         <div className="control-group">
                             <label className="slider-label">
-                                <span>Disk Brightness:</span>
+                                <span>Black Hole Rotation:</span>
                                 <input
                                     type="range"
-                                    min="0.1"
-                                    max="2.0"
-                                    step="0.1"
-                                    value={diskIntensity}
-                                    onChange={(e) => setDiskIntensity(parseFloat(e.target.value))}
+                                    min={BLACK_HOLE.ROTATION.MIN}
+                                    max={BLACK_HOLE.ROTATION.MAX}
+                                    step={0.001}
+                                    value={blackHoleRotation}
+                                    onChange={(e) => setBlackHoleRotation(parseFloat(e.target.value))}
                                     className="slider-input"
                                 />
-                                <span>{diskIntensity?.toFixed(2)}</span>
+                                <span>{blackHoleRotation.toFixed(3)}</span>
                             </label>
+                            <div className="control-description">
+                              Controls the spin of the black hole (0 = non-rotating, 0.998 = maximum rotation)
+                            </div>
                         </div>
-                    )}
-                    
-                    <div className="control-group">
-                        <label className="checkbox-label">
-                            <span>Stars</span>
-                            <input
-                                type="checkbox"
-                                checked={starsEnabled}
-                                onChange={(e) => setStarsEnabled(e.target.checked)}
-                            />
-                        </label>
-                    </div>
-                    <div className="control-group">
-                        <label className="checkbox-label">
-                            <span>Milky Way</span>
-                            <input
-                                type="checkbox"
-                                checked={milkywayEnabled}
-                                onChange={(e) => setMilkywayEnabled(e.target.checked)}
-                            />
-                        </label>
-                    </div>
-                </>
-            )}
+                    </>
+                )}
 
-            <h3 
-                className="controls-title" 
-                onClick={() => toggleGroup('camera')}
-                style={{ cursor: 'pointer' }}
-            >
-                Camera Controls {expandedGroups.camera ? '▼' : '▶'}
-            </h3>
-            
-            {expandedGroups.camera && (
-                <div className="control-group">
-                    <label className="checkbox-label">
-                        <span>Orbit Camera</span>
-                        <input
-                            type="checkbox"
-                            checked={orbitEnabled}
-                            onChange={(e) => setOrbitEnabled(e.target.checked)}
-                        />
-                    </label>
-                </div>
-            )}
-
-            <div className="control-group">
-                <hr />
-                <button 
-                    onClick={handleReset}
-                    className="reset-button"
-                    title="Reset all settings to their default values"
+                <h3 
+                  className="controls-title" 
+                  onClick={() => toggleGroup('diskTexture')}
+                  style={{ cursor: 'pointer' }}
                 >
-                    Reset to Defaults
-                </button>
+                  <span>Textures Controls</span> {expandedGroups.diskTexture ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+                </h3>
+                
+                {expandedGroups.diskTexture && (
+                    <>
+                        <div className="control-group">
+                            <label className="select-label">
+                                <span>Disk:</span>
+                                <select 
+                                    value={selectedTexture}
+                                    onChange={handleTextureChange}
+                                    className="select-input"
+                                >
+                                    {DISK_TEXTURE_OPTIONS.map(option => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                        </div>
+                        
+                        {selectedTexture !== 'no_disk' && (
+                            <div className="control-group">
+                                <label className="slider-label">
+                                    <span>Disk Brightness:</span>
+                                    <input
+                                        type="range"
+                                        min="0.1"
+                                        max="2.0"
+                                        step="0.1"
+                                        value={diskIntensity}
+                                        onChange={(e) => setDiskIntensity(parseFloat(e.target.value))}
+                                        className="slider-input"
+                                    />
+                                    <span>{diskIntensity?.toFixed(2)}</span>
+                                </label>
+                            </div>
+                        )}
+                        
+                        <div className="control-group">
+                            <label className="checkbox-label">
+                                <span>Stars</span>
+                                <input
+                                    type="checkbox"
+                                    checked={starsEnabled}
+                                    onChange={(e) => setStarsEnabled(e.target.checked)}
+                                />
+                            </label>
+                        </div>
+                        <div className="control-group">
+                            <label className="checkbox-label">
+                                <span>Milky Way</span>
+                                <input
+                                    type="checkbox"
+                                    checked={milkywayEnabled}
+                                    onChange={(e) => setMilkywayEnabled(e.target.checked)}
+                                />
+                            </label>
+                        </div>
+                    </>
+                )}
+
+                <h3 
+                  className="controls-title" 
+                  onClick={() => toggleGroup('camera')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <span>Camera Controls</span> {expandedGroups.camera ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+                </h3>
+                
+                {expandedGroups.camera && (
+                  <div className="control-group">
+                    <label className="checkbox-label">
+                      <span>Orbit Camera</span>
+                      <input
+                        type="checkbox"
+                        checked={orbitEnabled}
+                        onChange={(e) => setOrbitEnabled(e.target.checked)}
+                      />
+                    </label>
+                  </div>
+                )}
+
+                <div className="control-group">
+                    <hr />
+                    <button 
+                        onClick={handleReset}
+                        className="reset-button"
+                        title="Reset all settings to their default values"
+                    >
+                        Reset to Defaults
+                    </button>
+                </div>
             </div>
         </div>
     );
