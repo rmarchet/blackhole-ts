@@ -2,7 +2,7 @@
 
 The simulation includes the relativistic Doppler effect, which shifts the observed frequency and intensity of light due to the relative motion between the observer and the emitting material (e.g., the accretion disk).
 
-**Relativistic Doppler Factor:**
+## Relativistic Doppler Factor
 
 The Doppler factor for a source moving with velocity $\vec{v}$ relative to the observer is:
 ```math
@@ -13,7 +13,7 @@ where:
 - $\vec{n}$ is the direction from the source to the observer (unit vector)
 - $\vec{v}$ is the velocity of the emitting material (in units where $c = 1$)
 
-**Observed Frequency and Intensity:**
+## Observed Frequency and Intensity
 - The observed frequency is shifted by the Doppler factor:
 ```math
 \nu_{\text{obs}} = D \; \nu_{\text{emit}}
