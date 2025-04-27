@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
 /**
  * Options for the useLocalStorage hook
@@ -29,47 +29,47 @@ export function useLocalStorage<T>(
   initialValue: T, 
   options: LocalStorageOptions = {}
 ): [T, (value: T) => void] {
-  const { reloadOnChange = false, reloadDelay = 100 } = options;
+  const { reloadOnChange = false, reloadDelay = 100 } = options
   
   // Initialize state from localStorage or use the initial value
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      const item = localStorage.getItem(key)
+      return item ? JSON.parse(item) : initialValue
     } catch (error) {
-      console.error(`Error reading from localStorage: ${error}`);
-      return initialValue;
+      console.error(`Error reading from localStorage: ${error}`)
+      return initialValue
     }
-  });
+  })
 
   // Update localStorage when state changes
   useEffect(() => {
     try {
-      localStorage.setItem(key, JSON.stringify(storedValue));
+      localStorage.setItem(key, JSON.stringify(storedValue))
     } catch (error) {
-      console.error(`Error writing to localStorage: ${error}`);
+      console.error(`Error writing to localStorage: ${error}`)
     }
-  }, [key, storedValue]);
+  }, [key, storedValue])
 
   // Function to update the state and localStorage
   const setValue = (value: T) => {
     try {
       // Allow value to be a function so we have the same API as useState
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
+      const valueToStore = value instanceof Function ? value(storedValue) : value
+      setStoredValue(valueToStore)
       
       // Reload the page if requested
       if (reloadOnChange) {
         setTimeout(() => {
-          window.location.reload();
-        }, reloadDelay);
+          window.location.reload()
+        }, reloadDelay)
       }
     } catch (error) {
-      console.error(`Error updating localStorage: ${error}`);
+      console.error(`Error updating localStorage: ${error}`)
     }
-  };
+  }
 
-  return [storedValue, setValue];
+  return [storedValue, setValue]
 }
 
 /**
@@ -84,7 +84,7 @@ export function useLocalStorageBoolean(
   initialValue: boolean, 
   options: LocalStorageOptions = {}
 ): [boolean, (value: boolean) => void] {
-  return useLocalStorage<boolean>(key, initialValue, options);
+  return useLocalStorage<boolean>(key, initialValue, options)
 }
 
 /**
@@ -99,7 +99,7 @@ export function useLocalStorageString(
   initialValue: string, 
   options: LocalStorageOptions = {}
 ): [string, (value: string) => void] {
-  return useLocalStorage<string>(key, initialValue, options);
+  return useLocalStorage<string>(key, initialValue, options)
 }
 
 /**
@@ -114,5 +114,5 @@ export function useLocalStorageNumber(
   initialValue: number, 
   options: LocalStorageOptions = {}
 ): [number, (value: number) => void] {
-  return useLocalStorage<number>(key, initialValue, options);
+  return useLocalStorage<number>(key, initialValue, options)
 } 

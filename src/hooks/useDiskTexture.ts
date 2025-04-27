@@ -1,5 +1,5 @@
-import { useLocalStorageString } from './useLocalStorage';
-import { DISK_TEXTURES } from '../constants/textures';
+import { useLocalStorageString } from './useLocalStorage'
+import { DISK_TEXTURES } from '../constants/textures'
 
 export function useDiskTexture() {
   // Use the generic localStorage hook for string values with page reload enabled
@@ -9,16 +9,16 @@ export function useDiskTexture() {
     {
       reloadOnChange: true,
       reloadDelay: 100,
-  });
+    })
   
   // Helper function to check if we're using stripes texture
-  const useStripes = selectedTexture === DISK_TEXTURES.RED_PURPLE_STRIPES.value;
+  const useStripes = selectedTexture === DISK_TEXTURES.RED_PURPLE_STRIPES.value
   
   // Helper function to check if we're using no texture (blackbody)
-  const useBlackbody = selectedTexture === DISK_TEXTURES.NONE.value;
+  const useBlackbody = selectedTexture === DISK_TEXTURES.NONE.value
   
   // Helper function to check if we're hiding the disk completely
-  const hideDisk = selectedTexture === DISK_TEXTURES.NO_DISK.value;
+  const hideDisk = selectedTexture === DISK_TEXTURES.NO_DISK.value
   
   return {
     selectedTexture,
@@ -26,5 +26,5 @@ export function useDiskTexture() {
     useStripes,
     useBlackbody,
     hideDisk,
-  };
+  }
 } 

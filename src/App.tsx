@@ -1,6 +1,6 @@
-import { Scene } from './components/Scene';
-import { Controls } from './components/Controls';
-import './App.css';
+import { Scene } from './components/Scene'
+import { Controls } from './components/Controls'
+import './App.css'
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
       <Scene />
       <Controls />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

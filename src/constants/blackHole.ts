@@ -2,7 +2,7 @@
 export const BACKGROUND = {
   DEFAULT_INTENSITY: 0.38,
   MIN_INTENSITY: 0.005
-} as const;
+} as const
 
 // Black hole settings
 export const BLACK_HOLE = {
@@ -11,7 +11,7 @@ export const BLACK_HOLE = {
     MAX: 0.998,  // Maximum spin parameter (a*) for a Kerr black hole
     DEFAULT: 0.5
   }
-} as const;
+} as const
 
 // Camera settings
 export const CAMERA = {
@@ -28,7 +28,7 @@ export const CAMERA = {
     Y: 1,
     Z: 10
   }
-} as const;
+} as const
 
 export const UNIFORMS = {
   TIME: 0.25,
@@ -46,7 +46,7 @@ export const QUALITY = {
     segments: 32,
     stepSize: 0.12
   }
-} as const;
+} as const
 
 // Type definition for quality settings
 export type QualitySettings = typeof QUALITY.HIGH | typeof QUALITY.LOW;
@@ -82,4 +82,4 @@ export const DEFAULTS = {
     ROTATION: BLACK_HOLE.ROTATION.DEFAULT,
     RELATIVISTIC_JET: false,
   }
-} as const;
+} as const

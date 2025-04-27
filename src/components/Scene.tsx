@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
-import { BlackHole } from './BlackHole';
+import { useEffect } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
+import { BlackHole } from './BlackHole'
 import {
   CAMERA_POSITION,
   CAMERA_FOV,
@@ -10,24 +10,24 @@ import {
   CAMERA_FAR,
   TILTED_UP_VECTOR,
   ORBIT_CONTROLS_CONFIG
-} from '../constants/scene';
+} from '../constants/scene'
 
 // Camera setup component to handle initial camera position and orientation
 function CameraSetup() {
-  const { camera } = useThree();
+  const { camera } = useThree()
   
   useEffect(() => {
     // Set initial camera position
-    camera.position.set(...CAMERA_POSITION);
+    camera.position.set(...CAMERA_POSITION)
     
     // Set the camera's up vector to the tilted vector
-    camera.up.copy(TILTED_UP_VECTOR);
+    camera.up.copy(TILTED_UP_VECTOR)
     
     // Make sure the camera is looking at the center
-    camera.lookAt(0, 0, 0);
-  }, [camera]);
+    camera.lookAt(0, 0, 0)
+  }, [camera])
   
-  return null;
+  return null
 }
 
 export const Scene = () => {
@@ -49,5 +49,5 @@ export const Scene = () => {
       <OrbitControls {...ORBIT_CONTROLS_CONFIG} />
       <BlackHole />
     </Canvas>
-  );
+  )
 } 
