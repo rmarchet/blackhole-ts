@@ -187,3 +187,9 @@
 .controls-container::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
 }
+
+/* Temporarily hide bloom controls since it's not working */
+.bloom-controls-title,
+.bloom-controls {
+  display: none;
+}

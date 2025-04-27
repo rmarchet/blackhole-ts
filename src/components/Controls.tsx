@@ -177,7 +177,7 @@ export function Controls() {
         )}
 
         <h3 
-          className="controls-title" 
+          className="controls-title bloom-controls-title" 
           onClick={() => toggleGroup('bloom')}
           style={{ cursor: 'pointer' }}
         >
@@ -185,7 +185,7 @@ export function Controls() {
         </h3>
                 
         {expandedGroups.bloom && (
-          <>
+          <div className='bloom-controls'>
             <div className="control-group">
               <label className="checkbox-label">
                 <span>Bloom</span>
@@ -248,7 +248,7 @@ export function Controls() {
                 </div>
               </>
             )}
-          </>
+          </div>
         )}
 
         <h3 

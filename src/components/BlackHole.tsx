@@ -269,13 +269,16 @@ export function BlackHole() {
       }
 
       // Enforce camera distance limits
-      const distance = camera.position.length()
-      if (distance > CAMERA.DISTANCE.MAX) {
-        const scale = CAMERA.DISTANCE.MAX / distance
-        camera.position.multiplyScalar(scale)
-      } else if (distance < CAMERA.DISTANCE.MIN) {
-        const scale = CAMERA.DISTANCE.MIN / distance
-        camera.position.multiplyScalar(scale)
+      // Only apply distance limits when not in orbit mode
+      if (!orbitEnabled) {
+        const distance = camera.position.length()
+        if (distance > CAMERA.DISTANCE.MAX) {
+          const scale = CAMERA.DISTANCE.MAX / distance
+          camera.position.multiplyScalar(scale)
+        } else if (distance < CAMERA.DISTANCE.MIN) {
+          const scale = CAMERA.DISTANCE.MIN / distance
+          camera.position.multiplyScalar(scale)
+        }
       }
         
       // Update camera uniforms

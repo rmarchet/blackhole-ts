@@ -21,9 +21,9 @@ export const TILTED_UP_VECTOR = new THREE.Vector3(
 
 // Orbit controls constants
 export const ORBIT_CONTROLS_CONFIG = {
-  enablePan: false,
-  minDistance: 5,
-  maxDistance: 50,
+  enablePan: true,
+  minDistance: 4,
+  maxDistance: 30,
   rotateSpeed: 0.65,
   zoomSpeed: 0.5,
 } as const

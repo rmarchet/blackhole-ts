@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
@@ -31,6 +31,9 @@ function CameraSetup() {
 }
 
 export const Scene = () => {
+  // Create a ref for the OrbitControls
+  const controlsRef = useRef(null)
+  
   return (
     <Canvas
       className='canvas'
@@ -46,7 +49,10 @@ export const Scene = () => {
       }}
     >
       <CameraSetup />
-      <OrbitControls {...ORBIT_CONTROLS_CONFIG} />
+      <OrbitControls 
+        ref={controlsRef}
+        {...ORBIT_CONTROLS_CONFIG} 
+      />
       <BlackHole />
     </Canvas>
   )

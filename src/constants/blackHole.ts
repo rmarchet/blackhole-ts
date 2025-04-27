@@ -16,7 +16,7 @@ export const BLACK_HOLE = {
 // Camera settings
 export const CAMERA = {
   ORBIT: {
-    RADIUS: 15,
+    RADIUS: 8,
     SPEED: 0.2
   },
   DISTANCE: {
