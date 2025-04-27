@@ -2,6 +2,8 @@
 
 The simulation models relativistic jets as narrow, high-speed outflows of plasma ejected from the regions near the black hole's poles. The jet's appearance is shaped by both the geometry of the Kerr black hole and relativistic effects.
 
+<img src='images/relativistic-M87-jets.jpg' alt='Relativistic jet' />
+
 ## Jet Launch Region
 
 The base of the jet is set at the event horizon radius at the pole:

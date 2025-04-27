@@ -2,6 +2,8 @@
 
 The **photon ring** is a bright, thin ring of light that appears around a black hole's shadow. It is formed by photons that orbit the black hole multiple times before escaping to a distant observer, due to the extreme curvature of spacetime.
 
+<img src='images/photon-ring.jpg' alt='Photon ring' />
+
 ## Photon Sphere
 
 The photon ring is closely related to the **photon sphere**—the spherical region where gravity is strong enough that photons can travel in unstable circular orbits.

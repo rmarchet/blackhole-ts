@@ -6,7 +6,7 @@ The accretion disk around a black hole is a flattened, rotating structure of gas
 
 ## Disk Geometry
 
-- The disk is typically modeled as a thin, equatorial ring in the $x$-$z$ plane (perpendicular to the spin axis).
+- The disk is typically modeled as a thin, equatorial ring in the $x-$z plane (perpendicular to the spin axis).
 - The disk extends from an inner radius $r_{\text{in}}$ to an outer radius $r_{\text{out}}$.
 
 ## Inner Edge: ISCO (Innermost Stable Circular Orbit)
