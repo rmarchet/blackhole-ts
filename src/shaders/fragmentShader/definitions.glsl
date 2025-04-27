@@ -2,6 +2,7 @@
 #define DEG_TO_RAD (PI/180.0)
 #define ROT_Y(a) mat3(1, 0, 0, 0, cos(a), sin(a), 0, -sin(a), cos(a))
 #define ROT_Z(a) mat3(cos(a), -sin(a), 0, sin(a), cos(a), 0, 0, 0, 1)
+#define ROTATION_SCALE_DOWN 0.285
 
 // Disk parameters
 const float DISK_IN = 2.0;

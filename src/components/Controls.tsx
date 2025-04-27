@@ -85,7 +85,7 @@ export function Controls() {
     );
 
     const [jetEnabled, setJetEnabled] = useLocalStorageBoolean(
-        'jetEnabled', true, { reloadOnChange: true }
+        'jetEnabled', DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET, { reloadOnChange: true }
     );
 
     const [expandedGroups, setExpandedGroups] = useState<ExpandedGroups>(DEFAULT_EXPANDED_GROUPS);
@@ -122,7 +122,7 @@ export function Controls() {
         setThreshold(SLIDER_RANGES.bloomThreshold.default);
         setRadius(SLIDER_RANGES.bloomRadius.default);
         setBlackHoleRotation(DEFAULTS.BLACK_HOLE.ROTATION);
-        setJetEnabled(true);
+        setJetEnabled(DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET);
         
         // Reset expanded groups state
         setExpandedGroups(DEFAULT_EXPANDED_GROUPS);

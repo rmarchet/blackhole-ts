@@ -2,49 +2,6 @@
 // https://gamedev.stackexchange.com/questions/93032/what-causes-this-distortion-in-my-perspective-projection-at-steep-view-angles
 // for reference
 
-// Helper function for Kerr metric calculations
-vec2 calculateKerrEffects(vec3 pos, float a) {
-    float r = length(pos);
-    float r2 = r * r;
-    float a2 = a * a;
-    float cos_theta = pos.y / r;
-    float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
-    float rho2 = r2 + a2 * cos_theta * cos_theta;
-    
-    // Return omega and radial correction factor
-    float omega = -2.0 * a * r / (rho2 * (rho2 + 2.0 * r));
-    float radial_factor = 1.0 + a2 * cos_theta * cos_theta / (r2 * r2);
-    return vec2(omega, radial_factor);
-}
-
-// Calculate acceleration based on black hole rotation
-vec3 calculateAcceleration(vec3 pos, vec3 vel, float h2) {
-    float r = length(pos);
-    float r2 = r * r;
-    
-    // Use original Schwarzschild model when not rotating
-    if (black_hole_rotation == 0.0) {
-        return -1.5 * h2 * pos / (r2 * r2 * sqrt(r2));
-    }
-    
-    // Kerr model for rotating black hole
-    float a = black_hole_rotation * 0.2;  // Scale down rotation effect
-    vec2 kerr_effects = calculateKerrEffects(pos, a);
-    float omega = kerr_effects.x;
-    float radial_factor = kerr_effects.y;
-    
-    // Radial acceleration with Kerr corrections
-    vec3 accel = -1.5 * h2 * pos / (r2 * r2 * sqrt(r2));
-    accel *= radial_factor;
-    
-    // Add frame dragging acceleration
-    vec3 phi_dir = vec3(-pos.x, 0.0, -pos.z);
-    float phi_dot = length(phi_dir) > 0.0 ? dot(vel, phi_dir) / length(phi_dir) : 0.0;
-    accel += cross(vec3(0.0, 1.0, 0.0), pos) * omega * phi_dot * 0.5;
-    
-    return accel;
-}
-
 void main()	{
   // z towards you, y towards up, x towards your left
   float uvfov = tan(fov / 2.0 * DEG_TO_RAD);
@@ -88,9 +45,9 @@ void main()	{
   float distance = length(point);
 
   // Jet parameters based on black_hole_rotation
-  float jet_intensity = black_hole_rotation * 2.0;
-  float jet_radius = 0.1 + 0.15 * black_hole_rotation;
-  float jet_length = 3.0 + 8.0 * black_hole_rotation;
+  float jet_intensity = black_hole_rotation * 1.5 * ROTATION_SCALE_DOWN;
+  float jet_radius = 0.1 + 0.16 * black_hole_rotation * ROTATION_SCALE_DOWN;
+  float jet_length = 3.0 + 8.0 * black_hole_rotation * ROTATION_SCALE_DOWN;
 
   // Leapfrog geodesic
   for (int i=0; i<NSTEPS;i++){ 
@@ -115,13 +72,24 @@ void main()	{
 
     // --- Relativistic Jet ---
     if (jet_enabled && black_hole_rotation > 0.1) {
-      float jet_r = length(point.xz);
-      float jet_y = abs(point.y);
-      float local_radius = jet_radius * mix(0.7, 1.2, jet_y / jet_length);
-      if (jet_y < jet_length && jet_r < local_radius && length(point) > 1.0) {
-          float core = 1.0 - smoothstep(0.0, local_radius * 0.5, jet_r); // bright core
-          float edge = 1.0 - smoothstep(local_radius * 0.7, local_radius, jet_r); // soft edge
-          float t = jet_y / jet_length;
+      float a = black_hole_rotation * ROTATION_SCALE_DOWN;
+      float r_plus = 1.0 + sqrt(1.0 - a * a);
+      float base_radius = 0.05; // base radius at the pole
+      float cone_angle = 0.08; // controls the opening angle of the cone
+      // North pole jet
+      float north_dist = length(vec2(point.x, point.z));
+      float north_y = point.y - r_plus;
+      float north_jet_radius = base_radius + cone_angle * max(north_y, 0.0);
+      // South pole jet
+      float south_dist = length(vec2(point.x, point.z));
+      float south_y = point.y + r_plus;
+      float south_jet_radius = base_radius + cone_angle * max(-south_y, 0.0);
+      bool in_north_jet = (north_dist < north_jet_radius) && (north_y > 0.0) && (north_y < jet_length);
+      bool in_south_jet = (south_dist < south_jet_radius) && (south_y < 0.0) && (-south_y < jet_length);
+      if (in_north_jet || in_south_jet) {
+          float t = in_north_jet ? (north_y / jet_length) : (-south_y / jet_length);
+          float core = 1.1 - smoothstep(0.0, north_jet_radius * 0.5, in_north_jet ? north_dist : south_dist); // bright core
+          float edge = 1.0 - smoothstep(north_jet_radius * 0.8, north_jet_radius, in_north_jet ? north_dist : south_dist); // soft edge
           vec3 jet_color = mix(vec3(0.3, 0.7, 1.0), vec3(1.0, 1.0, 1.0), t); // blue to white
           jet_color = mix(jet_color, vec3(1.0, 0.7, 0.5), pow(t, 2.0)); // white to orange/red at tip
           float intensity = jet_intensity * core * (1.0 - t) + jet_intensity * 0.3 * edge * t;
@@ -144,7 +112,7 @@ void main()	{
           // Calculate disk velocity with frame dragging for rotating black hole
           vec3 disk_velocity = vec3(-intersection.x, 0.0, intersection.z)/sqrt(2.0*(r-1.0))/(r*r);
           if (black_hole_rotation > 0.0) {
-            float a = black_hole_rotation * 0.1;
+            float a = black_hole_rotation * ROTATION_SCALE_DOWN;
             vec2 kerr_effects = calculateKerrEffects(intersection, a);
             float omega = kerr_effects.x;
             disk_velocity += cross(vec3(0.0, 1.0, 0.0), intersection) * omega * 0.8;

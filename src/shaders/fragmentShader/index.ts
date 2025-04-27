@@ -1,5 +1,6 @@
 import definitions from './definitions.glsl?raw';
 import utils from './utils.glsl?raw';
+import kerr from './kerr.glsl?raw';
 import temperature from './temperature.glsl?raw';
 import bloom from './bloom.glsl?raw';
 import glow from './glow.glsl?raw';
@@ -9,6 +10,7 @@ import main from './main.glsl?raw';
 export const fragmentShader = `
 ${definitions}
 ${utils}
+${kerr}
 ${temperature}
 ${bloom}
 ${glow}

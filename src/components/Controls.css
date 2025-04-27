@@ -50,11 +50,16 @@
   padding: 2px 3px;
   border-radius: 3px;
   color: var(--title-color);
+  cursor: pointer;
   border: 1px solid #ffffff44;
   background-color: #ffffff22;
   font-weight: normal;
   margin-right: auto;
   margin-left: 8px;
+}
+.reset-button:hover {
+  background-color: #000;
+  border-color: #000;
 }
 
 .controls-content {

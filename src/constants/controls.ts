@@ -4,7 +4,7 @@ export const DEFAULT_EXPANDED_GROUPS = {
   diskTexture: true,
   effects: true,
   camera: false,
-  performance: true
+  performance: false
 };
 
 // Bloom controls
@@ -43,7 +43,7 @@ export const CAMERA_DEFAULTS = {
 
 // Performance controls
 export const PERFORMANCE_DEFAULTS = {
-  enabled: false
+  enabled: true
 };
 
 // Slider ranges
