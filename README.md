@@ -103,10 +103,11 @@ yarn dev
 ## How It Works
 
 The visualization uses advanced ray marching techniques in GLSL shaders to simulate:
-- [Gravitational lensing](Docs/Gravitational%20Lensing.md) around the black hole using geodesic calculations
-- Accretion disk with realistic [Doppler and relativistic effects](Docs/Doppler%20Shift.md)
+- [Gravitational lensing](docs/Gravitational%20Lensing.md) around the black hole using geodesic calculations
+- Accretion disk with realistic [Doppler and relativistic effects](docs/Doppler%20Shift.md)
 - Photon ring at the event horizon
 - Relativistic beaming and light aberration
+- [Relativistic Jet](docs/Relativistic%20Jet.md) for a rotating black hole
 - Star field background with proper parallax
 - Post-processing effects for enhanced visual quality
 
