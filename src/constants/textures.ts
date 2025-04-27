@@ -30,7 +30,7 @@ export const DISK_TEXTURES = {
   NATURAL: { value: 'accretion_disk_natural.png', label: 'Natural' },
   RED_STRIPES: { value: 'accretion_disk_red_white.png', label: 'Red stripes' },
   RED_PURPLE_STRIPES: { value: 'accretion_disk_red_white_purple.png', label: 'Red-Purple stripes' },
-  GRID: { value: 'accretion_disk_grid.png', label: 'Grid' },
+  GRID: { value: 'accretion_disk_grid.png', label: 'Checkboard' },
   THERMAL: { value: 'accretion_disk_thermal.png', label: 'Thermal' },
   ARROWS: { value: 'accretion_disk_arrows.png', label: 'Arrows' },
   CHAOTIC: { value: 'accretion_disk_chaotic.png', label: 'Chaotic' },

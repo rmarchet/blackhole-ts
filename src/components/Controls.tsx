@@ -103,7 +103,7 @@ export function Controls() {
         setSelectedTexture(e.target.value);
     };
 
-    const handleReset = (e) => {
+    const handleReset = (e: React.MouseEvent) => {
         e.stopPropagation()
         // Clear all localStorage values
         localStorage.clear();

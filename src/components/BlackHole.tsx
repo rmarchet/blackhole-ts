@@ -1,7 +1,10 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree, extend } from '@react-three/fiber';
-import { ShaderMaterial, Mesh, BackSide, Vector3, Vector2, TextureLoader, NearestFilter, LinearFilter, ClampToEdgeWrapping, WebGLRenderer, Scene, Camera } from 'three';
+import {
+  ShaderMaterial, Mesh, BackSide, Vector3, Vector2, TextureLoader, 
+  NearestFilter, LinearFilter, ClampToEdgeWrapping,
+} from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -22,23 +25,6 @@ import {
 // Extend R3F with post-processing components
 extend({ EffectComposer, RenderPass, UnrealBloomPass });
 
-// Augment R3F types
-declare module '@react-three/fiber' {
-  interface ThreeElements {
-    effectComposer: React.JSX.IntrinsicElements['mesh'] & {
-      args: [WebGLRenderer];
-    };
-    renderPass: React.JSX.IntrinsicElements['mesh'] & {
-      args: [Scene, Camera];
-      attach?: string;
-    };
-    unrealBloomPass: React.JSX.IntrinsicElements['mesh'] & {
-      args: [Vector2 | [number, number], number, number, number];
-      attach?: string;
-    };
-  }
-}
-
 export function BlackHole() {
     const meshRef = useRef<Mesh>(null);
     const materialRef = useRef<ShaderMaterial>(null);
@@ -52,7 +38,6 @@ export function BlackHole() {
     
     // Use useLocalStorage for controls with defaults
     const [beamingEnabled] = useLocalStorage<boolean>('beamingEnabled', DEFAULTS.BEAMING.ENABLED);
-    const [bloomEnabled] = useLocalStorage<boolean>('bloomEnabled', DEFAULTS.BLOOM.ENABLED);
     const [starsEnabled] = useLocalStorage<boolean>('starsEnabled', DEFAULTS.STARS.ENABLED);
     const [milkywayEnabled] = useLocalStorage<boolean>('milkywayEnabled', DEFAULTS.MILKYWAY.ENABLED);
     const [orbitEnabled] = useLocalStorage<boolean>('orbitEnabled', DEFAULTS.ORBIT.ENABLED);
@@ -89,6 +74,7 @@ export function BlackHole() {
       camera.lookAt(0, 0, 0);
 
       // Add zoom limits to the camera
+      // @ts-expect-error ignore typecheck on camera
       camera.addEventListener('change', () => {
         const distance = camera.position.length();
         if (distance > CAMERA.DISTANCE.MAX) {
@@ -327,11 +313,6 @@ export function BlackHole() {
           <renderPass 
             attach="passes" 
             args={[scene, camera]}
-          />
-          <unrealBloomPass 
-            attach="passes"
-            args={[new Vector2(gl.domElement.width, gl.domElement.height), intensity, radius, threshold]}
-            enabled={bloomEnabled}
           />
         </effectComposer>
       </>

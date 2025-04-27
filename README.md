@@ -108,7 +108,7 @@ The visualization uses advanced ray marching techniques in GLSL shaders to simul
 - Photon ring at the event horizon
 - Relativistic beaming and light aberration
 - [Relativistic Jet](docs/Relativistic%20Jet.md) for a rotating black hole
-- Star field background with proper parallax
+- Star field and Milky Way background with proper parallax
 - Post-processing effects for enhanced visual quality
 
 
