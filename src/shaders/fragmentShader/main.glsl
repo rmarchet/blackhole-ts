@@ -36,8 +36,7 @@ void main()	{
   float ray_doppler_factor = ray_gamma * (1.0 + dot(ray_dir, -cam_vel));
     
   float ray_intensity = 1.0;
-  if (beaming)
-    ray_intensity /= pow(ray_doppler_factor , 3.0);
+  if (beaming) ray_intensity /= pow(ray_doppler_factor , 3.0);
   
   vec3 oldpoint; 
   float pointsqr;
@@ -123,7 +122,7 @@ void main()	{
           float disk_gamma = 1.0/sqrt(1.0-dot(disk_velocity, disk_velocity));
           
           // Calculate the Doppler factor relative to the viewer's perspective
-          float disk_doppler_factor = disk_gamma*(1.0+dot(ray_dir, disk_velocity)); 
+          float disk_doppler_factor = disk_gamma * (1.0+dot(ray_dir, disk_velocity));
           
           if (use_disk_texture){
             // texture
@@ -144,15 +143,16 @@ void main()	{
               // Calculate how perpendicular our view is to the disk plane
               float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
               
-              float angle_threshold = 0.2618;  // 15 degrees in radians
-              float angle_blend = smoothstep(angle_threshold, angle_threshold * 0.8, disk_angle_factor);
+              float angle_threshold = 0.4648; // angle to start showing the doppler shift
+              float angle_blend_smootness = angle_threshold * 0.30; // smooth the effect over the disk texture
+              float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
               
               if (disk_angle_factor < angle_threshold) {
                 // Invert the side factor to put blue shift on the left
                 float smooth_side = 1.0 - smoothstep(-0.8, 0.8, side_factor);  // Wider transition
                 
                 // Calculate shift with smoother transition
-                float shift = (smooth_side - 0.5) * 2.0;
+                float shift = (smooth_side - 0.5) * 1.0;
                 shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;  // Smoother center transition
                 
                 // Apply color shifts (blue on left, red on right)
@@ -160,7 +160,15 @@ void main()	{
                 disk_color.b *= 1.0 + max(shift, 0.0) * 2.4;   // Reduced blue intensity
                 
                 // Smooth intensity transition
-                float intensity = shift > 0.0 ? mix(1.0, 1.7, shift) : mix(1.0, 0.6, -shift);  // Reduced intensity range
+                float positive_shift_mix_factor = 0.75;
+                float negative_shift_mix_factor = 0.75;
+                if (beaming) {
+                  positive_shift_mix_factor = 1.85;
+                  negative_shift_mix_factor = -0.75;
+                }
+                float intensity = shift > 0.0 
+                  ? mix(1.0, positive_shift_mix_factor, shift)
+                  : mix(1.0, negative_shift_mix_factor, -shift);  // Reduced intensity range
                 disk_color.rgb *= intensity;
               }
             }
@@ -193,8 +201,7 @@ void main()	{
             vec3 disk_color = temp_to_color(disk_temperature);
             float disk_alpha = clamp(dot(disk_color,disk_color)/3.0,0.0,1.0);
             
-            if (beaming)
-              disk_alpha /= pow(disk_doppler_factor,3.0);
+            if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
               
             // Apply glow to disk color
             vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
