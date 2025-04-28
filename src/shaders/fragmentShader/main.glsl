@@ -13,10 +13,9 @@ void main()	{
   vec3 nright = normalize(cross(forward, up));
   up = cross(nright, forward);
   // generate ray
-  vec3 pixel_pos = cam_pos + forward +
-                 nright*uv.x*uvfov+ up*uv.y*uvfov;
+  vec3 pixel_pos = cam_pos + forward + nright*uv.x*uvfov+ up*uv.y*uvfov;
   
-  vec3 ray_dir = normalize(pixel_pos - cam_pos); // 
+  vec3 ray_dir = normalize(pixel_pos - cam_pos);
 
   // light aberration alters ray path 
   if (lorentz_transform)
@@ -59,7 +58,7 @@ void main()	{
     
     // distance from origin
     distance = length(point);
-    if ( distance < 0.0) break;
+    if (distance < 0.0) break;
     
     bool horizon_mask = distance < 1.0 && length(oldpoint) > 1.0;// intersecting eventhorizon
     // does it enter event horizon?
@@ -103,7 +102,7 @@ void main()	{
       if (oldpoint.y * point.y < 0.0){
         // move along y axis
         float lambda = - oldpoint.y/velocity.y;
-        vec3 intersection = oldpoint + lambda*velocity;
+        vec3 intersection = oldpoint + lambda * velocity;
         float r = length(intersection);//dot(intersection,intersection);
         if (DISK_IN <= r&&r <= DISK_IN+DISK_WIDTH ){
           float phi = atan(intersection.x, intersection.z);
@@ -117,16 +116,16 @@ void main()	{
             disk_velocity += cross(vec3(0.0, 1.0, 0.0), intersection) * omega * 0.8;
           }
           
-          phi -= time;//length(r);
+          phi -= time;
           phi = mod(phi , PI*2.0);
-          float disk_gamma = 1.0/sqrt(1.0-dot(disk_velocity, disk_velocity));
+          float disk_gamma = 1.0 / sqrt(1.0 - dot(disk_velocity, disk_velocity));
           
           // Calculate the Doppler factor relative to the viewer's perspective
-          float disk_doppler_factor = disk_gamma * (1.0+dot(ray_dir, disk_velocity));
+          float disk_doppler_factor = disk_gamma * (1.0 + dot(ray_dir, disk_velocity));
           
           if (use_disk_texture){
             // texture
-            vec2 tex_coord = vec2(mod(phi,2.0*PI)/(2.0*PI),1.0-(r-DISK_IN)/(DISK_WIDTH));
+            vec2 tex_coord = vec2(mod(phi, 2.0 * PI) / (2.0 * PI), 1.0 - (r - DISK_IN) / (DISK_WIDTH));
             vec4 disk_color = texture2D(disk_texture, tex_coord);
             
             // Apply Doppler shift to the color
@@ -174,17 +173,16 @@ void main()	{
             }
             
             disk_color /= (ray_doppler_factor * disk_doppler_factor);
-            float disk_alpha = clamp(dot(disk_color,disk_color)/4.5,0.0,1.0);
+            float disk_alpha = clamp(dot(disk_color, disk_color) / 4.5, 0.0, 1.0);
 
-            if (beaming)
-              disk_alpha /= pow(disk_doppler_factor,3.0);
+            if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
             
             // Apply glow to disk color
             vec3 glowing_color = applyGlow(disk_color.rgb * disk_intensity, glow_intensity);
             color += vec4(glowing_color, disk_alpha);
           } else {
             // use blackbody 
-            float disk_temperature = 10000.0*(pow(r/DISK_IN, -3.0/4.0));
+            float disk_temperature = 10000.0 * (pow(r / DISK_IN, -3.0 / 4.0));
             
             // Apply Doppler shift to temperature
             if (doppler_shift) {
@@ -199,7 +197,7 @@ void main()	{
             }
 
             vec3 disk_color = temp_to_color(disk_temperature);
-            float disk_alpha = clamp(dot(disk_color,disk_color)/3.0,0.0,1.0);
+            float disk_alpha = clamp(dot(disk_color, disk_color) / 3.0, 0.0, 1.0);
             
             if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
               
@@ -212,28 +210,9 @@ void main()	{
     }
   }
   
-  if (distance > 1.0){
+  if (distance > 1.0) {
     ray_dir = normalize(point - oldpoint);
-    vec2 tex_coord = to_spherical(ray_dir * ROT_Z(45.0 * DEG_TO_RAD));
-    // taken from source
-    // red = temp
-    // green = lum
-    // blue = vel 
-    vec4 star_color = texture2D(star_texture, tex_coord);
-    if (show_stars && star_color.g > 0.0){
-      float star_temperature = (MIN_TEMPERATURE + TEMPERATURE_RANGE*star_color.r);
-      // arbitrarily sets background stars' velocity for random shifts
-      float star_velocity = star_color.b - 0.5;
-      float star_doppler_factor = sqrt((1.0+star_velocity)/(1.0-star_velocity));
-      if (doppler_shift)
-        star_temperature /= ray_doppler_factor*star_doppler_factor;
-      
-      color += vec4(temp_to_color(star_temperature),1.0)* star_color.g;
-    }
-
-    // Apply the background texture with increased intensity
-    float bg_strength = bg_intensity > 0.0 ? bg_intensity : DEFAULT_BG_INTENSITY;
-    color += texture2D(bg_texture, tex_coord) * bg_strength;
+    color += applyStarsAndBackground(ray_dir, ray_doppler_factor);
   }
-  gl_FragColor = color*ray_intensity;
+  gl_FragColor = color * ray_intensity;
 } 
