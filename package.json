@@ -4,6 +4,7 @@
   "version": "0.2.1",
   "author": "Roberto Marchetti <rmarchet@gmail.com>",
   "type": "module",
+  "keywords": ["blackhole", "astronomy", "simulation", "shader", "raytracing", "glsl", "threejs", "vitejs", "react"],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
