@@ -89,6 +89,18 @@ export function Controls() {
 
   const [expandedGroups, setExpandedGroups] = useState<ExpandedGroups>(DEFAULT_EXPANDED_GROUPS)
 
+  // Add localStorage for disk inner radius and width
+  const [diskIn, setDiskIn] = useLocalStorage<number>(
+    'diskIn',
+    SLIDER_RANGES.diskInnerRadius.default,
+    { reloadOnChange: true }
+  )
+  const [diskWidth, setDiskWidth] = useLocalStorage<number>(
+    'diskWidth', 
+    SLIDER_RANGES.diskWidth.default, 
+    { reloadOnChange: true },
+  )
+
   const toggleGroup = (groupName: ControlGroup) => {
     setExpandedGroups(prev => ({
       ...prev,
@@ -155,7 +167,6 @@ export function Controls() {
         <h3 
           className="controls-title" 
           onClick={() => toggleGroup('performance')}
-          style={{ cursor: 'pointer' }}
         >
           <span>Performance Controls</span> {expandedGroups.performance ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
         </h3>
@@ -179,7 +190,6 @@ export function Controls() {
         <h3 
           className="controls-title bloom-controls-title" 
           onClick={() => toggleGroup('bloom')}
-          style={{ cursor: 'pointer' }}
         >
           <span>Bloom Controls</span> {expandedGroups.bloom ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
         </h3>
@@ -254,7 +264,6 @@ export function Controls() {
         <h3 
           className="controls-title" 
           onClick={() => toggleGroup('effects')}
-          style={{ cursor: 'pointer' }}
         >
           <span>Effects Controls</span> {expandedGroups.effects ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
         </h3>
@@ -353,13 +362,74 @@ export function Controls() {
 
         <h3 
           className="controls-title" 
-          onClick={() => toggleGroup('diskTexture')}
-          style={{ cursor: 'pointer' }}
+          onClick={() => toggleGroup('disk')}
         >
-          <span>Textures Controls</span> {expandedGroups.diskTexture ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+          <span>Disk Controls</span> {expandedGroups.disk ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+        </h3>
+        {
+          expandedGroups.disk && (
+            <>                        
+              {selectedTexture !== 'no_disk' && (
+                <div className="control-group">
+                  <label className="slider-label">
+                    <span>Disk Brightness:</span>
+                    <input
+                      type="range"
+                      min="0.1"
+                      max="2.0"
+                      step="0.1"
+                      value={diskIntensity}
+                      onChange={(e) => setDiskIntensity(parseFloat(e.target.value))}
+                      className="slider-input"
+                    />
+                    <span>{diskIntensity?.toFixed(2)}</span>
+                  </label>
+                </div>
+              )}
+
+              {/* Disk geometry controls */}
+              <div className="control-group">
+                <label className="slider-label">
+                  <span>Disk Inner Radius:</span>
+                  <input
+                    type="range"
+                    min={SLIDER_RANGES.diskInnerRadius.min}
+                    max={SLIDER_RANGES.diskInnerRadius.max}
+                    step={SLIDER_RANGES.diskInnerRadius.step}
+                    value={diskIn}
+                    onChange={e => setDiskIn(parseFloat(e.target.value))}
+                    className="slider-input"
+                  />
+                  <span>{diskIn.toFixed(2)}</span>
+                </label>
+              </div>
+              <div className="control-group">
+                <label className="slider-label">
+                  <span>Disk Width:</span>
+                  <input
+                    type="range"
+                    min={SLIDER_RANGES.diskWidth.min}
+                    max={SLIDER_RANGES.diskWidth.max}
+                    step={SLIDER_RANGES.diskWidth.step}
+                    value={diskWidth}
+                    onChange={e => setDiskWidth(parseFloat(e.target.value))}
+                    className="slider-input"
+                  />
+                  <span>{diskWidth.toFixed(2)}</span>
+                </label>
+              </div>
+            </>
+          )
+        }
+
+        <h3 
+          className="controls-title" 
+          onClick={() => toggleGroup('textures')}
+        >
+          <span>Textures Controls</span> {expandedGroups.textures ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
         </h3>
                 
-        {expandedGroups.diskTexture && (
+        {expandedGroups.textures && (
           <>
             <div className="control-group">
               <label className="select-label">
@@ -377,24 +447,6 @@ export function Controls() {
                 </select>
               </label>
             </div>
-                        
-            {selectedTexture !== 'no_disk' && (
-              <div className="control-group">
-                <label className="slider-label">
-                  <span>Disk Brightness:</span>
-                  <input
-                    type="range"
-                    min="0.1"
-                    max="2.0"
-                    step="0.1"
-                    value={diskIntensity}
-                    onChange={(e) => setDiskIntensity(parseFloat(e.target.value))}
-                    className="slider-input"
-                  />
-                  <span>{diskIntensity?.toFixed(2)}</span>
-                </label>
-              </div>
-            )}
                         
             <div className="control-group">
               <label className="checkbox-label">
@@ -422,7 +474,6 @@ export function Controls() {
         <h3 
           className="controls-title" 
           onClick={() => toggleGroup('camera')}
-          style={{ cursor: 'pointer' }}
         >
           <span>Camera Controls</span> {expandedGroups.camera ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
         </h3>

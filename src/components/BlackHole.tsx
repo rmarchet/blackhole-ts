@@ -46,6 +46,10 @@ export function BlackHole() {
   const [blackHoleRotation] = useLocalStorage<number>('blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION)
   const [jetEnabled] = useLocalStorage<boolean>('jetEnabled', DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET)
 
+  // Add localStorage hooks for disk geometry
+  const [diskIn] = useLocalStorage<number>('diskIn', 2.45)
+  const [diskWidth] = useLocalStorage<number>('diskWidth', 4.0)
+
   // Load textures
   const textures = useMemo(() => {
     const textureLoader = new TextureLoader()
@@ -109,6 +113,9 @@ export function BlackHole() {
     glow_intensity: { value: glowEnabled ? glowIntensity : 0.0 },
     black_hole_rotation: { value: blackHoleRotation },
     jet_enabled: { value: jetEnabled },
+    // Add disk geometry uniforms
+    DISK_IN: { value: diskIn },
+    DISK_WIDTH: { value: diskWidth },
   }
 
   // Define shader material with textures
@@ -235,6 +242,15 @@ export function BlackHole() {
       materialRef.current.needsUpdate = true
     }
   }, [jetEnabled])
+
+  // Update disk geometry uniforms when values change
+  useEffect(() => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.DISK_IN.value = diskIn
+      materialRef.current.uniforms.DISK_WIDTH.value = diskWidth
+      materialRef.current.needsUpdate = true
+    }
+  }, [diskIn, diskWidth])
 
   // Update shader when performance mode changes
   useEffect(() => {

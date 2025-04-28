@@ -5,6 +5,7 @@ import diskRedWhiteUrl from '../assets/accretion_disk_red_white.png'
 import diskRedWhitePurpleUrl from '../assets/accretion_disk_red_white_purple.png'
 import diskArrowsUrl from '../assets/accretion_disk_arrows.png'
 import diskYellowUrl from '../assets/accretion_disk_yellow.png'
+import diskBrightUrl from '../assets/accretion_disk_bright.png'
 import diskBlueUrl from '../assets/accretion_disk_blue.png'
 import diskGridUrl from '../assets/accretion_disk_grid.png'
 import diskGridlinesUrl from '../assets/accretion_disk_gridlines.png'
@@ -19,6 +20,7 @@ export const IMAGES = {
   diskRedWhitePurpleUrl,
   diskArrowsUrl,
   diskYellowUrl,
+  diskBrightUrl,
   diskBlueUrl,
   diskGridUrl,
   diskGridlinesUrl,
@@ -39,6 +41,7 @@ export const DISK_TEXTURES = {
   CHAOTIC: { value: 'accretion_disk_chaotic.png', label: 'Turbulence' },
   YELLOW: { value: 'accretion_disk_yellow.png', label: 'Yellow' },
   BLUE: { value: 'accretion_disk_blue.png', label: 'Blue' },
+  BRIGHT: { value: 'accretion_disk_bright.png', label: 'Bright' },
 }
 
 // Map texture selection to URL
@@ -51,6 +54,7 @@ export const DISK_TEXTURE_MAP = {
   [DISK_TEXTURES.ARROWS.value]: diskArrowsUrl,
   [DISK_TEXTURES.YELLOW.value]: diskYellowUrl,
   [DISK_TEXTURES.BLUE.value]: diskBlueUrl,
+  [DISK_TEXTURES.BRIGHT.value]: diskBrightUrl,
   [DISK_TEXTURES.CHAOTIC.value]: diskChaoticUrl,
   [DISK_TEXTURES.THERMAL.value]: diskThermalUrl,
 }

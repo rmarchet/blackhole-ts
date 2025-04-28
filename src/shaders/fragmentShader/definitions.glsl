@@ -5,8 +5,8 @@
 #define ROTATION_SCALE_DOWN 0.285
 
 // Disk parameters
-const float DISK_IN = 2.0;
-const float DISK_WIDTH = 4.0;
+uniform float DISK_IN;
+uniform float DISK_WIDTH;
 
 // Temperature parameters
 const float MIN_TEMPERATURE = 1000.0;

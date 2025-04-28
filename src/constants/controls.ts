@@ -1,10 +1,11 @@
 // Control groups default state
 export const DEFAULT_EXPANDED_GROUPS = {
+  performance: false,
   bloom: false,
-  diskTexture: true,
   effects: true,
+  disk: true,
+  textures: true,
   camera: false,
-  performance: false
 }
 
 // Bloom controls
@@ -51,16 +52,12 @@ export const SLIDER_RANGES = {
   bloomIntensity: { min: 0, max: 2, step: 0.1, default: 1.0 },
   bloomThreshold: { min: 0, max: 1, step: 0.1, default: 0.5 },
   bloomRadius: { min: 0, max: 2, step: 0.1, default: 1.0 },
-  diskIntensity: { min: 0.1, max: 2.0, step: 0.1, default: 1.0 }
+  diskIntensity: { min: 0.1, max: 2.0, step: 0.1, default: 1.0 },
+  diskInnerRadius: { min: 2.0, max: 3.5, step: 0.1, default: 2.45 },
+  diskWidth: { min: 2.0, max: 6.5, step: 0.1, default: 4.0 },
 } as const
 
-// Type definitions for type safety
-export type ControlGroup = 'bloom' | 'diskTexture' | 'effects' | 'camera' | 'performance';
+// Type definitions for collapsible sections
+export type ExpandedGroups = typeof DEFAULT_EXPANDED_GROUPS
 
-export interface ExpandedGroups {
-  bloom: boolean;
-  diskTexture: boolean;
-  effects: boolean;
-  camera: boolean;
-  performance: boolean;
-}
+export type ControlGroup = keyof ExpandedGroups
