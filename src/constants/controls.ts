@@ -1,3 +1,5 @@
+import { DEFAULTS } from './blackHole'
+
 // Control groups default state
 export const DEFAULT_EXPANDED_GROUPS = {
   performance: false,
@@ -10,41 +12,41 @@ export const DEFAULT_EXPANDED_GROUPS = {
 
 // Bloom controls
 export const BLOOM_DEFAULTS = {
-  enabled: false,
+  enabled: DEFAULTS.BLOOM.ENABLED,
   intensity: 1.0,
   threshold: 0.5,
-  radius: 1.0
+  radius: 1.0,
 }
 
 // Glow controls
 export const GLOW_DEFAULTS = {
-  intensity: 0.6,  // 0 means disabled by default
+  intensity: DEFAULTS.GLOW.INTENSITY,  // 0 means disabled by default
   min: 0,
   max: 3,
-  step: 0.1
+  step: 0.1,
 }
 
 // Disk controls
 export const DISK_DEFAULTS = {
-  intensity: 0.7,
-  beaming: true,
-  dopplerShift: true
+  intensity: DEFAULTS.DISK.INTENSITY,
+  beaming: DEFAULTS.BEAMING.ENABLED,
+  dopplerShift: DEFAULTS.DISK.DOPPLER_SHIFT,
 }
 
 // Background controls
 export const BACKGROUND_DEFAULTS = {
-  stars: true,
-  milkyway: true,
+  stars: DEFAULTS.STARS.ENABLED,
+  milkyway: DEFAULTS.MILKYWAY.ENABLED,
 }
 
 // Camera controls
 export const CAMERA_DEFAULTS = {
-  orbit: false
+  orbit: false,
 }
 
 // Performance controls
 export const PERFORMANCE_DEFAULTS = {
-  enabled: true
+  enabled: true,
 }
 
 // Slider ranges
@@ -52,9 +54,9 @@ export const SLIDER_RANGES = {
   bloomIntensity: { min: 0, max: 2, step: 0.1, default: 1.0 },
   bloomThreshold: { min: 0, max: 1, step: 0.1, default: 0.5 },
   bloomRadius: { min: 0, max: 2, step: 0.1, default: 1.0 },
-  diskIntensity: { min: 0.1, max: 2.0, step: 0.1, default: 1.0 },
-  diskInnerRadius: { min: 2.0, max: 3.5, step: 0.1, default: 2.45 },
-  diskWidth: { min: 2.0, max: 6.5, step: 0.1, default: 4.0 },
+  diskIntensity: { min: 0.1, max: 2.0, step: 0.1, default: DEFAULTS.DISK.INTENSITY },
+  diskInnerRadius: { min: 2.0, max: 3.5, step: 0.1, default: DEFAULTS.DISK.INNER_RADIUS },
+  diskWidth: { min: 2.0, max: 6.5, step: 0.1, default: DEFAULTS.DISK.WIDTH },
 } as const
 
 // Type definitions for collapsible sections

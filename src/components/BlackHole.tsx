@@ -47,8 +47,8 @@ export function BlackHole() {
   const [jetEnabled] = useLocalStorage<boolean>('jetEnabled', DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET)
 
   // Add localStorage hooks for disk geometry
-  const [diskIn] = useLocalStorage<number>('diskIn', 2.45)
-  const [diskWidth] = useLocalStorage<number>('diskWidth', 4.0)
+  const [diskIn] = useLocalStorage<number>('diskIn', DEFAULTS.DISK.INNER_RADIUS)
+  const [diskWidth] = useLocalStorage<number>('diskWidth', DEFAULTS.DISK.WIDTH)
 
   // Load textures
   const textures = useMemo(() => {
@@ -97,7 +97,7 @@ export function BlackHole() {
 
   const uniforms = {
     time: { value: 0 },
-    fov: { value: 60.0 },
+    fov: { value: DEFAULTS.FOV },
     accretion_disk: { value: !hideDisk },
     use_disk_texture: { value: !useBlackbody },
     lorentz_transform: { value: true },

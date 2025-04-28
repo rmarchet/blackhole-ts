@@ -1,7 +1,7 @@
 // Background settings
 export const BACKGROUND = {
   DEFAULT_INTENSITY: 0.38,
-  MIN_INTENSITY: 0.005
+  MIN_INTENSITY: 0.005,
 } as const
 
 // Black hole settings
@@ -9,7 +9,7 @@ export const BLACK_HOLE = {
   ROTATION: {
     MIN: 0.0,
     MAX: 0.998,  // Maximum spin parameter (a*) for a Kerr black hole
-    DEFAULT: 0.5
+    DEFAULT: 0.5,
   }
 } as const
 
@@ -17,21 +17,21 @@ export const BLACK_HOLE = {
 export const CAMERA = {
   ORBIT: {
     RADIUS: 8,
-    SPEED: 0.2
+    SPEED: 0.2,
   },
   DISTANCE: {
     MIN: 5,
-    MAX: 15  // Maximum distance to keep black hole visible
+    MAX: 15,  // Maximum distance to keep black hole visible
   },
   INITIAL: {
     X: 0,
     Y: 1,
-    Z: 10
+    Z: 10,
   }
 } as const
 
 export const UNIFORMS = {
-  TIME: 0.25,
+  TIME: 0.20, // Animations multiplier (both orbit and accretion disk)
 }
 
 // Performance quality settings
@@ -39,47 +39,50 @@ export const QUALITY = {
   HIGH: {
     steps: 350,
     segments: 64,
-    stepSize: 0.08
+    stepSize: 0.08,
   },
   LOW: {
     steps: 150,
     segments: 32,
-    stepSize: 0.12
+    stepSize: 0.12,
   }
 } as const
 
 // Type definition for quality settings
-export type QualitySettings = typeof QUALITY.HIGH | typeof QUALITY.LOW;
+export type QualitySettings = typeof QUALITY.HIGH | typeof QUALITY.LOW
 
 // Default values for various features
 export const DEFAULTS = {
   BLOOM: {
-    ENABLED: true
+    ENABLED: false,
   },
   BEAMING: {
-    ENABLED: true
+    ENABLED: true,
   },
   STARS: {
-    ENABLED: true
+    ENABLED: true,
   },
   MILKYWAY: {
-    ENABLED: true
+    ENABLED: true,
   },
   ORBIT: {
-    ENABLED: false
+    ENABLED: false,
   },
   PERFORMANCE: {
-    ENABLED: false
+    ENABLED: true,
   },
   DISK: {
-    INTENSITY: 1.0,
-    DOPPLER_SHIFT: false
+    INTENSITY: 0.7,
+    DOPPLER_SHIFT: true,
+    INNER_RADIUS: 2.45,
+    WIDTH: 4.0,
   },
   GLOW: {
-    INTENSITY: 1.0
+    INTENSITY: 0.6,
   },
   BLACK_HOLE: {
     ROTATION: BLACK_HOLE.ROTATION.DEFAULT,
     RELATIVISTIC_JET: false,
-  }
+  },
+  FOV: 60.0,
 } as const
