@@ -1,4 +1,26 @@
 // Accretion disk calculation function
+#define DOPPLER_GRADIENT_SMOOTHNESS 0.7
+
+vec3 thermal_colormap(float t) {
+    vec3 blue = vec3(0.0, 0.0, 1.0);
+    vec3 cyan = vec3(0.0, 1.0, 1.0);
+    vec3 green = vec3(0.0, 1.0, 0.0);
+    vec3 yellow = vec3(1.0, 1.0, 0.0);
+    vec3 red = vec3(1.0, 0.0, 0.0);
+
+    // Create ultra-smooth transitions with maximum overlap
+    vec3 color = mix(blue, cyan, smoothstep(0.0, 0.4, t));
+    color = mix(color, green, smoothstep(0.2, 0.6, t));
+    
+    // First mix yellow with green
+    vec3 yellow_mix = mix(green, yellow, smoothstep(0.4, 0.7, t));
+    // Then mix that result with red
+    vec3 warm_colors = mix(yellow_mix, red, smoothstep(0.6, 1.0, t));
+    
+    // Finally blend between the cool and warm colors
+    return mix(color, warm_colors, smoothstep(0.3, 0.7, t));
+}
+
 vec4 calculateDisk(
     vec3 oldpoint,
     vec3 point,
@@ -28,6 +50,55 @@ vec4 calculateDisk(
             phi = mod(phi, PI * 2.0);
             float disk_gamma = 1.0 / sqrt(1.0 - dot(disk_velocity, disk_velocity));
             float disk_doppler_factor = disk_gamma * (1.0 + dot(normalize(intersection - cam_pos), disk_velocity));
+            
+            // Calculate base temperature - shared between thermal and blackbody modes
+            float disk_temperature = 9000.0 * (pow(r / DISK_IN, -3.0 / 4.0));
+
+            if (thermal_colormap_mode) {
+                // Apply Doppler shift to temperature
+                if (doppler_shift) {
+                    vec3 view_dir = normalize(intersection - cam_pos);
+                    vec3 camera_right = normalize(cross(cam_dir, cam_up));
+                    float side_factor = dot(view_dir, camera_right);
+                    float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
+                    
+                    float angle_threshold = 0.4648;
+                    float angle_blend_smootness = angle_threshold * 0.40;
+                    float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
+                    
+                    if (disk_angle_factor < angle_threshold) {
+                        float smooth_side = 1.0 - smoothstep(-0.7, 0.8, side_factor);
+                        float shift = (smooth_side - 0.5) * 1.0;
+                        shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;
+                        // Scale shift based on radius - stronger near inner edge
+                        float radius_factor = 1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.885, r);
+                        shift *= mix(0.6, 1.80, radius_factor);
+                        
+                        // Adjust temperature based on Doppler shift
+                        if (shift > 0.0) {
+                            disk_temperature *= 1.0 - (shift) * 2.0; // Much stronger blueshift
+                        } else {
+                            disk_temperature *= 1.0 + abs(shift) * 1.0; // Much stronger redshift
+                        }
+                    }
+                }
+
+                // Normalize temperature with wider range
+                float t = clamp((disk_temperature - 500.0) / 9500.0, 0.01, 0.99);
+                vec3 disk_color = thermal_colormap(t);
+                
+                // Apply intensity variations from Doppler beaming
+                float disk_alpha = 1.0;
+                if (beaming) {
+                  disk_alpha /= pow(disk_doppler_factor, 3.0);
+                }
+                disk_color /= (ray_doppler_factor * disk_doppler_factor);
+                
+                // Apply glow
+                vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
+                return vec4(glowing_color, disk_alpha);
+            }
+
             if (use_disk_texture) {
                 vec2 tex_coord = vec2(mod(phi, 2.0 * PI) / (2.0 * PI), 1.0 - (r - DISK_IN) / (DISK_WIDTH));
                 vec4 disk_color = texture2D(disk_texture, tex_coord);
@@ -63,7 +134,6 @@ vec4 calculateDisk(
                 vec3 glowing_color = applyGlow(disk_color.rgb * disk_intensity, glow_intensity);
                 return vec4(glowing_color, disk_alpha);
             } else {
-                float disk_temperature = 10000.0 * (pow(r / DISK_IN, -3.0 / 4.0));
                 if (doppler_shift) {
                     float doppler_factor = disk_doppler_factor;
                     if (doppler_factor < 1.0) {

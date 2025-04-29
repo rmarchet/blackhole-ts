@@ -117,6 +117,7 @@ export function BlackHole() {
     // Add disk geometry uniforms
     DISK_IN: { value: diskIn },
     DISK_WIDTH: { value: diskWidth },
+    thermal_colormap_mode: { value: selectedTexture === 'accretion_disk_thermal.png' },
   }
 
   // Define shader material with textures
@@ -263,6 +264,14 @@ export function BlackHole() {
       materialRef.current.needsUpdate = true
     }
   }, [performanceMode])
+
+  // Update thermal_colormap_mode when selectedTexture changes
+  useEffect(() => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.thermal_colormap_mode.value = selectedTexture === 'accretion_disk_thermal.png'
+      materialRef.current.needsUpdate = true
+    }
+  }, [selectedTexture])
 
   useFrame((state) => {
     if (materialRef.current) {
