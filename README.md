@@ -14,7 +14,7 @@
 - 7. [Project Structure](#ProjectStructure)
 - 8. [License](#License)
 - 9. [Acknowledgments](#Acknowledgments)
-- 10. [Docs](/rmarchet/blackhole-ts/tree/main/Docs)
+- 10. [Docs](https://github.com/rmarchet/blackhole-ts/tree/main/Docs)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
