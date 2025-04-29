@@ -1,20 +1,20 @@
 # Black Hole Visualization
 
 <!-- vscode-markdown-toc -->
-* 1. [Screenshot](#Screenshot)
-* 2. [Features](#Features)
-* 3. [Technologies Used](#TechnologiesUsed)
-* 4. [Getting Started](#GettingStarted)
-	* 4.1. [Prerequisites](#Prerequisites)
-	* 4.2. [Installation](#Installation)
-* 5. [Controls](#Controls)
-	* 5.1. [Camera Controls](#CameraControls)
-	* 5.2. [Visual Controls](#VisualControls)
-* 6. [How It Works](#HowItWorks)
-* 7. [Project Structure](#ProjectStructure)
-* 8. [License](#License)
-* 9. [Acknowledgments](#Acknowledgments)
-* 10. [Docs](./tree/main/Docs)
+- 1. [Screenshot](#Screenshot)
+- 2. [Features](#Features)
+- 3. [Technologies Used](#TechnologiesUsed)
+- 4. [Getting Started](#GettingStarted)
+  - 4.1. [Prerequisites](#Prerequisites)
+  - 4.2. [Installation](#Installation)
+- 5. [Controls](#Controls)
+	- 5.1. [Camera Controls](#CameraControls)
+	- 5.2. [Visual Controls](#VisualControls)
+- 6. [How It Works](#HowItWorks)
+- 7. [Project Structure](#ProjectStructure)
+- 8. [License](#License)
+- 9. [Acknowledgments](#Acknowledgments)
+- 10. [Docs](./tree/main/Docs)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
@@ -22,10 +22,9 @@
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
 
-
-<img src="public/blackhole.svg" width="128" alt="Black Hole Visualization" align="left" style="margin: 0 16px 8px 0" />
-A real-time 3D visualization of a black hole using React, Three.js, and GLSL shaders. This project simulates gravitational lensing, accretion disk effects, and relativistic beaming around a black hole, inspired by scientifically accurate black hole renderings.
-
+<br />
+<img src="public/blackhole.svg" width="118" alt="Black Hole Visualization" align="left" style="margin: 0 20px 8px 0" />
+A real-time 3D visualization of a black hole using React, Three.js, and GLSL shaders. This project simulates gravitational lensing, accretion disk effects, and relativistic beaming around a black hole, inspired by scientifically accurate black hole renderings.<br /><br /><br /><br />
 
 ##  1. <a name='Screenshot'></a>Screenshot
 
