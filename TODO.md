@@ -49,5 +49,5 @@ There are several areas for improvement.
   - [ ] Consider adding early ray termination conditions
   - [ ] Could add level-of-detail (LOD) for distant views
   - [x] Move the jet rendering logic to a separate GLSL file
-  - [ ] Move the disk rendering logic to a separate file
+  - [x] Move the disk rendering logic to a separate file
 - [ ] Better constants organisation

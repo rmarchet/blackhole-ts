@@ -7,6 +7,7 @@ import glow from './glow.glsl?raw'
 import main from './main.glsl?raw'
 import background from './background.glsl?raw'
 import jet from './jet.glsl?raw'
+import disk from './disk.glsl?raw'
 
 // Concatenate all shader files in the correct order
 export const fragmentShader = `
@@ -18,5 +19,6 @@ ${bloom}
 ${glow}
 ${background}
 ${jet}
+${disk}
 ${main}
 ` 
