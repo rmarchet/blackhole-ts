@@ -30,8 +30,9 @@ There are several areas for improvement.
 - [ ] Add gravitational time dilation visualization effects
 
 ## Textures
-- [ ] Fix the "Grid lines" texture
-- [ ] Fix the "Thermal" simulation with realistic temperature colors
+- [ ] Fix the "Grid lines" texture (thicker when on far side of disk)
+- [x] Fix the "Thermal" simulation with realistic temperature colors
+  - [ ] Realistic thermal simulation when relativistic beaming is enabled
 - [ ] Fix the "No texture" Doppler effect
 
 # Controls

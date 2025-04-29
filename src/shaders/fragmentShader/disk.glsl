@@ -1,7 +1,7 @@
 // Accretion disk calculation function
 #define DOPPLER_GRADIENT_SMOOTHNESS 0.7
 
-vec3 thermal_colormap(float t) {
+vec3 thermal_colormap(float t, bool beaming) {
     vec3 blue = vec3(0.0, 0.0, 1.0);
     vec3 cyan = vec3(0.0, 1.0, 1.0);
     vec3 green = vec3(0.0, 1.0, 0.0);
@@ -16,7 +16,10 @@ vec3 thermal_colormap(float t) {
     vec3 yellow_mix = mix(green, yellow, smoothstep(0.4, 0.7, t));
     // Then mix that result with red
     vec3 warm_colors = mix(yellow_mix, red, smoothstep(0.6, 1.0, t));
-    
+
+    if (beaming) {
+    return mix(color, warm_colors, smoothstep(0.3, 0.7, t));
+    }
     // Finally blend between the cool and warm colors
     return mix(color, warm_colors, smoothstep(0.3, 0.7, t));
 }
@@ -57,45 +60,46 @@ vec4 calculateDisk(
             if (thermal_colormap_mode) {
                 // Apply Doppler shift to temperature
                 if (doppler_shift) {
-                    vec3 view_dir = normalize(intersection - cam_pos);
-                    vec3 camera_right = normalize(cross(cam_dir, cam_up));
-                    float side_factor = dot(view_dir, camera_right);
-                    float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
-                    
-                    float angle_threshold = 0.4648;
-                    float angle_blend_smootness = angle_threshold * 0.40;
-                    float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
-                    
-                    if (disk_angle_factor < angle_threshold) {
-                        float smooth_side = 1.0 - smoothstep(-0.7, 0.8, side_factor);
-                        float shift = (smooth_side - 0.5) * 1.0;
-                        shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;
-                        // Scale shift based on radius - stronger near inner edge
-                        float radius_factor = 1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.885, r);
-                        shift *= mix(0.6, 1.80, radius_factor);
-                        
-                        // Adjust temperature based on Doppler shift
-                        if (shift > 0.0) {
-                            disk_temperature *= 1.0 - (shift) * 2.0; // Much stronger blueshift
-                        } else {
-                            disk_temperature *= 1.0 + abs(shift) * 1.0; // Much stronger redshift
-                        }
+                  vec3 view_dir = normalize(intersection - cam_pos);
+                  vec3 camera_right = normalize(cross(cam_dir, cam_up));
+                  float side_factor = dot(view_dir, camera_right);
+                  float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
+                  
+                  float angle_threshold = 0.4648;
+                  float angle_blend_smootness = angle_threshold * 0.40;
+                  float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
+                  
+                  if (disk_angle_factor < angle_threshold) {
+                    float smooth_side = 1.0 - smoothstep(-0.7, 0.8, side_factor);
+                    float shift = (smooth_side - 0.5) * 1.0;
+                    shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;
+                    // Scale shift based on radius - stronger near inner edge
+                    float radius_factor = 1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.885, r);
+                    shift *= mix(0.6, 1.80, radius_factor);
+                     
+                    // Adjust temperature based on Doppler shift
+                    if (shift > 0.0) {
+                        disk_temperature *= 1.0 - (shift) * 2.0; // Much stronger blueshift
+                    } else {
+                        disk_temperature *= 1.0 + abs(shift) * 1.0; // Much stronger redshift
                     }
+                  }
                 }
 
                 // Normalize temperature with wider range
                 float t = clamp((disk_temperature - 500.0) / 9500.0, 0.01, 0.99);
-                vec3 disk_color = thermal_colormap(t);
+                vec3 disk_color = thermal_colormap(t, false);
                 
                 // Apply intensity variations from Doppler beaming
                 float disk_alpha = 1.0;
-                if (beaming) {
-                  disk_alpha /= pow(disk_doppler_factor, 3.0);
-                }
                 disk_color /= (ray_doppler_factor * disk_doppler_factor);
-                
                 // Apply glow
                 vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
+                
+                if (beaming) {
+                  disk_color = thermal_colormap(clamp((disk_temperature - 210.0) / 7000.0, 0.1, 0.99), true);
+                  return vec4(disk_color, disk_alpha);
+                }
                 return vec4(glowing_color, disk_alpha);
             }
 
