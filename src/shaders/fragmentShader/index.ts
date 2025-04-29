@@ -6,6 +6,7 @@ import bloom from './bloom.glsl?raw'
 import glow from './glow.glsl?raw'
 import main from './main.glsl?raw'
 import background from './background.glsl?raw'
+import jet from './jet.glsl?raw'
 
 // Concatenate all shader files in the correct order
 export const fragmentShader = `
@@ -16,5 +17,6 @@ ${temperature}
 ${bloom}
 ${glow}
 ${background}
+${jet}
 ${main}
 ` 
