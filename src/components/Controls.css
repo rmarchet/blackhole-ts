@@ -191,5 +191,5 @@
 /* Temporarily hide bloom controls since it's not working */
 .bloom-controls-title,
 .bloom-controls {
-  display: none;
+  /* display: none;*/ 
 }

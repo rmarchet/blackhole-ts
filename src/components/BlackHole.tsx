@@ -113,6 +113,7 @@ export function BlackHole() {
     glow_intensity: { value: glowEnabled ? glowIntensity : 0.0 },
     black_hole_rotation: { value: blackHoleRotation },
     jet_enabled: { value: jetEnabled },
+    orbit_enabled: { value: orbitEnabled },
     // Add disk geometry uniforms
     DISK_IN: { value: diskIn },
     DISK_WIDTH: { value: diskWidth },

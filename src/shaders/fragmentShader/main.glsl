@@ -116,8 +116,10 @@ void main()	{
             disk_velocity += cross(vec3(0.0, 1.0, 0.0), intersection) * omega * 0.8;
           }
           
-          phi -= time;
-          phi = mod(phi , PI*2.0);
+          // Adjust rotation speed based on whether orbit is enabled
+          float rotation_speed = orbit_enabled ? 2.0 : 1.0;  // Faster rotation when orbiting
+          phi -= time * rotation_speed;
+          phi = mod(phi, PI * 2.0);
           float disk_gamma = 1.0 / sqrt(1.0 - dot(disk_velocity, disk_velocity));
           
           // Calculate the Doppler factor relative to the viewer's perspective

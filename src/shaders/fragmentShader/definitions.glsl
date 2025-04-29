@@ -30,6 +30,7 @@ uniform bool lorentz_transform;
 uniform bool beaming;
 uniform bool show_stars;
 uniform bool show_milkyway;
+uniform bool orbit_enabled;
 uniform float bg_intensity;
 uniform float disk_intensity;
 // Add bloom parameter uniforms

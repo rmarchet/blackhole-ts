@@ -13,7 +13,7 @@ import {
 } from '../constants/scene'
 
 // Camera setup component to handle initial camera position and orientation
-function CameraSetup() {
+const CameraSetup = () => {
   const { camera } = useThree()
   
   useEffect(() => {
