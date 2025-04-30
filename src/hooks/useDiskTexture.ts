@@ -1,13 +1,14 @@
-import { useLocalStorageString } from './useLocalStorage'
+import { useLocalStorage } from './useLocalStorage'
 import { DISK_TEXTURES } from '../constants/textures'
+import { DISK_DEFAULTS, RELOAD_CONTROLS_ON_CHANGE } from '../constants/controls'
 
 export function useDiskTexture() {
   // Use the generic localStorage hook for string values with page reload enabled
-  const [selectedTexture, setSelectedTexture] = useLocalStorageString(
+  const [selectedTexture, setSelectedTexture] = useLocalStorage<string>(
     'diskTexture', 
-    DISK_TEXTURES.NATURAL.value, 
+    DISK_DEFAULTS.diskTexture, 
     {
-      reloadOnChange: true,
+      reloadOnChange: RELOAD_CONTROLS_ON_CHANGE,
       reloadDelay: 100,
     })
   

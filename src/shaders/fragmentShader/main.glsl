@@ -3,6 +3,9 @@
 // for reference
 
 void main()	{
+  vec4 black = vec4(0.0,0.0,0.0,1.0);
+  vec4 white = vec4(1.0,1.0,1.0,1.0);
+
   // z towards you, y towards up, x towards your left
   float uvfov = tan(fov / 2.0 * DEG_TO_RAD);
   vec2 uv = square_frame(resolution); 
@@ -58,7 +61,6 @@ void main()	{
     bool horizon_mask = distance < 1.0 && length(oldpoint) > 1.0;// intersecting eventhorizon
     // does it enter event horizon?
     if (horizon_mask) {
-      vec4 black = vec4(0.0,0.0,0.0,1.0);
       color += black;
       break;
     }
@@ -69,10 +71,12 @@ void main()	{
     
     // Check if the disk should be rendered
     if (accretion_disk) {
-    vec4 disk_result = calculateDisk(
-      oldpoint, point, velocity, cam_pos, cam_dir, cam_up, ray_doppler_factor  
-    );
-    color += disk_result;
+      vec4 disk_result = calculateDisk(
+        oldpoint, point, velocity, cam_pos, cam_dir, cam_up, ray_doppler_factor  
+      );
+      color += disk_result;
+      // color = mix(color, disk_result, disk_result.a);
+      // color = mix(color, white, disk_result.a);
     }
     // --- End Accretion Disk ---
   }

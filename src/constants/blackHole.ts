@@ -9,7 +9,7 @@ export const BLACK_HOLE = {
   ROTATION: {
     MIN: 0.0,
     MAX: 0.998,  // Maximum spin parameter (a*) for a Kerr black hole
-    DEFAULT: 0.7,
+    DEFAULT: 0.8,
   }
 } as const
 
@@ -55,6 +55,9 @@ export type QualitySettings = typeof QUALITY.HIGH | typeof QUALITY.LOW
 export const DEFAULTS = {
   BLOOM: {
     ENABLED: true,
+    INTENSITY: 1.5,
+    THRESHOLD: 0.3,
+    RADIUS: 0.8,
   },
   BEAMING: {
     ENABLED: true,
@@ -72,13 +75,13 @@ export const DEFAULTS = {
     ENABLED: true,
   },
   DISK: {
-    INTENSITY: 0.7,
+    INTENSITY: 1.0,
     DOPPLER_SHIFT: true,
     INNER_RADIUS: 2.45,
     WIDTH: 4.0,
   },
   GLOW: {
-    INTENSITY: 0.6,
+    INTENSITY: 0.1,
   },
   BLACK_HOLE: {
     ROTATION: BLACK_HOLE.ROTATION.DEFAULT,

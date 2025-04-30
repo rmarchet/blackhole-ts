@@ -1,11 +1,17 @@
 import { useLocalStorage } from './useLocalStorage'
+import { RELOAD_CONTROLS_ON_CHANGE } from '../constants/controls'
+import { DEFAULTS } from '../constants/blackHole'
 
 export function useBloom() {
   // Use the generic localStorage hooks for all bloom settings
-  const [enabled, setEnabled] = useLocalStorage<boolean>('bloomEnabled', true, { reloadOnChange: true })
-  const [intensity, setIntensity] = useLocalStorage<number>('bloomIntensity', 1.5, { reloadOnChange: true })
-  const [threshold, setThreshold] = useLocalStorage<number>('bloomThreshold', 0.3, { reloadOnChange: true })
-  const [radius, setRadius] = useLocalStorage<number>('bloomRadius', 0.8, { reloadOnChange: true })
+  const [enabled, setEnabled] = useLocalStorage<boolean>('bloomEnabled', DEFAULTS.BLOOM.ENABLED, 
+    { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE })
+  const [intensity, setIntensity] = useLocalStorage<number>('bloomIntensity', DEFAULTS.BLOOM.INTENSITY,
+    { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE })
+  const [threshold, setThreshold] = useLocalStorage<number>('bloomThreshold', DEFAULTS.BLOOM.THRESHOLD, 
+    { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE })
+  const [radius, setRadius] = useLocalStorage<number>('bloomRadius', DEFAULTS.BLOOM.RADIUS, 
+    { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE })
 
   return {
     enabled,

@@ -9,6 +9,8 @@
   --border-color: rgba(255, 255, 255, 0.23);
   --title-color: #ffffff;
   --input-gap: 8px;
+  --accent-color: #a84df6;
+  --accent-color-dark: #a84df699;
 }
 
 .controls-container {
@@ -45,19 +47,29 @@
   padding: 8px 10px;
 }
 
-.reset-button {
+.collapse-button span {
+  margin-right: auto;
+}
+
+.controls-footer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 10px;
+}
+
+.button {
   font-size: 11px;
   padding: 2px 3px;
   border-radius: 3px;
   color: var(--title-color);
   cursor: pointer;
-  border: 1px solid #ffffff44;
-  background-color: #ffffff22;
+  border: 1px solid var(--accent-color);
+  background-color: var(--accent-color-dark);
   font-weight: normal;
-  margin-right: auto;
-  margin-left: 8px;
 }
-.reset-button:hover {
+.button:hover {
   background-color: #000;
   border-color: #000;
 }
@@ -72,11 +84,34 @@
   overflow: hidden;
 }
 
+.controls-content input[type="checkbox"] {
+  appearance: none;
+  border: 1px solid var(--border-color);
+  color: #fff;
+  border-radius: 2px;
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+}
+
+
+.controls-content input[type="checkbox"]:checked {
+  background-color: var(--accent-color-dark);
+  border: 1px solid var(--accent-color);
+  line-height: 8px;
+  text-align: center;
+}
+
+.controls-content input[type="checkbox"]:checked:before {
+  content: '✕';
+  font-size: 10px;
+}
+
 .controls-title {
   font-size: 12px;
   margin: 0 0;
   background: var(--title-background);
-  padding: 8px 10px;
+  padding: 7px 10px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -90,7 +125,7 @@
 }
 
 .control-group {
-  padding: 2px 9px;
+  padding: 1px 9px;
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
   overflow: hidden;
 }
@@ -129,6 +164,11 @@
   flex: 1;
   margin-top: 0;
   width: var(--slider-width);
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  accent-color: #a84df622;
+  border-radius: 0;
 }
 
 .select-label {
@@ -188,8 +228,7 @@
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* Temporarily hide bloom controls since it's not working */
-.bloom-controls-title,
-.bloom-controls {
-  /* display: none;*/ 
+#controls-tooltip {
+  background-color: white;
+  color: black;
 }

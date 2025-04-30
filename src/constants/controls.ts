@@ -1,4 +1,5 @@
 import { DEFAULTS } from './blackHole'
+import { DISK_TEXTURES } from './textures'
 
 // Control groups default state
 export const DEFAULT_EXPANDED_GROUPS = {
@@ -13,9 +14,9 @@ export const DEFAULT_EXPANDED_GROUPS = {
 // Bloom controls
 export const BLOOM_DEFAULTS = {
   enabled: DEFAULTS.BLOOM.ENABLED,
-  intensity: 1.0,
-  threshold: 0.5,
-  radius: 1.0,
+  intensity: DEFAULTS.BLOOM.INTENSITY,
+  threshold: DEFAULTS.BLOOM.THRESHOLD,
+  radius: DEFAULTS.BLOOM.RADIUS,
 }
 
 // Glow controls
@@ -31,6 +32,7 @@ export const DISK_DEFAULTS = {
   intensity: DEFAULTS.DISK.INTENSITY,
   beaming: DEFAULTS.BEAMING.ENABLED,
   dopplerShift: DEFAULTS.DISK.DOPPLER_SHIFT,
+  diskTexture: DISK_TEXTURES.CHAOTIC.value,
 }
 
 // Background controls
@@ -58,6 +60,10 @@ export const SLIDER_RANGES = {
   diskInnerRadius: { min: 2.0, max: 3.5, step: 0.1, default: DEFAULTS.DISK.INNER_RADIUS },
   diskWidth: { min: 2.0, max: 6.5, step: 0.1, default: DEFAULTS.DISK.WIDTH },
 } as const
+
+export const LOCAL_STORAGE_PREFIX = 'blackhole'
+
+export const RELOAD_CONTROLS_ON_CHANGE = false
 
 // Type definitions for collapsible sections
 export type ExpandedGroups = typeof DEFAULT_EXPANDED_GROUPS

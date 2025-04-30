@@ -20,7 +20,7 @@ import {
   UNIFORMS,
 } from '../constants/blackHole'
 
-export function BlackHole() {
+export const BlackHole = () => {
   const meshRef = useRef<Mesh>(null)
   const materialRef = useRef<ShaderMaterial>(null)
   const { camera, gl, scene } = useThree()
@@ -111,7 +111,7 @@ export function BlackHole() {
     // Add disk geometry uniforms
     DISK_IN: { value: diskIn },
     DISK_WIDTH: { value: diskWidth },
-    thermal_colormap_mode: { value: selectedTexture === 'accretion_disk_thermal.png' },
+    thermal_colormap_mode: { value: selectedTexture === DISK_TEXTURES.THERMAL.value },
   }
 
   // Define shader material with textures
@@ -135,8 +135,8 @@ export function BlackHole() {
         disk_texture: { value: textures.diskTexture },
         ...uniforms,
       },
-      transparent: true,
-      depthWrite: false,
+      transparent: false,
+      depthWrite: true,
       side: BackSide
     })
   }
@@ -328,9 +328,9 @@ export function BlackHole() {
         
       <EffectComposer>
         <Bloom 
-          intensity={enabled ? intensity:0}
+          intensity={enabled ? intensity : 0}
           luminanceThreshold={threshold}
-          luminanceSmoothing={0.9}
+          luminanceSmoothing={0.99}
           radius={radius}
           mipmapBlur={true}
           kernelSize={1}

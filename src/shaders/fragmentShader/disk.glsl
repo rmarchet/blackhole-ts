@@ -43,10 +43,10 @@ vec4 calculateDisk(
             // Calculate disk velocity with frame dragging for rotating black hole
             vec3 disk_velocity = vec3(-intersection.x, 0.0, intersection.z) / sqrt(2.0 * (r - 1.0)) / (r * r);
             if (black_hole_rotation > 0.0) {
-                float a = black_hole_rotation * ROTATION_SCALE_DOWN;
-                vec2 kerr_effects = calculateKerrEffects(intersection, a);
-                float omega = kerr_effects.x;
-                disk_velocity += cross(vec3(0.0, 1.0, 0.0), intersection) * omega * 0.8;
+              float a = black_hole_rotation * ROTATION_SCALE_DOWN;
+              vec2 kerr_effects = calculateKerrEffects(intersection, a);
+              float omega = kerr_effects.x;
+              disk_velocity += cross(vec3(0.0, 1.0, 0.0), intersection) * omega * 0.8;
             }
             float rotation_speed = orbit_enabled ? 2.0 : 1.0;
             phi -= time * rotation_speed;
@@ -104,39 +104,42 @@ vec4 calculateDisk(
             }
 
             if (use_disk_texture) {
-                vec2 tex_coord = vec2(mod(phi, 2.0 * PI) / (2.0 * PI), 1.0 - (r - DISK_IN) / (DISK_WIDTH));
-                vec4 disk_color = texture2D(disk_texture, tex_coord);
-                if (doppler_shift) {
-                    vec3 view_dir = normalize(intersection - cam_pos);
-                    vec3 camera_right = normalize(cross(cam_dir, cam_up));
-                    float side_factor = dot(view_dir, camera_right);
-                    float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
-                    float angle_threshold = 0.4648;
-                    float angle_blend_smootness = angle_threshold * 0.30;
-                    float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
-                    if (disk_angle_factor < angle_threshold) {
-                        float smooth_side = 1.0 - smoothstep(-0.8, 0.8, side_factor);
-                        float shift = (smooth_side - 0.55) * 1.0;
-                        shift *= smoothstep(0.0, 0.14, abs(shift)) * angle_blend;
-                        disk_color.r *= 1.0 + max(-shift, 0.0) * 2.9;
-                        disk_color.b *= 1.0 + max(shift, 0.0) * 2.8;
-                        float positive_shift_mix_factor = 0.75;
-                        float negative_shift_mix_factor = 0.75;
-                        if (beaming) {
-                          positive_shift_mix_factor = 1.95;
-                          negative_shift_mix_factor = -0.985;
-                        }
-                        float intensity = shift > 0.0 
-                            ? mix(1.0, positive_shift_mix_factor, shift)
-                            : mix(1.0, negative_shift_mix_factor, -shift);
-                        disk_color.rgb *= intensity;
-                    }
-                }
-                disk_color /= (ray_doppler_factor * disk_doppler_factor);
-                float disk_alpha = clamp(dot(disk_color.rgb, disk_color.rgb) / 4.5, 0.0, 1.0);
-                if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
-                vec3 glowing_color = applyGlow(disk_color.rgb * disk_intensity, glow_intensity);
-                return vec4(glowing_color, disk_alpha);
+              vec2 tex_coord = vec2(
+                mod(phi, 2.0 * PI) / (2.0 * PI),
+                1.0 - (r - DISK_IN) / (DISK_WIDTH)
+              );
+              vec4 disk_color = texture2D(disk_texture, tex_coord);
+              if (doppler_shift) {
+                  vec3 view_dir = normalize(intersection - cam_pos);
+                  vec3 camera_right = normalize(cross(cam_dir, cam_up));
+                  float side_factor = dot(view_dir, camera_right);
+                  float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
+                  float angle_threshold = 0.4648;
+                  float angle_blend_smootness = angle_threshold * 0.30;
+                  float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
+                  if (disk_angle_factor < angle_threshold) {
+                      float smooth_side = 1.0 - smoothstep(-0.8, 0.8, side_factor);
+                      float shift = (smooth_side - 0.55) * 1.0;
+                      shift *= smoothstep(0.0, 0.14, abs(shift)) * angle_blend;
+                      disk_color.r *= 1.0 + max(-shift, 0.0) * 2.9;
+                      disk_color.b *= 1.0 + max(shift, 0.0) * 2.8;
+                      float positive_shift_mix_factor = 0.75;
+                      float negative_shift_mix_factor = 0.75;
+                      if (beaming) {
+                        positive_shift_mix_factor = 1.95;
+                        negative_shift_mix_factor = -0.985;
+                      }
+                      float intensity = shift > 0.0 
+                          ? mix(1.0, positive_shift_mix_factor, shift)
+                          : mix(1.0, negative_shift_mix_factor, -shift);
+                      disk_color.rgb *= intensity;
+                  }
+              }
+              disk_color /= (ray_doppler_factor * disk_doppler_factor);
+              float disk_alpha = clamp(dot(disk_color.rgb, disk_color.rgb) / 4.5, 0.0, 1.0);
+              if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
+              vec3 glowing_color = applyGlow(disk_color.rgb * disk_intensity, glow_intensity);
+              return vec4(glowing_color, disk_alpha);
             } else {
                 if (doppler_shift) {
                     float doppler_factor = disk_doppler_factor;

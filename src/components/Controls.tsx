@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Tooltip } from 'react-tooltip'
 import { useBloom } from '../hooks/useBloom'
 import { useDiskTexture } from '../hooks/useDiskTexture'
 import { DISK_TEXTURE_OPTIONS } from '../constants/textures'
@@ -13,11 +14,12 @@ import {
   CAMERA_DEFAULTS,
   PERFORMANCE_DEFAULTS,
   SLIDER_RANGES,
+  RELOAD_CONTROLS_ON_CHANGE,
   type ControlGroup,
   type ExpandedGroups
 } from '../constants/controls'
 import { BLACK_HOLE, DEFAULTS } from '../constants/blackHole'
-import './Controls.css'
+import '../styles/Controls.css'
 
 const COLLAPSE_ICONS = {
   DOWN: '▼',
@@ -25,7 +27,13 @@ const COLLAPSE_ICONS = {
   RIGHT: '▶',
 }
 
-export function Controls() {
+interface ControlsProps {
+  onFullScreen: () => void
+}
+
+export const Controls = ({
+  onFullScreen,
+}: ControlsProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const {
     intensity,
@@ -37,13 +45,13 @@ export function Controls() {
   } = useBloom()
 
   const [glowIntensity, setGlowIntensity] = useLocalStorage<number>(
-    'glowIntensity', GLOW_DEFAULTS.intensity, { reloadOnChange: true }
+    'glowIntensity', GLOW_DEFAULTS.intensity, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const glowEnabled = glowIntensity > 0
 
   const [bloomEnabled, setBloomEnabled] = useLocalStorage<boolean>(
-    'bloomEnabled', BLOOM_DEFAULTS.enabled, { reloadOnChange: true }
+    'bloomEnabled', BLOOM_DEFAULTS.enabled, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const {
@@ -52,39 +60,39 @@ export function Controls() {
   } = useDiskTexture()
 
   const [beamingEnabled, setBeamingEnabled] = useLocalStorage<boolean>(
-    'beamingEnabled', DISK_DEFAULTS.beaming, { reloadOnChange: true }
+    'beamingEnabled', DISK_DEFAULTS.beaming, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [starsEnabled, setStarsEnabled] = useLocalStorage<boolean>(
-    'starsEnabled', BACKGROUND_DEFAULTS.stars, { reloadOnChange: true }
+    'starsEnabled', BACKGROUND_DEFAULTS.stars, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [milkywayEnabled, setMilkywayEnabled] = useLocalStorage<boolean>(
-    'milkywayEnabled', BACKGROUND_DEFAULTS.milkyway, { reloadOnChange: true }
+    'milkywayEnabled', BACKGROUND_DEFAULTS.milkyway, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [orbitEnabled, setOrbitEnabled] = useLocalStorage<boolean>(
-    'orbitEnabled', CAMERA_DEFAULTS.orbit, { reloadOnChange: true }
+    'orbitEnabled', CAMERA_DEFAULTS.orbit, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [performanceMode, setPerformanceMode] = useLocalStorage<boolean>(
-    'performanceMode', PERFORMANCE_DEFAULTS.enabled, { reloadOnChange: true }
+    'performanceMode', PERFORMANCE_DEFAULTS.enabled, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [diskIntensity, setDiskIntensity] = useLocalStorage<number>(
-    'diskIntensity', DISK_DEFAULTS.intensity, { reloadOnChange: true }
+    'diskIntensity', DISK_DEFAULTS.intensity, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [dopplerShiftEnabled, setDopplerShiftEnabled] = useLocalStorage<boolean>(
-    'dopplerShiftEnabled', DISK_DEFAULTS.dopplerShift, { reloadOnChange: true }
+    'dopplerShiftEnabled', DISK_DEFAULTS.dopplerShift, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [blackHoleRotation, setBlackHoleRotation] = useLocalStorage<number>(
-    'blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION, { reloadOnChange: true }
+    'blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [jetEnabled, setJetEnabled] = useLocalStorageBoolean(
-    'jetEnabled', DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET, { reloadOnChange: true }
+    'jetEnabled', DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
   const [expandedGroups, setExpandedGroups] = useState<ExpandedGroups>(DEFAULT_EXPANDED_GROUPS)
@@ -93,12 +101,12 @@ export function Controls() {
   const [diskIn, setDiskIn] = useLocalStorage<number>(
     'diskIn',
     SLIDER_RANGES.diskInnerRadius.default,
-    { reloadOnChange: true }
+    { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
   const [diskWidth, setDiskWidth] = useLocalStorage<number>(
     'diskWidth', 
     SLIDER_RANGES.diskWidth.default, 
-    { reloadOnChange: true },
+    { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE },
   )
 
   const toggleGroup = (groupName: ControlGroup) => {
@@ -144,21 +152,11 @@ export function Controls() {
 
   return (
     <div className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}>
+      <Tooltip id="controls-tooltip" className='controls-tooltip' />
       <div className="controls-header">
-        <div 
-          className="collapse-button"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
+        <div className="collapse-button" onClick={() => setIsCollapsed(!isCollapsed)}>
           <img src="/icon.svg" alt="App Icon" style={{ width: 24, height: 24, marginRight: 8 }} />
           <span>Controls</span>
-
-          <button 
-            onClick={handleReset}
-            className="reset-button"
-            title="Reset all settings to their default values"
-          >
-                  Reset to Defaults
-          </button>
           {isCollapsed ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.UP}
         </div>
       </div>
@@ -173,7 +171,7 @@ export function Controls() {
                 
         {expandedGroups.performance && (
           <div className="control-group">
-            <label className="checkbox-label">
+            <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Reduces quality to improve performance">
               <span>Performance Mode</span>
               <input
                 type="checkbox"
@@ -181,9 +179,6 @@ export function Controls() {
                 onChange={(e) => setPerformanceMode(e.target.checked)}
               />
             </label>
-            <div className="control-description">
-                            Reduces quality to improve performance
-            </div>
           </div>
         )}
 
@@ -302,7 +297,7 @@ export function Controls() {
             )}
 
             <div className="control-group">
-              <label className="checkbox-label">
+              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Makes one side brighter and the other dimmer">
                 <span>Beaming</span>
                 <input
                   type="checkbox"
@@ -312,7 +307,7 @@ export function Controls() {
               </label>
             </div>
             <div className="control-group">
-              <label className="checkbox-label">
+              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Shows red and blue shifts in the accretion disk">
                 <span>Doppler Shift</span>
                 <input
                   type="checkbox"
@@ -320,13 +315,10 @@ export function Controls() {
                   onChange={(e) => setDopplerShiftEnabled(e.target.checked)}
                 />
               </label>
-              <div className="control-description">
-                                Shows red and blue shifts in the accretion disk
-              </div>
             </div>
 
             <div className="control-group">
-              <label className="checkbox-label">
+              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Toggle a relativistic jet emitted from the poles">
                 <span>Relativistic Jet</span>
                 <input
                   type="checkbox"
@@ -334,13 +326,10 @@ export function Controls() {
                   onChange={e => setJetEnabled(e.target.checked)}
                 />
               </label>
-              <div className="control-description">
-                                Show or hide the relativistic jet
-              </div>
             </div>
 
             <div className="control-group">
-              <label className="slider-label">
+              <label className="slider-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Controls the spin of the black hole<br/>(0 = non-rotating, 0.998 = maximum rotation)">
                 <span>Black Hole Rotation:</span>
                 <input
                   type="range"
@@ -353,9 +342,6 @@ export function Controls() {
                 />
                 <span>{blackHoleRotation.toFixed(3)}</span>
               </label>
-              <div className="control-description">
-                              Controls the spin of the black hole (0 = non-rotating, 0.998 = maximum rotation)
-              </div>
             </div>
           </>
         )}
@@ -372,12 +358,12 @@ export function Controls() {
               {selectedTexture !== 'no_disk' && (
                 <div className="control-group">
                   <label className="slider-label">
-                    <span>Disk Brightness:</span>
+                    <span>Disk Intensity:</span>
                     <input
                       type="range"
-                      min="0.1"
-                      max="2.0"
-                      step="0.1"
+                      min={SLIDER_RANGES.diskIntensity.min}
+                      max={SLIDER_RANGES.diskIntensity.max}
+                      step={SLIDER_RANGES.diskIntensity.step}
                       value={diskIntensity}
                       onChange={(e) => setDiskIntensity(parseFloat(e.target.value))}
                       className="slider-input"
@@ -491,6 +477,22 @@ export function Controls() {
           </div>
         )}
       </div>
+      <footer className="controls-footer">
+        <button 
+          onClick={handleReset}
+          className="button reset-button"
+          title="Reset all settings to their default values"
+        >
+          Reset to Defaults
+        </button>
+        <button 
+          onClick={onFullScreen}
+          className="button fullscreen-button"
+          title="Toggle Full Screen"
+        >
+          Toggle Full screen
+        </button>
+      </footer>
     </div>
   )
 }
