@@ -1,6 +1,6 @@
 // Background settings
 export const BACKGROUND = {
-  DEFAULT_INTENSITY: 0.38,
+  DEFAULT_INTENSITY: 0.3,
   MIN_INTENSITY: 0.005,
 } as const
 
@@ -9,14 +9,14 @@ export const BLACK_HOLE = {
   ROTATION: {
     MIN: 0.0,
     MAX: 0.998,  // Maximum spin parameter (a*) for a Kerr black hole
-    DEFAULT: 0.5,
+    DEFAULT: 0.7,
   }
 } as const
 
 // Camera settings
 export const CAMERA = {
   ORBIT: {
-    RADIUS: 8,
+    RADIUS: 9.5,
     SPEED: 0.2,
   },
   DISTANCE: {
@@ -54,7 +54,7 @@ export type QualitySettings = typeof QUALITY.HIGH | typeof QUALITY.LOW
 // Default values for various features
 export const DEFAULTS = {
   BLOOM: {
-    ENABLED: false,
+    ENABLED: true,
   },
   BEAMING: {
     ENABLED: true,

@@ -3,7 +3,7 @@ import { DEFAULTS } from './blackHole'
 // Control groups default state
 export const DEFAULT_EXPANDED_GROUPS = {
   performance: false,
-  bloom: false,
+  bloom: true,
   effects: true,
   disk: true,
   textures: true,
@@ -53,7 +53,7 @@ export const PERFORMANCE_DEFAULTS = {
 export const SLIDER_RANGES = {
   bloomIntensity: { min: 0, max: 2, step: 0.1, default: 1.0 },
   bloomThreshold: { min: 0, max: 1, step: 0.1, default: 0.5 },
-  bloomRadius: { min: 0, max: 2, step: 0.1, default: 1.0 },
+  bloomRadius: { min: 0, max: 1, step: 0.1, default: 0.9 },
   diskIntensity: { min: 0.1, max: 2.0, step: 0.1, default: DEFAULTS.DISK.INTENSITY },
   diskInnerRadius: { min: 2.0, max: 3.5, step: 0.1, default: DEFAULTS.DISK.INNER_RADIUS },
   diskWidth: { min: 2.0, max: 6.5, step: 0.1, default: DEFAULTS.DISK.WIDTH },

@@ -1,5 +1,5 @@
 import starUrl from '../assets/star_noise.png'
-import milkywayUrl from '../assets/milkyway.jpg'
+import milkywayUrl from '../assets/milkyWay6MP.jpg'
 import diskNaturalUrl from '../assets/accretion_disk_natural.png'
 import diskRedWhiteUrl from '../assets/accretion_disk_red_white.png'
 import diskRedWhitePurpleUrl from '../assets/accretion_disk_red_white_purple.png'

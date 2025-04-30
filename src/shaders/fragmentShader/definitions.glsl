@@ -13,7 +13,7 @@ const float MIN_TEMPERATURE = 1000.0;
 const float TEMPERATURE_RANGE = 39000.0;
 
 // Background parameters
-const float DEFAULT_BG_INTENSITY = 0.8;
+const float DEFAULT_BG_INTENSITY = 0.1;
 
 // Uniforms
 uniform float time;

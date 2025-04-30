@@ -1,5 +1,5 @@
 // Accretion disk calculation function
-#define DOPPLER_GRADIENT_SMOOTHNESS 0.7
+#define DOPPLER_GRADIENT_SMOOTHNESS 0.65
 
 vec3 thermal_colormap(float t, bool beaming) {
     vec3 blue = vec3(0.0, 0.0, 1.0);
@@ -116,15 +116,15 @@ vec4 calculateDisk(
                     float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
                     if (disk_angle_factor < angle_threshold) {
                         float smooth_side = 1.0 - smoothstep(-0.8, 0.8, side_factor);
-                        float shift = (smooth_side - 0.5) * 1.0;
-                        shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;
-                        disk_color.r *= 1.0 + max(-shift, 0.0) * 1.6;
-                        disk_color.b *= 1.0 + max(shift, 0.0) * 2.4;
+                        float shift = (smooth_side - 0.55) * 1.0;
+                        shift *= smoothstep(0.0, 0.14, abs(shift)) * angle_blend;
+                        disk_color.r *= 1.0 + max(-shift, 0.0) * 2.9;
+                        disk_color.b *= 1.0 + max(shift, 0.0) * 2.8;
                         float positive_shift_mix_factor = 0.75;
                         float negative_shift_mix_factor = 0.75;
                         if (beaming) {
-                            positive_shift_mix_factor = 1.85;
-                            negative_shift_mix_factor = -0.75;
+                          positive_shift_mix_factor = 1.95;
+                          negative_shift_mix_factor = -0.985;
                         }
                         float intensity = shift > 0.0 
                             ? mix(1.0, positive_shift_mix_factor, shift)

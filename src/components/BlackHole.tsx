@@ -1,16 +1,14 @@
 import { useRef, useMemo, useEffect } from 'react'
 import * as THREE from 'three'
-import { useFrame, useThree, extend } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import {
   ShaderMaterial, Mesh, BackSide, Vector3, Vector2, TextureLoader, 
   NearestFilter, LinearFilter, ClampToEdgeWrapping,
 } from 'three'
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import vertexShader from '../shaders/vertexShader.glsl?raw'
 import { fragmentShader } from '../shaders/fragmentShader/index'
-import { IMAGES, DISK_TEXTURE_MAP } from '../constants/textures'
+import { IMAGES, DISK_TEXTURE_MAP, DISK_TEXTURES } from '../constants/textures'
 import { useBloom } from '../hooks/useBloom'
 import { useDiskTexture } from '../hooks/useDiskTexture'
 import { useLocalStorage } from '../hooks/useLocalStorage'
@@ -22,15 +20,11 @@ import {
   UNIFORMS,
 } from '../constants/blackHole'
 
-// Extend R3F with post-processing components
-extend({ EffectComposer, RenderPass, UnrealBloomPass })
-
 export function BlackHole() {
   const meshRef = useRef<Mesh>(null)
   const materialRef = useRef<ShaderMaterial>(null)
-  const composerRef = useRef<EffectComposer>(null)
   const { camera, gl, scene } = useThree()
-  const { intensity, threshold, radius } = useBloom()
+  const { enabled, intensity, threshold, radius } = useBloom()
   const [glowIntensity] = useLocalStorage<number>('glowIntensity', DEFAULTS.GLOW.INTENSITY)
   const glowEnabled = glowIntensity > 0
   const { selectedTexture, useBlackbody, hideDisk } = useDiskTexture()
@@ -268,7 +262,7 @@ export function BlackHole() {
   // Update thermal_colormap_mode when selectedTexture changes
   useEffect(() => {
     if (materialRef.current) {
-      materialRef.current.uniforms.thermal_colormap_mode.value = selectedTexture === 'accretion_disk_thermal.png'
+      materialRef.current.uniforms.thermal_colormap_mode.value = selectedTexture === DISK_TEXTURES.THERMAL.value
       materialRef.current.needsUpdate = true
     }
   }, [selectedTexture])
@@ -312,11 +306,6 @@ export function BlackHole() {
       uniforms.cam_dir.value.copy(camera.getWorldDirection(new Vector3()))
       uniforms.cam_up.value.copy(camera.up)
     }
-
-    // Update composer
-    if (composerRef.current) {
-      composerRef.current.render()
-    }
   })
 
   // Add a bright point light to enhance the bloom effect
@@ -337,12 +326,16 @@ export function BlackHole() {
         <shaderMaterial ref={materialRef} {...shaderMaterial()} />
       </mesh>
         
-      <effectComposer ref={composerRef} args={[gl]}>
-        <renderPass 
-          attach="passes" 
-          args={[scene, camera]}
+      <EffectComposer>
+        <Bloom 
+          intensity={enabled ? intensity:0}
+          luminanceThreshold={threshold}
+          luminanceSmoothing={0.9}
+          radius={radius}
+          mipmapBlur={true}
+          kernelSize={1}
         />
-      </effectComposer>
+      </EffectComposer>
     </>
   )
 } 

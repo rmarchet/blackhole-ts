@@ -1,11 +1,11 @@
-import { useLocalStorageBoolean, useLocalStorageNumber } from './useLocalStorage'
+import { useLocalStorage } from './useLocalStorage'
 
 export function useBloom() {
   // Use the generic localStorage hooks for all bloom settings
-  const [enabled, setEnabled] = useLocalStorageBoolean('bloomEnabled', true)
-  const [intensity, setIntensity] = useLocalStorageNumber('bloomIntensity', 1.5)
-  const [threshold, setThreshold] = useLocalStorageNumber('bloomThreshold', 0.3)
-  const [radius, setRadius] = useLocalStorageNumber('bloomRadius', 0.8)
+  const [enabled, setEnabled] = useLocalStorage<boolean>('bloomEnabled', true, { reloadOnChange: true })
+  const [intensity, setIntensity] = useLocalStorage<number>('bloomIntensity', 1.5, { reloadOnChange: true })
+  const [threshold, setThreshold] = useLocalStorage<number>('bloomThreshold', 0.3, { reloadOnChange: true })
+  const [radius, setRadius] = useLocalStorage<number>('bloomRadius', 0.8, { reloadOnChange: true })
 
   return {
     enabled,

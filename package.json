@@ -4,7 +4,17 @@
   "version": "0.2.1",
   "author": "Roberto Marchetti <rmarchet@gmail.com>",
   "type": "module",
-  "keywords": ["blackhole", "astronomy", "simulation", "shader", "raytracing", "glsl", "threejs", "vitejs", "react"],
+  "keywords": [
+    "blackhole",
+    "astronomy",
+    "simulation",
+    "shader",
+    "raytracing",
+    "glsl",
+    "threejs",
+    "vitejs",
+    "react"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -15,6 +25,7 @@
   "dependencies": {
     "@react-three/drei": "^10.0.6",
     "@react-three/fiber": "^9.1.2",
+    "@react-three/postprocessing": "^3.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "three": "^0.175.0"
