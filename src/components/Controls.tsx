@@ -152,7 +152,12 @@ export const Controls = ({
 
   return (
     <div className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}>
-      <Tooltip id="controls-tooltip" className='controls-tooltip' />
+      <Tooltip
+        id="controls-tooltip"
+        className='controls-tooltip'
+        place='right'
+        offset={15}
+      />
       <div className="controls-header">
         <div className="collapse-button" onClick={() => setIsCollapsed(!isCollapsed)}>
           <img src="/icon.svg" alt="App Icon" style={{ width: 24, height: 24, marginRight: 8 }} />
@@ -297,7 +302,7 @@ export const Controls = ({
             )}
 
             <div className="control-group">
-              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Makes one side brighter and the other dimmer">
+              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Makes one side brighter and the other dimmer.<br>Only works when dopler shift is active">
                 <span>Beaming</span>
                 <input
                   type="checkbox"
@@ -307,7 +312,7 @@ export const Controls = ({
               </label>
             </div>
             <div className="control-group">
-              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Shows red and blue shifts in the accretion disk">
+              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Shows red and blue shifts in the accretion disk">
                 <span>Doppler Shift</span>
                 <input
                   type="checkbox"
@@ -318,7 +323,7 @@ export const Controls = ({
             </div>
 
             <div className="control-group">
-              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Toggle a relativistic jet emitted from the poles">
+              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Toggle a relativistic jet emitted from the poles.<br>Shown when black hole rotation > 0">
                 <span>Relativistic Jet</span>
                 <input
                   type="checkbox"
@@ -477,6 +482,7 @@ export const Controls = ({
           </div>
         )}
       </div>
+
       <footer className="controls-footer">
         <button 
           onClick={handleReset}
