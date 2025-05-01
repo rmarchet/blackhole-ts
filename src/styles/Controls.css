@@ -1,38 +1,26 @@
-:root {
-  --controls-width: 270px;
-  --controls-background: #111111cc;
-  --select-width: 120px;
-  --slider-width: 90px;
-  --label-width: 110px;
-  --label-color: #ffffffaa;
-  --title-background: #33333399;
-  --border-color: rgba(255, 255, 255, 0.23);
-  --title-color: #ffffff;
-  --input-gap: 8px;
-  --accent-color: #a84df6;
-  --accent-color-dark: #a84df699;
-  --spacing-05: 2px;
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
+.controls-panel {
+  --aug-border-bg: var(--accent-color-dark);
+  --aug-border-all: 2px;
+  --aug-tr-extend1: 40%;
+  --aug-tl: 12px;
+  --aug-bl: 12px;
+  --aug-tr: 12px;
+  --aug-br: 12px;
+  padding: var(--spacing-2);
+  width: var(--controls-width);
+  background: var(--accent-color-darkest);
+  flex-direction: column;
+  transition: all 0.3s ease;
 }
-
 .controls-container {
-  position: fixed;
+  position: absolute;
   top: var(--spacing-4);
   left: var(--spacing-4);
-  background: var(--controls-background);
-  border-radius: var(--spacing-1);
-  border: 1px solid var(--border-color);
   color: var(--label-color);
   font-family: Arial, sans-serif;
   font-size: 12px;
   text-align: left;
-  width: var(--controls-width);
   display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
 }
 
 .controls-container.collapsed {
@@ -40,43 +28,55 @@
 }
 
 .collapse-button {
+  font-size: 8px;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
   border: none;
   color: var(--title-color);
   cursor: pointer;
   display: flex;
   font-weight: bold;
-  padding: var(--spacing-1) var(--spacing-2);
+  padding: 0 var(--spacing-2) var(--spacing-1) 0;
 }
 
 .collapse-button span {
-  margin-right: auto;
+  margin-right: var(--spacing-4);
   font-size: 16px;
 }
 
 .controls-footer {
+  --aug-br: 8px;
+  --aug-bl: 8px;
   display: flex;
   gap: var(--spacing-2);
-  border-top: 1px solid var(--border-color);
-  background: var(--title-background);
+  background: var(--accent-color-darker);
   padding: var(--spacing-2) var(--spacing-2);
 }
 
 .button {
+  --aug-border-bg: var(--accent-color);
+  --aug-border-all: 2px;
+  --aug-br: 10px;
+  --aug-bl: 10px;
+  --aug-tl: 10px;
+  --aug-tr: 10px;
   flex-grow: 1;
   font-size: 11px;
   padding: var(--spacing-1) var(--spacing-2);
   border-radius: var(--spacing-1);
-  color: var(--title-color);
+  color: black;
+  font-weight: bold;
   cursor: pointer;
-  border: 1px solid var(--accent-color);
-  background-color: var(--accent-color-dark);
-  font-weight: normal;
+  border: none;
+  background-color: var(--accent-color);
   display: block;
 }
 .button:hover {
-  opacity: 0.6;
+  background-color: var(--accent-color);
+}
+
+.button:focus {
+  outline-offset: -2px;
+  outline: 2px solid white;
 }
 
 .controls-content {
@@ -90,46 +90,69 @@
 }
 
 .controls-content input[type="checkbox"] {
+  --aug-br: 6px;
+  --aug-tl: 6px;
+  --aug-border-bg: var(--border-color);
+  --aug-border-all: 1px;
+  border: none;
   appearance: none;
-  border: 1px solid var(--border-color);
   color: #fff;
   border-radius: var(--spacing-05);
   width: var(--spacing-3);
+  padding: 0 var(--spacing-4);
   height: var(--spacing-3);
   cursor: pointer;
+  text-align: center;
 }
 
 .controls-content input[type="checkbox"]:checked {
+  --aug-border-bg: var(--accent-color);
   background-color: var(--accent-color-dark);
-  border: 1px solid var(--accent-color);
   line-height: 8px;
   text-align: center;
 }
 
 .controls-content input[type="checkbox"]:checked:before {
-  content: '✕';
-  font-size: 10px;
+  content: '▰';
+  font-size: 12px;
+  position: absolute;
+  left: var(--spacing-3);
+}
+
+.controls-content input[type="checkbox"]:focus {
+  outline-offset: -2px;
+  outline: 2px solid white;
 }
 
 .controls-title {
-  font-size: 12px;
+  --aug-tr: 8px;
+  --aug-tl: 8px;
+  --aug-border-bg: var(--border-color);
+  --aug-border-all: 0px;
+  font-size: 8px;
   margin: 0 0;
-  background: var(--title-background);
-  padding: var(--spacing-1) var(--spacing-2);
+  background: var(--accent-color-darker);
+  padding: var(--spacing-05) var(--spacing-3);
   cursor: pointer;
   display: flex;
+  width: 100%;
+  border: none;
+  margin-bottom: 1px;
   justify-content: space-between;
   align-items: center;
   color: var(--title-color);
-  border-top: 1px solid var(--border-color);
+}
+.controls-title h3 {
+  margin: 0;
+  font-size: 12px;
 }
 
 .controls-title:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: var(--accent-color)
 }
 
 .control-group {
-  padding: var(--spacing-05) var(--spacing-2);
+  padding: 0 var(--spacing-2);
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
   overflow: hidden;
 }
@@ -171,7 +194,7 @@
   background-color: transparent;
   cursor: pointer;
   position: relative;
-  accent-color: #a84df622;
+  accent-color: var(--accent-color-dark);
   border-radius: 0;
 }
 
@@ -187,13 +210,23 @@
 }
 
 .select-input {
+  --aug-br: 10px;
+  --aug-bl: 10px;
+  --aug-tl: 10px;
+  --aug-tr: 10px;
+  --aug-border-bg: white;
+  --aug-border-all: 2px;
+  appearance: none;
   margin-top: 0;
-  padding: var(--spacing-05) var(--spacing-1);
-  border-radius: var(--spacing-1);
-  border: 1px solid #ffffff44;
-  background-color: #ffffff22;
-  color: #fff;
+  padding: var(--spacing-1) var(--spacing-6) var(--spacing-1) var(--spacing-4);
+  border: none;
+  background-color: var(--accent-color);
+  color: #000;
+  cursor: pointer;
   font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
   width: var(--select-width);
 }
 
@@ -201,10 +234,19 @@
 .controls-title span {
   transition: transform 0.3s ease;
 }
+.select-label:before {
+  position: absolute;
+  content: "▼";
+  font-size: 10px;
+  color: #000;
+  width: 10px;
+  right: 45px;
+  z-index: 2;
+}
 
 .select-input:focus {
-  outline: none;
-  border-color: var(--accent-color);
+  outline-offset: -2px;
+  outline: 1px solid white;
 }
 
 .select-input option {
@@ -235,4 +277,5 @@
 #controls-tooltip {
   background-color: white;
   color: black;
+  z-index: 10;
 }

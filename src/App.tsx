@@ -12,7 +12,7 @@ const App = () => {
   const lsItems = useAllLocalStorage()
   const [isLoading, setIsLoading] = useState(false)
 
-  const SPINNER_DELAY = 400
+  const SPINNER_DELAY = 600
 
   useEffect(() => {
     setIsLoading(true)

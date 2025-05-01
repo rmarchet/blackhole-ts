@@ -1,3 +1,27 @@
+:root {
+  --controls-width: 270px;
+  --controls-background: #111111cc;
+  --select-width: 120px;
+  --slider-width: 90px;
+  --label-width: 110px;
+  --label-color: #6edae9;
+  --title-background: #33333399;
+  --border-color: rgba(255, 255, 255, 0.23);
+  --title-color: #ffffff;
+  --input-gap: 8px;
+  --accent-color: #6edae9;
+  --accent-color-dark: #6edae9dd;
+  --accent-color-darker: #00bfd880;
+  --accent-color-darkest: #002426aa;
+  --spacing-05: 2px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+}
+
 html,body {
   background-color: #000;
   margin: 0;

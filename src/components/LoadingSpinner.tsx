@@ -8,15 +8,14 @@ interface LoadingSpinnerProps {
 
 export const LoadingSpinner = ({ 
   size = 60, 
-  color = '#ffffff', 
-  thickness = 4 
+  color = 'var(--accent-color)', 
+  thickness = 6, 
 }: LoadingSpinnerProps) => {
   const inlineStyles = {
     width: size,
     height: size,
-    border: `${thickness}px solid rgba(255, 255, 255, 0.1)`,
+    borderWidth: `${thickness}px`,
     borderLeftColor: color,
-    animation: 'spin 1s linear infinite',
     marginTop: -(size / 2),
   }
   return (

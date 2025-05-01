@@ -19,6 +19,7 @@ import {
   type ExpandedGroups
 } from '../constants/controls'
 import { BLACK_HOLE, DEFAULTS } from '../constants/blackHole'
+import '/node_modules/augmented-ui/augmented-ui.min.css'
 import '../styles/Controls.css'
 
 const COLLAPSE_ICONS = {
@@ -151,354 +152,382 @@ export const Controls = ({
   }
 
   return (
-    <div className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}>
+    <>
       <Tooltip
         id="controls-tooltip"
         className='controls-tooltip'
         place='right'
         offset={15}
       />
-      <div className="controls-header">
-        <div className="collapse-button" onClick={() => setIsCollapsed(!isCollapsed)}>
-          <img src="/icon.svg" alt="App Icon" style={{ width: 24, height: 24, marginRight: 8 }} />
-          <span>Controls</span>
-          {isCollapsed ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.UP}
-        </div>
-      </div>
-
-      <div className={`controls-content ${isCollapsed ? 'hidden' : ''}`}>
-        <h3 
-          className="controls-title" 
-          onClick={() => toggleGroup('performance')}
-        >
-          <span>Performance Controls</span> {expandedGroups.performance ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
-        </h3>
-                
-        {expandedGroups.performance && (
-          <div className="control-group">
-            <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Reduces quality to improve performance">
-              <span>Performance Mode</span>
-              <input
-                type="checkbox"
-                checked={performanceMode}
-                onChange={(e) => setPerformanceMode(e.target.checked)}
-              />
-            </label>
-          </div>
-        )}
-
-        <h3 
-          className="controls-title bloom-controls-title" 
-          onClick={() => toggleGroup('bloom')}
-        >
-          <span>Bloom Controls</span> {expandedGroups.bloom ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
-        </h3>
-                
-        {expandedGroups.bloom && (
-          <div className='bloom-controls'>
-            <div className="control-group">
-              <label className="checkbox-label">
-                <span>Bloom</span>
-                <input
-                  type="checkbox"
-                  checked={bloomEnabled}
-                  onChange={(e) => setBloomEnabled(e.target.checked)}
-                />
-              </label>
+      <nav
+        className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}
+      >
+        <div className='controls-panel' data-augmented-ui="  tl-clip bl-clip   br-clip tr-2-clip-x border">
+            
+          <header className="controls-header">
+            <div className="collapse-button" onClick={() => setIsCollapsed(!isCollapsed)}>
+              <img src="/icon.svg" alt="App Icon" style={{ width: 24, height: 24, marginRight: 8 }} />
+              <span>Controls</span>
+              {isCollapsed ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.UP}
             </div>
+          </header>
 
-            {bloomEnabled && (
-              <>
-                <div className="control-group">
-                  <label className="slider-label">
-                    <span>Intensity:</span>
-                    <input
-                      type="range"
-                      min={SLIDER_RANGES.bloomIntensity.min}
-                      max={SLIDER_RANGES.bloomIntensity.max}
-                      step={SLIDER_RANGES.bloomIntensity.step}
-                      value={intensity}
-                      onChange={(e) => setIntensity(parseFloat(e.target.value))}
-                      className="slider-input"
-                    />
-                    <span>{intensity.toFixed(2)}</span>
-                  </label>
-                </div>
-
-                <div className="control-group">
-                  <label className="slider-label">
-                    <span>Threshold:</span>
-                    <input
-                      type="range"
-                      min={SLIDER_RANGES.bloomThreshold.min}
-                      max={SLIDER_RANGES.bloomThreshold.max}
-                      step={SLIDER_RANGES.bloomThreshold.step}
-                      value={threshold}
-                      onChange={(e) => setThreshold(parseFloat(e.target.value))}
-                      className="slider-input"
-                    />
-                    <span>{threshold.toFixed(2)}</span>
-                  </label>
-                </div>
-
-                <div className="control-group">
-                  <label className="slider-label">
-                    <span>Radius:</span>
-                    <input
-                      type="range"
-                      min={SLIDER_RANGES.bloomRadius.min}
-                      max={SLIDER_RANGES.bloomRadius.max}
-                      step={SLIDER_RANGES.bloomRadius.step}
-                      value={radius}
-                      onChange={(e) => setRadius(parseFloat(e.target.value))}
-                      className="slider-input"
-                    />
-                    <span>{radius.toFixed(2)}</span>
-                  </label>
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
-        <h3 
-          className="controls-title" 
-          onClick={() => toggleGroup('effects')}
-        >
-          <span>Effects Controls</span> {expandedGroups.effects ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
-        </h3>
+          <div className={`controls-content ${isCollapsed ? 'hidden' : ''}`}>
+            <button
+              data-augmented-ui="border tl-clip tr-clip"
+              className="controls-title" 
+              onClick={() => toggleGroup('performance')}
+            >
+              <h3>Performance Controls</h3> {expandedGroups.performance ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+            </button>
                 
-        {expandedGroups.effects && (
-          <>
-            <div className="control-group">
-              <label className="checkbox-label">
-                <span>Glow</span>
-                <input
-                  type="checkbox"
-                  checked={glowEnabled}
-                  onChange={() => {
-                    setGlowIntensity(glowEnabled ? 0 : 1)
-                  }}
-                />
-              </label>
-            </div>
-
-            {glowEnabled && (
-              <div className="control-group">
-                <label className="slider-label">
-                  <span>Glow Intensity:</span>
-                  <input
-                    type="range"
-                    min={GLOW_DEFAULTS.min}
-                    max={GLOW_DEFAULTS.max}
-                    step={GLOW_DEFAULTS.step}
-                    value={glowIntensity}
-                    onChange={(e) => setGlowIntensity(parseFloat(e.target.value))}
-                    className="slider-input"
-                  />
-                  <span>{(glowIntensity ?? 0).toFixed(2)}</span>
-                </label>
-              </div>
+            {expandedGroups.performance && (
+              <section id='section-performance'>
+                <div className="control-group">
+                  <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Reduces quality to improve performance">
+                    <span>Performance Mode</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={performanceMode}
+                      onChange={(e) => setPerformanceMode(e.target.checked)}
+                    />
+                  </label>
+                </div>
+              </section>
             )}
 
-            <div className="control-group">
-              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Makes one side brighter and the other dimmer.<br>Only works when dopler shift is active">
-                <span>Beaming</span>
-                <input
-                  type="checkbox"
-                  checked={beamingEnabled}
-                  onChange={(e) => setBeamingEnabled(e.target.checked)}
-                />
-              </label>
-            </div>
-            <div className="control-group">
-              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Shows red and blue shifts in the accretion disk">
-                <span>Doppler Shift</span>
-                <input
-                  type="checkbox"
-                  checked={dopplerShiftEnabled}
-                  onChange={(e) => setDopplerShiftEnabled(e.target.checked)}
-                />
-              </label>
-            </div>
-
-            <div className="control-group">
-              <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Toggle a relativistic jet emitted from the poles.<br>Shown when black hole rotation > 0">
-                <span>Relativistic Jet</span>
-                <input
-                  type="checkbox"
-                  checked={jetEnabled}
-                  onChange={e => setJetEnabled(e.target.checked)}
-                />
-              </label>
-            </div>
-
-            <div className="control-group">
-              <label className="slider-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Controls the spin of the black hole<br/>(0 = non-rotating, 0.998 = maximum rotation)">
-                <span>Black Hole Rotation:</span>
-                <input
-                  type="range"
-                  min={BLACK_HOLE.ROTATION.MIN}
-                  max={BLACK_HOLE.ROTATION.MAX}
-                  step={0.001}
-                  value={blackHoleRotation}
-                  onChange={(e) => setBlackHoleRotation(parseFloat(e.target.value))}
-                  className="slider-input"
-                />
-                <span>{blackHoleRotation.toFixed(3)}</span>
-              </label>
-            </div>
-          </>
-        )}
-
-        <h3 
-          className="controls-title" 
-          onClick={() => toggleGroup('disk')}
-        >
-          <span>Disk Controls</span> {expandedGroups.disk ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
-        </h3>
-        {
-          expandedGroups.disk && (
-            <>                        
-              {selectedTexture !== 'no_disk' && (
+            <button
+              data-augmented-ui="border tl-clip tr-clip"
+              className="controls-title bloom-controls-title" 
+              onClick={() => toggleGroup('bloom')}
+            >
+              <h3>Bloom Controls</h3> {expandedGroups.bloom ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+            </button>
+                
+            {expandedGroups.bloom && (
+              <section id="section-bloom" className='bloom-controls'>
                 <div className="control-group">
-                  <label className="slider-label">
-                    <span>Disk Intensity:</span>
+                  <label className="checkbox-label">
+                    <span>Bloom</span>
                     <input
-                      type="range"
-                      min={SLIDER_RANGES.diskIntensity.min}
-                      max={SLIDER_RANGES.diskIntensity.max}
-                      step={SLIDER_RANGES.diskIntensity.step}
-                      value={diskIntensity}
-                      onChange={(e) => setDiskIntensity(parseFloat(e.target.value))}
-                      className="slider-input"
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={bloomEnabled}
+                      onChange={(e) => setBloomEnabled(e.target.checked)}
                     />
-                    <span>{diskIntensity?.toFixed(2)}</span>
                   </label>
                 </div>
-              )}
 
-              {/* Disk geometry controls */}
-              <div className="control-group">
-                <label className="slider-label">
-                  <span>Disk Inner Radius:</span>
-                  <input
-                    type="range"
-                    min={SLIDER_RANGES.diskInnerRadius.min}
-                    max={SLIDER_RANGES.diskInnerRadius.max}
-                    step={SLIDER_RANGES.diskInnerRadius.step}
-                    value={diskIn}
-                    onChange={e => setDiskIn(parseFloat(e.target.value))}
-                    className="slider-input"
-                  />
-                  <span>{diskIn.toFixed(2)}</span>
-                </label>
-              </div>
-              <div className="control-group">
-                <label className="slider-label">
-                  <span>Disk Width:</span>
-                  <input
-                    type="range"
-                    min={SLIDER_RANGES.diskWidth.min}
-                    max={SLIDER_RANGES.diskWidth.max}
-                    step={SLIDER_RANGES.diskWidth.step}
-                    value={diskWidth}
-                    onChange={e => setDiskWidth(parseFloat(e.target.value))}
-                    className="slider-input"
-                  />
-                  <span>{diskWidth.toFixed(2)}</span>
-                </label>
-              </div>
-            </>
-          )
-        }
+                {bloomEnabled && (
+                  <>
+                    <div className="control-group">
+                      <label className="slider-label">
+                        <span>Intensity:</span>
+                        <input
+                          type="range"
+                          min={SLIDER_RANGES.bloomIntensity.min}
+                          max={SLIDER_RANGES.bloomIntensity.max}
+                          step={SLIDER_RANGES.bloomIntensity.step}
+                          value={intensity}
+                          onChange={(e) => setIntensity(parseFloat(e.target.value))}
+                          className="slider-input"
+                        />
+                        <span>{intensity.toFixed(2)}</span>
+                      </label>
+                    </div>
 
-        <h3 
-          className="controls-title" 
-          onClick={() => toggleGroup('textures')}
-        >
-          <span>Textures Controls</span> {expandedGroups.textures ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
-        </h3>
+                    <div className="control-group">
+                      <label className="slider-label">
+                        <span>Threshold:</span>
+                        <input
+                          type="range"
+                          min={SLIDER_RANGES.bloomThreshold.min}
+                          max={SLIDER_RANGES.bloomThreshold.max}
+                          step={SLIDER_RANGES.bloomThreshold.step}
+                          value={threshold}
+                          onChange={(e) => setThreshold(parseFloat(e.target.value))}
+                          className="slider-input"
+                        />
+                        <span>{threshold.toFixed(2)}</span>
+                      </label>
+                    </div>
+
+                    <div className="control-group">
+                      <label className="slider-label">
+                        <span>Radius:</span>
+                        <input
+                          type="range"
+                          min={SLIDER_RANGES.bloomRadius.min}
+                          max={SLIDER_RANGES.bloomRadius.max}
+                          step={SLIDER_RANGES.bloomRadius.step}
+                          value={radius}
+                          onChange={(e) => setRadius(parseFloat(e.target.value))}
+                          className="slider-input"
+                        />
+                        <span>{radius.toFixed(2)}</span>
+                      </label>
+                    </div>
+                  </>
+                )}
+              </section>
+            )}
+
+            <button
+              data-augmented-ui="border tl-clip tr-clip"
+              className="controls-title" 
+              onClick={() => toggleGroup('effects')}
+            >
+              <h3>Effects Controls</h3> {expandedGroups.effects ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+            </button>
+            {expandedGroups.effects && (
+              <section id="section-effects">
+                <div className="control-group">
+                  <label className="checkbox-label">
+                    <span>Glow</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={glowEnabled}
+                      onChange={() => {
+                        setGlowIntensity(glowEnabled ? 0 : 1)
+                      }}
+                    />
+                  </label>
+                </div>
+
+                {glowEnabled && (
+                  <div className="control-group">
+                    <label className="slider-label">
+                      <span>Glow Intensity:</span>
+                      <input
+                        type="range"
+                        min={GLOW_DEFAULTS.min}
+                        max={GLOW_DEFAULTS.max}
+                        step={GLOW_DEFAULTS.step}
+                        value={glowIntensity}
+                        onChange={(e) => setGlowIntensity(parseFloat(e.target.value))}
+                        className="slider-input"
+                      />
+                      <span>{(glowIntensity ?? 0).toFixed(2)}</span>
+                    </label>
+                  </div>
+                )}
+
+                <div className="control-group">
+                  <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Makes one side brighter and the other dimmer.<br>Only works when dopler shift is active">
+                    <span>Beaming</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={beamingEnabled}
+                      onChange={(e) => setBeamingEnabled(e.target.checked)}
+                    />
+                  </label>
+                </div>
+                <div className="control-group">
+                  <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Shows red and blue shifts in the accretion disk">
+                    <span>Doppler Shift</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={dopplerShiftEnabled}
+                      onChange={(e) => setDopplerShiftEnabled(e.target.checked)}
+                    />
+                  </label>
+                </div>
+
+                <div className="control-group">
+                  <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Toggle a relativistic jet emitted from the poles.<br>Shown when black hole rotation > 0">
+                    <span>Relativistic Jet</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={jetEnabled}
+                      onChange={e => setJetEnabled(e.target.checked)}
+                    />
+                  </label>
+                </div>
+
+                <div className="control-group">
+                  <label className="slider-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Controls the spin of the black hole<br/>(0 = non-rotating, 0.998 = maximum rotation)">
+                    <span>Black Hole Rotation:</span>
+                    <input
+                      type="range"
+                      min={BLACK_HOLE.ROTATION.MIN}
+                      max={BLACK_HOLE.ROTATION.MAX}
+                      step={0.001}
+                      value={blackHoleRotation}
+                      onChange={(e) => setBlackHoleRotation(parseFloat(e.target.value))}
+                      className="slider-input"
+                    />
+                    <span>{blackHoleRotation.toFixed(3)}</span>
+                  </label>
+                </div>
+              </section>
+            )}
+
+            <button
+              data-augmented-ui="border tl-clip tr-clip"
+              className="controls-title" 
+              onClick={() => toggleGroup('disk')}
+            >
+              <h3>Disk Controls</h3> {expandedGroups.disk ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+            </button>
+            {
+              expandedGroups.disk && (
+                <section id="section-disk">                        
+                  {selectedTexture !== 'no_disk' && (
+                    <div className="control-group">
+                      <label className="slider-label">
+                        <span>Disk Intensity:</span>
+                        <input
+                          type="range"
+                          min={SLIDER_RANGES.diskIntensity.min}
+                          max={SLIDER_RANGES.diskIntensity.max}
+                          step={SLIDER_RANGES.diskIntensity.step}
+                          value={diskIntensity}
+                          onChange={(e) => setDiskIntensity(parseFloat(e.target.value))}
+                          className="slider-input"
+                        />
+                        <span>{diskIntensity?.toFixed(2)}</span>
+                      </label>
+                    </div>
+                  )}
+
+                  {/* Disk geometry controls */}
+                  <div className="control-group">
+                    <label className="slider-label">
+                      <span>Disk Inner Radius:</span>
+                      <input
+                        type="range"
+                        min={SLIDER_RANGES.diskInnerRadius.min}
+                        max={SLIDER_RANGES.diskInnerRadius.max}
+                        step={SLIDER_RANGES.diskInnerRadius.step}
+                        value={diskIn}
+                        onChange={e => setDiskIn(parseFloat(e.target.value))}
+                        className="slider-input"
+                      />
+                      <span>{diskIn.toFixed(2)}</span>
+                    </label>
+                  </div>
+                  <div className="control-group">
+                    <label className="slider-label">
+                      <span>Disk Width:</span>
+                      <input
+                        type="range"
+                        min={SLIDER_RANGES.diskWidth.min}
+                        max={SLIDER_RANGES.diskWidth.max}
+                        step={SLIDER_RANGES.diskWidth.step}
+                        value={diskWidth}
+                        onChange={e => setDiskWidth(parseFloat(e.target.value))}
+                        className="slider-input"
+                      />
+                      <span>{diskWidth.toFixed(2)}</span>
+                    </label>
+                  </div>
+                </section>
+              )
+            }
+
+            <button 
+              data-augmented-ui="border tl-clip tr-clip"
+              className="controls-title" 
+              onClick={() => toggleGroup('textures')}
+            >
+              <h3>Textures Controls</h3>
+              {expandedGroups.textures ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+            </button>
                 
-        {expandedGroups.textures && (
-          <>
-            <div className="control-group">
-              <label className="select-label">
-                <span>Disk:</span>
-                <select 
-                  value={selectedTexture}
-                  onChange={handleTextureChange}
-                  className="select-input"
-                >
-                  {DISK_TEXTURE_OPTIONS.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-                        
-            <div className="control-group">
-              <label className="checkbox-label">
-                <span>Stars</span>
-                <input
-                  type="checkbox"
-                  checked={starsEnabled}
-                  onChange={(e) => setStarsEnabled(e.target.checked)}
-                />
-              </label>
-            </div>
-            <div className="control-group">
-              <label className="checkbox-label">
-                <span>Milky Way</span>
-                <input
-                  type="checkbox"
-                  checked={milkywayEnabled}
-                  onChange={(e) => setMilkywayEnabled(e.target.checked)}
-                />
-              </label>
-            </div>
-          </>
-        )}
+            {expandedGroups.textures && (
+              <section id="section-textures">
+                <div className="control-group">
+                  <label className="select-label">
+                    <span>Disk:</span>
+                    <select 
+                      data-augmented-ui="tl-clip bl-clip border br-clip tr-clip"                  
+                      value={selectedTexture}
+                      onChange={handleTextureChange}
+                      className="select-input"
+                    >
+                      {DISK_TEXTURE_OPTIONS.map(option => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>      
+                <div className="control-group">
+                  <label className="checkbox-label">
+                    <span>Stars</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={starsEnabled}
+                      onChange={(e) => setStarsEnabled(e.target.checked)}
+                    />
+                  </label>
+                </div>
+                <div className="control-group">
+                  <label className="checkbox-label">
+                    <span>Milky Way</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={milkywayEnabled}
+                      onChange={(e) => setMilkywayEnabled(e.target.checked)}
+                    />
+                  </label>
+                </div>
+              </section>
+            )}
 
-        <h3 
-          className="controls-title" 
-          onClick={() => toggleGroup('camera')}
-        >
-          <span>Camera Controls</span> {expandedGroups.camera ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
-        </h3>
-                
-        {expandedGroups.camera && (
-          <div className="control-group">
-            <label className="checkbox-label">
-              <span>Orbit Camera</span>
-              <input
-                type="checkbox"
-                checked={orbitEnabled}
-                onChange={(e) => setOrbitEnabled(e.target.checked)}
-              />
-            </label>
+            <button
+              data-augmented-ui="border tl-clip tr-clip"
+              className="controls-title"
+              onClick={() => toggleGroup('camera')}
+            >
+              <h3>Camera Controls</h3>
+              {expandedGroups.camera ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+            </button>          
+            {expandedGroups.camera && (
+              <section id="section-camera">
+                <div className="control-group">
+                  <label className="checkbox-label">
+                    <span>Orbit Camera</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={orbitEnabled}
+                      onChange={(e) => setOrbitEnabled(e.target.checked)}
+                    />
+                  </label>
+                </div>
+              </section>
+            )}
           </div>
-        )}
-      </div>
 
-      <footer className="controls-footer">
-        <button 
-          onClick={handleReset}
-          className="button reset-button"
-          title="Reset all settings to their default values"
-        >
+          <footer data-augmented-ui="bl-clip br-clip" className="controls-footer">
+            <button 
+              data-augmented-ui="br-clip tr-clip tl-clip bl-clip border"
+              onClick={handleReset}
+              className="button reset-button"
+              title="Reset all settings to their default values"
+            >
           Reset to Defaults
-        </button>
-        <button 
-          onClick={onFullScreen}
-          className="button fullscreen-button"
-          title="Toggle Full Screen"
-        >
+            </button>
+            <button  
+              data-augmented-ui="br-clip tr-clip tl-clip bl-clip border"
+              onClick={onFullScreen}
+              className="button fullscreen-button"
+              title="Toggle Full Screen"
+            >
           Toggle Full screen
-        </button>
-      </footer>
-    </div>
+            </button>
+          </footer>
+        </div>
+      </nav>
+    </>
   )
 }
