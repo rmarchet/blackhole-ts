@@ -6,6 +6,7 @@
   --aug-bl: 12px;
   --aug-tr: 12px;
   --aug-br: 12px;
+  --aug-b: 7px;
   padding: var(--spacing-2);
   width: var(--controls-width);
   background: var(--accent-color-darkest);
@@ -46,10 +47,15 @@
 .controls-footer {
   --aug-br: 8px;
   --aug-bl: 8px;
+  --aug-b: 10px;
   display: flex;
   gap: var(--spacing-2);
   background: var(--accent-color-darker);
   padding: var(--spacing-2) var(--spacing-2);
+}
+
+.controls-footer .button {
+  width: 50%;
 }
 
 .button {

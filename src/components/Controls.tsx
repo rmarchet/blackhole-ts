@@ -162,7 +162,7 @@ export const Controls = ({
       <nav
         className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}
       >
-        <div className='controls-panel' data-augmented-ui="  tl-clip bl-clip   br-clip tr-2-clip-x border">
+        <div className='controls-panel' data-augmented-ui="  tl-clip bl-clip  b-clip br-clip tr-2-clip-x border">
             
           <header className="controls-header">
             <div className="collapse-button" onClick={() => setIsCollapsed(!isCollapsed)}>
@@ -508,7 +508,7 @@ export const Controls = ({
             )}
           </div>
 
-          <footer data-augmented-ui="bl-clip br-clip" className="controls-footer">
+          <footer data-augmented-ui="bl-clip b-clip br-clip" className="controls-footer">
             <button 
               data-augmented-ui="br-clip tr-clip tl-clip bl-clip border"
               onClick={handleReset}
