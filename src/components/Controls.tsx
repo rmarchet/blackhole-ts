@@ -174,15 +174,18 @@ export const Controls = ({
 
           <div className={`controls-content ${isCollapsed ? 'hidden' : ''}`}>
             <button
+              id="button-performance"
               data-augmented-ui="border tl-clip tr-clip"
               className="controls-title" 
               onClick={() => toggleGroup('performance')}
+              aria-controls="section-performance"
+              aria-expanded={expandedGroups.performance}
             >
-              <h3>Performance Controls</h3> {expandedGroups.performance ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+              <h3 id="title-performance">Performance Controls</h3> {expandedGroups.performance ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
             </button>
                 
             {expandedGroups.performance && (
-              <section id='section-performance'>
+              <section id='section-performance' aria-labelledby='title-performance'>
                 <div className="control-group">
                   <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-content="Reduces quality to improve performance">
                     <span>Performance Mode</span>
@@ -198,15 +201,18 @@ export const Controls = ({
             )}
 
             <button
+              id="button-bloom"
               data-augmented-ui="border tl-clip tr-clip"
               className="controls-title bloom-controls-title" 
               onClick={() => toggleGroup('bloom')}
+              aria-controls="section-bloom"
+              aria-expanded={expandedGroups.bloom}
             >
-              <h3>Bloom Controls</h3> {expandedGroups.bloom ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+              <h3 id="title-bloom">Bloom Controls</h3> {expandedGroups.bloom ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
             </button>
                 
             {expandedGroups.bloom && (
-              <section id="section-bloom" className='bloom-controls'>
+              <section id="section-bloom" aria-labelledby="title-bloom" className='bloom-controls'>
                 <div className="control-group">
                   <label className="checkbox-label">
                     <span>Bloom</span>
@@ -274,14 +280,17 @@ export const Controls = ({
             )}
 
             <button
+              id="button-effects"
               data-augmented-ui="border tl-clip tr-clip"
               className="controls-title" 
               onClick={() => toggleGroup('effects')}
+              aria-controls="section-effects"
+              aria-expanded={expandedGroups.effects}
             >
-              <h3>Effects Controls</h3> {expandedGroups.effects ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+              <h3 id="title-effects">Effects Controls</h3> {expandedGroups.effects ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
             </button>
             {expandedGroups.effects && (
-              <section id="section-effects">
+              <section id="section-effects" aria-labelledby="title-effects">
                 <div className="control-group">
                   <label className="checkbox-label">
                     <span>Glow</span>
@@ -368,15 +377,18 @@ export const Controls = ({
             )}
 
             <button
+              id="button-disk"
               data-augmented-ui="border tl-clip tr-clip"
               className="controls-title" 
               onClick={() => toggleGroup('disk')}
+              aria-controls="section-disk"
+              aria-expanded={expandedGroups.disk}
             >
-              <h3>Disk Controls</h3> {expandedGroups.disk ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
+              <h3 id="title-disk">Disk Controls</h3> {expandedGroups.disk ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
             </button>
             {
               expandedGroups.disk && (
-                <section id="section-disk">                        
+                <section id="section-disk" aria-labelledby="title-disk">                        
                   {selectedTexture !== 'no_disk' && (
                     <div className="control-group">
                       <label className="slider-label">
@@ -431,16 +443,19 @@ export const Controls = ({
             }
 
             <button 
+              id="button-textures"
               data-augmented-ui="border tl-clip tr-clip"
               className="controls-title" 
               onClick={() => toggleGroup('textures')}
+              aria-controls="section-textures"
+              aria-expanded={expandedGroups.textures}
             >
-              <h3>Textures Controls</h3>
+              <h3 id="title-textures">Textures Controls</h3>
               {expandedGroups.textures ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
             </button>
                 
             {expandedGroups.textures && (
-              <section id="section-textures">
+              <section id="section-textures" aria-labelledby="title-textures">
                 <div className="control-group">
                   <label className="select-label">
                     <span>Disk:</span>
@@ -484,15 +499,18 @@ export const Controls = ({
             )}
 
             <button
+              id="button-camera"
               data-augmented-ui="border tl-clip tr-clip"
               className="controls-title"
               onClick={() => toggleGroup('camera')}
+              aria-controls="section-camera"
+              aria-expanded={expandedGroups.camera}
             >
-              <h3>Camera Controls</h3>
+              <h3 id="title-camera">Camera Controls</h3>
               {expandedGroups.camera ? COLLAPSE_ICONS.DOWN : COLLAPSE_ICONS.RIGHT}
             </button>          
             {expandedGroups.camera && (
-              <section id="section-camera">
+              <section id="section-camera" aria-labelledby="title-camera">
                 <div className="control-group">
                   <label className="checkbox-label">
                     <span>Orbit Camera</span>
