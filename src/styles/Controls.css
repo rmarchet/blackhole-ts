@@ -297,29 +297,29 @@
 
 #button-bloom,
 #section-bloom {
-  --accent-color: #ffdc4e;
-  --accent-color-dark: #e9d96edd;
-  --accent-color-darker: #d8c60080;
-  --accent-color-darkest: #261e00aa;
-  --label-color: #ffdc4e;
+  --accent-color: #6ee974;
+  --accent-color-dark: #6ee978dd;
+  --accent-color-darker: #00d82480;
+  --accent-color-darkest: #002600aa;
+  --label-color: #6ee974;
 }
 
 #button-effects,
 #section-effects {
-  --accent-color: #ff6e4e;
-  --accent-color-dark: #e9856edd;
-  --accent-color-darker: #d81d0080;
-  --accent-color-darkest: #260400aa;
-  --label-color: #ff6e4e;
+  --accent-color: #6ee974;
+  --accent-color-dark: #6ee978dd;
+  --accent-color-darker: #00d82480;
+  --accent-color-darkest: #002600aa;
+  --label-color: #6ee974;
 }
 
 #button-disk,
 #section-disk {
-  --accent-color: #a361ff;
-  --accent-color-dark: #c06ee9dd;
-  --accent-color-darker: #6800d880;
-  --accent-color-darkest: #0f0026aa;
-  --label-color: #a361ff;
+  --accent-color: #6ee974;
+  --accent-color-dark: #6ee978dd;
+  --accent-color-darker: #00d82480;
+  --accent-color-darkest: #002600aa;
+  --label-color: #6ee974;
 }
 
 #button-textures,
@@ -333,9 +333,9 @@
 
 #button-camera,
 #section-camera {
-  --accent-color: #4e8cff;
-  --accent-color-dark: #6e97e9dd;
-  --accent-color-darker: #0053d880;
-  --accent-color-darkest: #000826aa;
-  --label-color: #4e8cff;
+  --accent-color: #6ee974;
+  --accent-color-dark: #6ee978dd;
+  --accent-color-darker: #00d82480;
+  --accent-color-darkest: #002600aa;
+  --label-color: #6ee974;
 }

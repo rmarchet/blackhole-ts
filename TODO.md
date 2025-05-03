@@ -3,7 +3,7 @@
 There are several areas for improvement.
 
 ## Docs
-- [ ] Add docs for Relativistic Beaming
+- [x] Add docs for Relativistic Beaming
 - [ ] GitHub tab for docs
 - [ ] Consider moving docs files to GitHub Wiki
 
@@ -37,6 +37,7 @@ There are several areas for improvement.
 - [x] Add tooltips
 - [ ] Keyboard navigation
 - [x] Better styles
+  - [x] Use Augmented UI
 
 # General App
 - [ ] allow live refresh of the state without page reloads
