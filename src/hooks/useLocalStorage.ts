@@ -191,12 +191,12 @@ export function useAllLocalStorage(prefix: string = LOCAL_STORAGE_PREFIX) {
       }
     }
 
-    window.addEventListener('storage', handleStorageChange)
-    window.addEventListener(LOCAL_STORAGE_CHANGE_EVENT, handleLocalChange as EventListener)
+    window?.addEventListener('storage', handleStorageChange)
+    window?.addEventListener(LOCAL_STORAGE_CHANGE_EVENT, handleLocalChange as EventListener)
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange)
-      window.removeEventListener(LOCAL_STORAGE_CHANGE_EVENT, handleLocalChange as EventListener)
+      window?.removeEventListener('storage', handleStorageChange)
+      window?.removeEventListener(LOCAL_STORAGE_CHANGE_EVENT, handleLocalChange as EventListener)
     }
   }, [prefix])
 

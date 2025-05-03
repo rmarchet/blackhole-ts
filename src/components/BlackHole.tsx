@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect } from 'react'
+import { useRef, useMemo, useEffect, memo } from 'react'
 import * as THREE from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import {
@@ -19,6 +19,25 @@ import {
   DEFAULTS,
   UNIFORMS,
 } from '../constants/blackHole'
+
+// Memoized BloomEffect component
+const BloomEffect = memo(({ enabled, intensity, threshold, radius }: {
+  enabled: boolean,
+  intensity: number,
+  threshold: number,
+  radius: number
+}) => (
+  <EffectComposer>
+    <Bloom 
+      intensity={enabled ? intensity : 0}
+      luminanceThreshold={threshold}
+      luminanceSmoothing={0.99}
+      radius={radius}
+      mipmapBlur={true}
+      kernelSize={1}
+    />
+  </EffectComposer>
+))
 
 export const BlackHole = () => {
   const meshRef = useRef<Mesh>(null)
@@ -72,7 +91,7 @@ export const BlackHole = () => {
 
     // Add zoom limits to the camera
     // @ts-expect-error ignore typecheck on camera
-    camera.addEventListener('change', () => {
+    camera?.addEventListener('change', () => {
       const distance = camera.position.length()
       if (distance > CAMERA.DISTANCE.MAX) {
         const scale = CAMERA.DISTANCE.MAX / distance
@@ -325,17 +344,12 @@ export const BlackHole = () => {
         <sphereGeometry args={[20, qualitySettings.segments, qualitySettings.segments]} />
         <shaderMaterial ref={materialRef} {...shaderMaterial()} />
       </mesh>
-        
-      <EffectComposer>
-        <Bloom 
-          intensity={enabled ? intensity : 0}
-          luminanceThreshold={threshold}
-          luminanceSmoothing={0.99}
-          radius={radius}
-          mipmapBlur={true}
-          kernelSize={1}
-        />
-      </EffectComposer>
+      <BloomEffect 
+        enabled={enabled}
+        intensity={intensity}
+        threshold={threshold}
+        radius={radius}
+      />
     </>
   )
 } 
