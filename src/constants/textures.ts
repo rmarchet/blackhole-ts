@@ -11,6 +11,7 @@ import diskGridUrl from '../assets/accretion_disk_grid.png'
 import diskGridlinesUrl from '../assets/accretion_disk_gridlines.png'
 import diskChaoticUrl from '../assets/accretion_disk_chaotic.png'
 import diskThermalUrl from '../assets/accretion_disk_thermal.png'
+import diskDustUrl from '../assets/accretion_disk_dust.png'
 
 export const IMAGES = {
   starUrl,
@@ -26,6 +27,7 @@ export const IMAGES = {
   diskGridlinesUrl,
   diskChaoticUrl,
   diskThermalUrl,
+  diskDustUrl,
 }
 
 export const DISK_TEXTURES = {
@@ -42,6 +44,7 @@ export const DISK_TEXTURES = {
   YELLOW: { value: 'accretion_disk_yellow.png', label: 'Yellow' },
   BLUE: { value: 'accretion_disk_blue.png', label: 'Blue' },
   BRIGHT: { value: 'accretion_disk_bright.png', label: 'Bright' },
+  DUST: { value: 'accretion_disk_dust.png', label: 'Dust' },
 }
 
 // Map texture selection to URL
@@ -57,6 +60,7 @@ export const DISK_TEXTURE_MAP = {
   [DISK_TEXTURES.BRIGHT.value]: diskBrightUrl,
   [DISK_TEXTURES.CHAOTIC.value]: diskChaoticUrl,
   [DISK_TEXTURES.THERMAL.value]: diskThermalUrl,
+  [DISK_TEXTURES.DUST.value]: diskDustUrl,
 }
 
 // Define the available texture options

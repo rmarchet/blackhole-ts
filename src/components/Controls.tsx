@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { useBloom } from '../hooks/useBloom'
 import { useDiskTexture } from '../hooks/useDiskTexture'
-import { DISK_TEXTURE_OPTIONS } from '../constants/textures'
+import { DISK_TEXTURE_OPTIONS, DISK_TEXTURES } from '../constants/textures'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { useLocalStorageBoolean } from '../hooks/useLocalStorage'
 import {
@@ -143,6 +143,7 @@ export const Controls = ({
     setRadius(SLIDER_RANGES.bloomRadius.default)
     setBlackHoleRotation(DEFAULTS.BLACK_HOLE.ROTATION)
     setJetEnabled(DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET)
+    setSelectedTexture(DISK_TEXTURES.CHAOTIC.value)
         
     // Reset expanded groups state
     setExpandedGroups(DEFAULT_EXPANDED_GROUPS)
@@ -156,9 +157,7 @@ export const Controls = ({
         place='right'
         offset={15}
       />
-      <nav
-        className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}
-      >
+      <nav className={`controls-container ${isCollapsed ? 'collapsed' : ''}`}>
         <div className='controls-panel' data-augmented-ui="  tl-clip bl-clip  b-clip br-clip tr-2-clip-x border">
             
           <header className="controls-header">
@@ -530,7 +529,7 @@ export const Controls = ({
               className="button reset-button"
               title="Reset all settings to their default values"
             >
-          Reset to Defaults
+             Reset to Defaults
             </button>
             <button  
               data-augmented-ui="br-clip tr-clip tl-clip bl-clip border"
@@ -538,7 +537,7 @@ export const Controls = ({
               className="button fullscreen-button"
               title="Toggle Full Screen"
             >
-          Toggle Full screen
+              Toggle Full screen
             </button>
           </footer>
         </div>
