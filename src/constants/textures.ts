@@ -1,6 +1,7 @@
 import starUrl from '../assets/star_noise.png'
 import milkywayUrl from '../assets/milkyWay6MP.jpg'
 import diskNaturalUrl from '../assets/accretion_disk_natural.png'
+import diskNatural2Url from '../assets/accretion_disk_natural2.png'
 import diskRedWhiteUrl from '../assets/accretion_disk_red_white.png'
 import diskRedWhitePurpleUrl from '../assets/accretion_disk_red_white_purple.png'
 import diskArrowsUrl from '../assets/accretion_disk_arrows.png'
@@ -17,6 +18,7 @@ export const IMAGES = {
   starUrl,
   milkywayUrl,
   diskNaturalUrl,
+  diskNatural2Url,
   diskRedWhiteUrl,
   diskRedWhitePurpleUrl,
   diskArrowsUrl,
@@ -34,6 +36,7 @@ export const DISK_TEXTURES = {
   NO_DISK: { value: 'no_disk', label: 'No Disk' },
   NONE: { value: 'none', label: 'No Texture (Blackbody)' },
   NATURAL: { value: 'accretion_disk_natural.png', label: 'Natural' },
+  NATURAL2: { value: 'accretion_disk_natural2.png', label: 'Natural 2' },
   RED_STRIPES: { value: 'accretion_disk_red_white.png', label: 'Red stripes' },
   RED_PURPLE_STRIPES: { value: 'accretion_disk_red_white_purple.png', label: 'Red-Purple stripes' },
   GRID: { value: 'accretion_disk_grid.png', label: 'Checkboard' },
@@ -50,6 +53,7 @@ export const DISK_TEXTURES = {
 // Map texture selection to URL
 export const DISK_TEXTURE_MAP = {
   [DISK_TEXTURES.NATURAL.value]: diskNaturalUrl,
+  [DISK_TEXTURES.NATURAL2.value]: diskNatural2Url,
   [DISK_TEXTURES.RED_STRIPES.value]: diskRedWhiteUrl,
   [DISK_TEXTURES.RED_PURPLE_STRIPES.value]: diskRedWhitePurpleUrl,
   [DISK_TEXTURES.GRID.value]: diskGridUrl,
