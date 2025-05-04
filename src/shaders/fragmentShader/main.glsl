@@ -11,18 +11,18 @@ void main()	{
   vec2 uv = square_frame(resolution); 
 
   uv *= vec2(resolution.x/resolution.y, 1.0);
-  vec3 forward = normalize(cam_dir); // 
-  vec3 up = normalize(cam_up);
-  vec3 nright = normalize(cross(forward, up));
+  vec3 forward = normalize(cam_dir); // forward vector
+  vec3 up = normalize(cam_up); // up vector
+  vec3 nright = normalize(cross(forward, up)); // right vector
   up = cross(nright, forward);
+
   // generate ray
-  vec3 pixel_pos = cam_pos + forward + nright*uv.x*uvfov+ up*uv.y*uvfov;
+  vec3 pixel_pos = cam_pos + forward + nright * uv.x * uvfov + up * uv.y * uvfov;
   
   vec3 ray_dir = normalize(pixel_pos - cam_pos);
 
   // light aberration alters ray path 
-  if (lorentz_transform)
-    ray_dir = lorentz_transform_velocity(ray_dir, cam_vel);
+  if (lorentz_transform) ray_dir = lorentz_transform_velocity(ray_dir, cam_vel);
 
   // initial color
   vec4 color = vec4(0.0,0.0,0.0,1.0);
@@ -30,25 +30,24 @@ void main()	{
   // geodesic by leapfrog integration
   vec3 point = cam_pos;
   vec3 velocity = ray_dir;
-  vec3 c = cross(point,velocity);
-  float h2 = dot(c,c);
+  vec3 c = cross(point, velocity);
+  float h2 = dot(c, c);
 
   // for doppler effect
-  float ray_gamma = 1.0/sqrt(1.0-dot(cam_vel,cam_vel));
+  float ray_gamma = 1.0 / sqrt(1.0 - dot(cam_vel, cam_vel));
   float ray_doppler_factor = ray_gamma * (1.0 + dot(ray_dir, -cam_vel));
     
   float ray_intensity = 1.0;
-  if (beaming) ray_intensity /= pow(ray_doppler_factor , 3.0);
+  if (beaming) ray_intensity /= pow(ray_doppler_factor, 3.0);
   
   vec3 oldpoint; 
   float pointsqr;
   
   float distance = length(point);
-
   bool disk_hit = false;
 
   // Leapfrog geodesic
-  for (int i=0; i<NSTEPS;i++){ 
+  for (int i = 0; i < NSTEPS; i++){ 
     oldpoint = point; // remember previous point for finding intersection
     point += velocity * STEP;
     

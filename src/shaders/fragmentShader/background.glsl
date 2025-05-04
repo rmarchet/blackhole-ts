@@ -11,7 +11,7 @@ vec4 applyStarsAndBackground(
     float star_temperature = (MIN_TEMPERATURE + TEMPERATURE_RANGE * star_color.r);
     // arbitrarily sets background stars' velocity for random shifts
     float star_velocity = star_color.b - 0.5;
-    float star_doppler_factor = sqrt((1.0 + star_velocity)/(1.0 - star_velocity));
+    float star_doppler_factor = sqrt((1.0 + star_velocity) / (1.0 - star_velocity));
     if (doppler_shift) star_temperature /= ray_doppler_factor * star_doppler_factor;
     
     vec3 temp_color = temp_to_color(star_temperature);
