@@ -1,5 +1,4 @@
 // Accretion disk calculation function
-#define DOPPLER_GRADIENT_SMOOTHNESS 0.65
 
 vec3 thermal_colormap(float t, bool beaming) {
     vec3 blue = vec3(0.0, 0.0, 1.0);
@@ -26,57 +25,57 @@ vec3 thermal_colormap(float t, bool beaming) {
 
 // Helper: Disk intersection and geometry
 struct DiskIntersection {
-    bool hit;
-    vec3 intersection;
-    float r;
-    float phi;
-    vec3 disk_velocity;
-    float disk_gamma;
-    float disk_doppler_factor;
-    float disk_temperature;
+  bool hit;
+  vec3 intersection;
+  float r;
+  float phi;
+  vec3 disk_velocity;
+  float disk_gamma;
+  float disk_doppler_factor;
+  float disk_temperature;
 };
 
 DiskIntersection getDiskIntersection(
-    vec3 oldpoint,
-    vec3 point,
-    vec3 velocity,
-    vec3 cam_pos,
-    float time
+  vec3 oldpoint,
+  vec3 point,
+  vec3 velocity,
+  vec3 cam_pos,
+  float time
 ) {
-    DiskIntersection result;
-    result.hit = false;
-    if (oldpoint.y * point.y < 0.0) {
-        float lambda = -oldpoint.y / velocity.y;
-        result.intersection = oldpoint + lambda * velocity;
-        result.r = length(result.intersection);
-        if (DISK_IN <= result.r && result.r <= DISK_IN + DISK_WIDTH) {
-            result.phi = atan(result.intersection.x, result.intersection.z);
-            result.disk_velocity = vec3(-result.intersection.x, 0.0, result.intersection.z) / sqrt(2.0 * (result.r - 1.0)) / (result.r * result.r);
-            if (black_hole_rotation > 0.0) {
-                float a = black_hole_rotation * ROTATION_SCALE_DOWN;
-                vec2 kerr_effects = calculateKerrEffects(result.intersection, a);
-                float omega = kerr_effects.x;
-                result.disk_velocity += cross(vec3(0.0, 1.0, 0.0), result.intersection) * omega * 0.8;
-            }
-            float rotation_speed = orbit_enabled ? 2.0 : 1.0;
-            result.phi -= time * rotation_speed;
-            result.phi = mod(result.phi, PI * 2.0);
-            result.disk_gamma = 1.0 / sqrt(1.0 - dot(result.disk_velocity, result.disk_velocity));
-            result.disk_doppler_factor = result.disk_gamma * (1.0 + dot(normalize(result.intersection - cam_pos), result.disk_velocity));
-            result.disk_temperature = 9000.0 * (pow(result.r / DISK_IN, -3.0 / 4.0));
-            result.hit = true;
-        }
+  DiskIntersection result;
+  result.hit = false;
+  if (oldpoint.y * point.y < 0.0) {
+    float lambda = -oldpoint.y / velocity.y;
+    result.intersection = oldpoint + lambda * velocity;
+    result.r = length(result.intersection);
+    if (DISK_IN <= result.r && result.r <= DISK_IN + DISK_WIDTH) {
+      result.phi = atan(result.intersection.x, result.intersection.z);
+      result.disk_velocity = vec3(-result.intersection.x, 0.0, result.intersection.z) / sqrt(2.0 * (result.r - 1.0)) / (result.r * result.r);
+      if (black_hole_rotation > 0.0) {
+        float a = black_hole_rotation * ROTATION_SCALE_DOWN;
+        vec2 kerr_effects = calculateKerrEffects(result.intersection, a);
+        float omega = kerr_effects.x;
+        result.disk_velocity += cross(vec3(0.0, 1.0, 0.0), result.intersection) * omega * 0.8;
+      }
+      float rotation_speed = orbit_enabled ? 2.0 : 1.0;
+      result.phi -= time * rotation_speed;
+      result.phi = mod(result.phi, PI * 2.0);
+      result.disk_gamma = 1.0 / sqrt(1.0 - dot(result.disk_velocity, result.disk_velocity));
+      result.disk_doppler_factor = result.disk_gamma * (1.0 + dot(normalize(result.intersection - cam_pos), result.disk_velocity));
+      result.disk_temperature = 9000.0 * (pow(result.r / DISK_IN, -3.0 / 4.0));
+      result.hit = true;
     }
-    return result;
+  }
+  return result;
 }
 
 // Helper: Disk appearance/color
 vec4 getDiskAppearance(
-    DiskIntersection disk,
-    vec3 cam_pos,
-    vec3 cam_dir,
-    vec3 cam_up,
-    float ray_doppler_factor
+  DiskIntersection disk,
+  vec3 cam_pos,
+  vec3 cam_dir,
+  vec3 cam_up,
+  float ray_doppler_factor
 ) {
     float disk_temperature = disk.disk_temperature;
     float disk_doppler_factor = disk.disk_doppler_factor;
@@ -117,57 +116,57 @@ vec4 getDiskAppearance(
             glowing_color = disk_color;
         }
         glowing_color = clamp(glowing_color, 0.0, 1.0);
-        return vec4(glowing_color, disk_alpha);
+        return vec4(glowing_color, USE_COMPUTED_ALPHA ? disk_alpha : 1.0);
     }
     // TEXTURE MODE
     if (use_disk_texture) {
-        vec2 tex_coord = vec2(
-            mod(phi, 2.0 * PI) / (2.0 * PI),
-            1.0 - (r - DISK_IN) / (DISK_WIDTH)
-        );
-        vec4 disk_color = texture2D(disk_texture, tex_coord);
-        if (doppler_shift) {
-            vec3 view_dir = normalize(disk.intersection - cam_pos);
-            vec3 camera_right = normalize(cross(cam_dir, cam_up));
-            float side_factor = dot(view_dir, camera_right);
-            float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
-            float angle_threshold = 0.4648;
-            float angle_blend_smootness = angle_threshold * 0.30;
-            float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
-            if (disk_angle_factor < angle_threshold) {
-                float smooth_side = 1.0 - smoothstep(-0.8, 0.8, side_factor);
-                float shift = (smooth_side - 0.55) * 1.0;
-                shift *= smoothstep(0.0, 0.14, abs(shift)) * angle_blend;
-                disk_color.r *= 1.0 + max(-shift, 0.0) * 2.9;
-                disk_color.b *= 1.0 + max(shift, 0.0) * 2.8;
-                float positive_shift_mix_factor = 0.75;
-                float negative_shift_mix_factor = 0.75;
-                if (beaming) {
-                    positive_shift_mix_factor = 1.95;
-                    negative_shift_mix_factor = -0.985;
-                }
-                float intensity = shift > 0.0 
-                    ? mix(1.0, positive_shift_mix_factor, shift)
-                    : mix(1.0, negative_shift_mix_factor, -shift);
-                disk_color.rgb *= intensity;
-            }
-        }
-        float denom = max(ray_doppler_factor * disk_doppler_factor, 0.01);
-        disk_color.rgb /= denom;
-        float disk_alpha = clamp(dot(disk_color.rgb, disk_color.rgb) / 4.5, 0.0, 1.0);
-        if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
-        vec3 glowing_color = applyGlow(disk_color.rgb * disk_intensity, glow_intensity);
-        glowing_color = clamp(glowing_color, 0.0, 1.0);
-        return vec4(glowing_color, disk_alpha);
+      vec2 tex_coord = vec2(
+        mod(phi, 2.0 * PI) / (2.0 * PI),
+        1.0 - (r - DISK_IN) / (DISK_WIDTH)
+      );
+      vec4 disk_color = texture2D(disk_texture, tex_coord);
+      if (doppler_shift) {
+          vec3 view_dir = normalize(disk.intersection - cam_pos);
+          vec3 camera_right = normalize(cross(cam_dir, cam_up));
+          float side_factor = dot(view_dir, camera_right);
+          float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
+          float angle_threshold = 0.4648;
+          float angle_blend_smootness = angle_threshold * 0.30;
+          float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
+          if (disk_angle_factor < angle_threshold) {
+              float smooth_side = 1.0 - smoothstep(-0.8, 0.8, side_factor);
+              float shift = (smooth_side - 0.55) * 1.0;
+              shift *= smoothstep(0.0, 0.14, abs(shift)) * angle_blend;
+              disk_color.r *= 1.0 + max(-shift, 0.0) * 2.9;
+              disk_color.b *= 1.0 + max(shift, 0.0) * 2.8;
+              float positive_shift_mix_factor = 0.75;
+              float negative_shift_mix_factor = 0.75;
+              if (beaming) {
+                  positive_shift_mix_factor = 1.95;
+                  negative_shift_mix_factor = -0.985;
+              }
+              float intensity = shift > 0.0 
+                  ? mix(1.0, positive_shift_mix_factor, shift)
+                  : mix(1.0, negative_shift_mix_factor, -shift);
+              disk_color.rgb *= intensity;
+          }
+      }
+      float denom = max(ray_doppler_factor * disk_doppler_factor, 0.01);
+      disk_color.rgb /= denom;
+      float disk_alpha = disk_color.a;
+      if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
+      vec3 glowing_color = applyGlow(disk_color.rgb * disk_intensity, glow_intensity);
+      glowing_color = clamp(glowing_color, 0.0, 1.0);
+      return vec4(glowing_color, disk_color.a);
     }
     // BLACKBODY MODE
     if (doppler_shift) {
-        float doppler_factor = disk_doppler_factor;
-        if (doppler_factor < 1.0) {
-            disk_temperature *= 1.0 + (1.0 - doppler_factor) * 2.0;
-        } else {
-            disk_temperature /= doppler_factor * 1.5;
-        }
+      float doppler_factor = disk_doppler_factor;
+      if (doppler_factor < 1.0) {
+        disk_temperature *= 1.0 + (1.0 - doppler_factor) * 2.0;
+      } else {
+        disk_temperature /= doppler_factor * 1.5;
+      }
     }
     vec3 disk_color = temp_to_color(disk_temperature);
     float denom = max(ray_doppler_factor * disk_doppler_factor, 0.01);
@@ -176,7 +175,7 @@ vec4 getDiskAppearance(
     if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
     vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
     glowing_color = clamp(glowing_color, 0.0, 1.0);
-    return vec4(glowing_color, disk_alpha);
+    return vec4(glowing_color, USE_COMPUTED_ALPHA ? disk_alpha : 1.0);
 }
 
 // Main function

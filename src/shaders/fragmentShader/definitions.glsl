@@ -3,6 +3,8 @@
 #define ROT_Y(a) mat3(1, 0, 0, 0, cos(a), sin(a), 0, -sin(a), cos(a))
 #define ROT_Z(a) mat3(cos(a), -sin(a), 0, sin(a), cos(a), 0, 0, 0, 1)
 #define ROTATION_SCALE_DOWN 0.29
+#define USE_COMPUTED_ALPHA false
+#define DOPPLER_GRADIENT_SMOOTHNESS 0.65
 
 // Disk parameters
 uniform float DISK_IN;

@@ -45,6 +45,8 @@ void main()	{
   
   float distance = length(point);
 
+  bool disk_hit = false;
+
   // Leapfrog geodesic
   for (int i=0; i<NSTEPS;i++){ 
     oldpoint = point; // remember previous point for finding intersection
@@ -74,14 +76,20 @@ void main()	{
       vec4 disk_result = calculateDisk(
         oldpoint, point, velocity, cam_pos, cam_dir, cam_up, ray_doppler_factor  
       );
-      color += disk_result;
-      // color = mix(color, disk_result, disk_result.a);
-      // color = mix(color, white, disk_result.a);
+      if (disk_result.a > 0.0 && !USE_COMPUTED_ALPHA) {
+        color = mix(color, disk_result, disk_result.a);
+        color += disk_result;
+        disk_hit = true;
+        break; // Stop at the first disk hit!
+      } else {
+        color += disk_result;
+      }
+      // color = mix(color, vec4(1.0, 0.5, 0.0, 1.0), disk_result.a);
     }
     // --- End Accretion Disk ---
   }
   
-  if (distance > 1.0) {
+  if (!disk_hit && distance > 1.0) {
     ray_dir = normalize(point - oldpoint);
     color += applyStarsAndBackground(ray_dir, ray_doppler_factor);
   }
