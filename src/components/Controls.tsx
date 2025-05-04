@@ -146,9 +146,6 @@ export const Controls = ({
         
     // Reset expanded groups state
     setExpandedGroups(DEFAULT_EXPANDED_GROUPS)
-        
-    // Force page reload to ensure all components update
-    window.location.reload()
   }
 
   return (

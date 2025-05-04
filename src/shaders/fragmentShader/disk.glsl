@@ -57,6 +57,7 @@ vec4 calculateDisk(
             // Calculate base temperature - shared between thermal and blackbody modes
             float disk_temperature = 9000.0 * (pow(r / DISK_IN, -3.0 / 4.0));
 
+            // thermal colormap mode
             if (thermal_colormap_mode) {
                 // Apply Doppler shift to temperature
                 if (doppler_shift) {
@@ -103,6 +104,7 @@ vec4 calculateDisk(
                 return vec4(glowing_color, disk_alpha);
             }
 
+            // texture mode
             if (use_disk_texture) {
               vec2 tex_coord = vec2(
                 mod(phi, 2.0 * PI) / (2.0 * PI),
@@ -140,22 +142,24 @@ vec4 calculateDisk(
               if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
               vec3 glowing_color = applyGlow(disk_color.rgb * disk_intensity, glow_intensity);
               return vec4(glowing_color, disk_alpha);
-            } else {
-                if (doppler_shift) {
-                    float doppler_factor = disk_doppler_factor;
-                    if (doppler_factor < 1.0) {
-                        disk_temperature *= 1.0 + (1.0 - doppler_factor) * 2.0;
-                    } else {
-                        disk_temperature /= doppler_factor * 1.5;
-                    }
+            } 
+            // blackbody mode
+            else {
+              if (doppler_shift) {
+                float doppler_factor = disk_doppler_factor;
+                if (doppler_factor < 1.0) {
+                  disk_temperature *= 1.0 + (1.0 - doppler_factor) * 2.0;
+                } else {
+                  disk_temperature /= doppler_factor * 1.5;
                 }
-                vec3 disk_color = temp_to_color(disk_temperature);
-                float disk_alpha = clamp(dot(disk_color, disk_color) / 3.0, 0.0, 1.0);
-                if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
-                vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
-                return vec4(glowing_color, disk_alpha);
+              }
+              vec3 disk_color = temp_to_color(disk_temperature);
+              float disk_alpha = clamp(dot(disk_color, disk_color) / 3.0, 0.0, 1.0);
+              if (beaming) disk_alpha /= pow(disk_doppler_factor, 3.0);
+              vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
+              return vec4(glowing_color, disk_alpha);
             }
         }
     }
-    return vec4(0.0);
+    return vec4(0.0, 0.0, 0.0, 0.0);
 }

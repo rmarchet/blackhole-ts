@@ -31,7 +31,6 @@ const CameraSetup = () => {
 }
 
 export const Scene = () => {
-  // Create a ref for the OrbitControls
   const controlsRef = useRef(null)
   
   return (
@@ -41,7 +40,7 @@ export const Scene = () => {
         position: CAMERA_POSITION,
         fov: CAMERA_FOV,
         near: CAMERA_NEAR,
-        far: CAMERA_FAR
+        far: CAMERA_FAR,
       }}
       gl={{
         antialias: true,

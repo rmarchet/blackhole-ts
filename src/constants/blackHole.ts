@@ -9,7 +9,7 @@ export const BLACK_HOLE = {
   ROTATION: {
     MIN: 0.0,
     MAX: 0.998,  // Maximum spin parameter (a*) for a Kerr black hole
-    DEFAULT: 0.85,
+    DEFAULT: 0.9,
   }
 } as const
 
@@ -42,8 +42,8 @@ export const QUALITY = {
     stepSize: 0.08,
   },
   LOW: {
-    steps: 150,
-    segments: 32,
+    steps: 140,
+    segments: 18,
     stepSize: 0.12,
   }
 } as const

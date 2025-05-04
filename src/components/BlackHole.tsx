@@ -1,10 +1,10 @@
 import { useRef, useMemo, useEffect, memo } from 'react'
 import * as THREE from 'three'
-import { useFrame, useThree } from '@react-three/fiber'
 import {
-  ShaderMaterial, Mesh, BackSide, Vector3, Vector2, TextureLoader, 
+  ShaderMaterial, Mesh, Vector3, Vector2, TextureLoader, 
   NearestFilter, LinearFilter, ClampToEdgeWrapping,
 } from 'three'
+import { useFrame, useThree } from '@react-three/fiber'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import vertexShader from '../shaders/vertexShader.glsl?raw'
 import { fragmentShader } from '../shaders/fragmentShader/index'
@@ -136,9 +136,9 @@ export const BlackHole = () => {
   // Define shader material with textures
   const shaderMaterial = () => {
     const defines = `
-        #define STEP ${qualitySettings.stepSize}
-        #define NSTEPS ${qualitySettings.steps}
-      `
+      #define STEP ${qualitySettings.stepSize}
+      #define NSTEPS ${qualitySettings.steps}
+    `
 
     return new ShaderMaterial({
       vertexShader,
@@ -156,7 +156,8 @@ export const BlackHole = () => {
       },
       transparent: false,
       depthWrite: true,
-      side: BackSide
+      blending: THREE.NormalBlending,
+      side: THREE.BackSide,
     })
   }
 
