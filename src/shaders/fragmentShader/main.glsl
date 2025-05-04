@@ -38,6 +38,7 @@ void main()	{
   float ray_doppler_factor = ray_gamma * (1.0 + dot(ray_dir, -cam_vel));
     
   float ray_intensity = 1.0;
+  // Apply correction according to Liouville’s theorem
   if (beaming) ray_intensity /= pow(ray_doppler_factor, 3.0);
   
   vec3 oldpoint; 

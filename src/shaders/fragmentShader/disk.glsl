@@ -97,8 +97,8 @@ vec4 getDiskAppearance(
               float smooth_side = 1.0 - smoothstep(-0.7, 0.8, side_factor);
               float shift = (smooth_side - 0.5) * 1.0;
               shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;
-              float radius_factor = 1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.885, r);
-              shift *= mix(0.6, 1.80, radius_factor);
+              float radius_factor = pow(1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.885, r), 1.7);
+              shift *= mix(0.1, 4.0, radius_factor);
               if (shift > 0.0) {
                   disk_temperature *= 1.0 - (shift) * 2.0;
               } else {
@@ -132,14 +132,16 @@ vec4 getDiskAppearance(
       float side_factor = dot(view_dir, camera_right);
       float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
       float angle_threshold = 0.4648;
-      float angle_blend_smootness = angle_threshold * 0.30;
+      float angle_blend_smootness = angle_threshold * 0.435;
       float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
       if (disk_angle_factor < angle_threshold) {
         float smooth_side = 1.0 - smoothstep(-0.8, 0.8, side_factor);
-        float shift = (smooth_side - 0.55) * 1.0;
+        float shift = (smooth_side - 0.555) * 0.92;
         shift *= smoothstep(0.0, 0.14, abs(shift)) * angle_blend;
-        disk_color.r *= 1.0 + max(-shift, 0.0) * 2.9;
-        disk_color.b *= 1.0 + max(shift, 0.0) * 2.8;
+        float radius_factor = pow(1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.585, r), 0.9);
+        shift *= mix(.699, 1.85, radius_factor);
+        disk_color.r *= 1.0 + max(-shift, 0.0) * 4.9;
+        disk_color.b *= 1.0 + max(shift, 0.0) * 4.9;
         float positive_shift_mix_factor = 0.75;
         float negative_shift_mix_factor = 0.75;
         if (beaming) {
