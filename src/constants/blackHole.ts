@@ -7,7 +7,7 @@ export const BACKGROUND = {
 // Black hole settings
 export const BLACK_HOLE = {
   ROTATION: {
-    MIN: 0.0,
+    MIN: -0.998,
     MAX: 0.998,  // Maximum spin parameter (a*) for a Kerr black hole
     DEFAULT: 0.9,
   }

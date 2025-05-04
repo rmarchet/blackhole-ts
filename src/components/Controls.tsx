@@ -356,7 +356,7 @@ export const Controls = ({
                 </div>
 
                 <div className="control-group">
-                  <label className="slider-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Controls the spin of the black hole<br/>(0 = non-rotating, 0.998 = maximum rotation)">
+                  <label className="slider-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Controls the spin of the black hole<br/>0 = non-rotating<br/>0.998 = maximum rotation CCW<br/>-0.998 = maximum rotation CW">
                     <span>Black Hole Rotation:</span>
                     <input
                       type="range"
