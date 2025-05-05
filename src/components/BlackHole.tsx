@@ -56,6 +56,8 @@ export const BlackHole = () => {
   const [performanceMode] = useLocalStorage<boolean>('performanceMode', DEFAULTS.PERFORMANCE.ENABLED)
   const [diskIntensity] = useLocalStorage<number>('diskIntensity', DEFAULTS.DISK.INTENSITY)
   const [dopplerShiftEnabled] = useLocalStorage<boolean>('dopplerShiftEnabled', DEFAULTS.DISK.DOPPLER_SHIFT)
+  const [dopplerIntensity] = useLocalStorage<number>('dopplerIntensity', DEFAULTS.DISK.DOPPLER_INTENSITY)
+  const [beamingIntensity] = useLocalStorage<number>('beamingIntensity', DEFAULTS.DISK.BEAMING_INTENSITY)
   const [blackHoleRotation] = useLocalStorage<number>('blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION)
   const [jetEnabled] = useLocalStorage<boolean>('jetEnabled', DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET)
 
@@ -130,6 +132,8 @@ export const BlackHole = () => {
     // Add disk geometry uniforms
     DISK_IN: { value: diskIn },
     DISK_WIDTH: { value: diskWidth },
+    doppler_intensity: { value: dopplerIntensity },
+    beaming_intensity: { value: beamingIntensity },
     thermal_colormap_mode: { value: selectedTexture === DISK_TEXTURES.THERMAL.value },
   }
 

@@ -48,3 +48,5 @@ uniform sampler2D bg_texture;
 uniform sampler2D star_texture;
 uniform sampler2D disk_texture;
 uniform bool thermal_colormap_mode;
+uniform float doppler_intensity;
+uniform float beaming_intensity;

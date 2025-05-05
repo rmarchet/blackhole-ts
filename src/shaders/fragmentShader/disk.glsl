@@ -84,40 +84,42 @@ vec4 getDiskAppearance(
 
   // THERMAL COLORMAP MODE
   if (thermal_colormap_mode) {
-      // Apply Doppler shift to temperature
-      if (doppler_shift) {
-          vec3 view_dir = normalize(disk.intersection - cam_pos);
-          vec3 camera_right = normalize(cross(cam_dir, cam_up));
-          float side_factor = dot(view_dir, camera_right);
-          float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
-          float angle_threshold = 0.4648;
-          float angle_blend_smootness = angle_threshold * 0.40;
-          float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
-          if (disk_angle_factor < angle_threshold) {
-              float smooth_side = 1.0 - smoothstep(-0.7, 0.8, side_factor);
-              float shift = (smooth_side - 0.5) * 1.0;
-              shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;
-              float radius_factor = pow(1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.885, r), 1.7);
-              shift *= mix(0.1, 4.0, radius_factor);
-              if (shift > 0.0) {
-                  disk_temperature *= 1.0 - (shift) * 2.0;
-              } else {
-                  disk_temperature *= 1.0 + abs(shift) * 1.0;
-              }
-          }
+    // Apply Doppler shift to temperature
+    if (doppler_shift) {
+      vec3 view_dir = normalize(disk.intersection - cam_pos);
+      vec3 camera_right = normalize(cross(cam_dir, cam_up));
+      float side_factor = dot(view_dir, camera_right);
+      float disk_angle_factor = abs(dot(view_dir, vec3(0.0, 1.0, 0.0)));
+      float angle_threshold = 0.4648;
+      float angle_blend_smootness = angle_threshold * 0.40;
+      float angle_blend = smoothstep(angle_threshold, angle_blend_smootness, disk_angle_factor);
+      if (disk_angle_factor < angle_threshold) {
+        float smooth_side = 1.0 - smoothstep(-0.7, 0.8, side_factor);
+        float shift = (smooth_side - 0.5) * 1.0;
+        shift *= smoothstep(0.0, 0.4, abs(shift)) * angle_blend;
+        float radius_factor = pow(1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.885, r), 1.7);
+        shift *= mix(0.1, 4.0, radius_factor);
+        shift *= doppler_intensity;
+        if (shift > 0.0) {
+          disk_temperature *= 1.0 - (shift) * 2.0;
+        } else {
+          disk_temperature *= 1.0 + abs(shift) * 1.0;
+        }
       }
-      float t = clamp((disk_temperature - 500.0) / 9500.0, 0.01, 0.99);
-      vec3 disk_color = thermal_colormap(t, false);
-      float denom = max(ray_doppler_factor * disk_doppler_factor, 0.01);
-      disk_color /= denom;
-      float disk_alpha = 1.0;
-      vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
-      if (beaming) {
-          disk_color = thermal_colormap(clamp((disk_temperature - 210.0) / 7000.0, 0.1, 0.99), true);
-          glowing_color = disk_color;
-      }
-      glowing_color = clamp(glowing_color, 0.0, 1.0);
-      return vec4(glowing_color, USE_COMPUTED_ALPHA ? disk_alpha : 1.0);
+    }
+    float t = clamp((disk_temperature - 500.0) / 9500.0, 0.01, 0.99);
+    vec3 disk_color = thermal_colormap(t, false);
+    float denom = max(ray_doppler_factor * disk_doppler_factor, 0.01);
+    disk_color /= denom;
+    float disk_alpha = 1.0;
+    vec3 glowing_color = applyGlow(disk_color * disk_intensity, glow_intensity);
+    if (beaming) {
+      disk_color = thermal_colormap(clamp((disk_temperature - 210.0) / 7000.0, 0.1, 0.99), true);
+      glowing_color = disk_color;
+      glowing_color *= beaming_intensity;
+    }
+    glowing_color = clamp(glowing_color, 0.0, 1.0);
+    return vec4(glowing_color, USE_COMPUTED_ALPHA ? disk_alpha : 1.0);
   }
   // TEXTURE MODE
   if (use_disk_texture) {
@@ -140,13 +142,14 @@ vec4 getDiskAppearance(
         shift *= smoothstep(0.0, 0.14, abs(shift)) * angle_blend;
         float radius_factor = pow(1.0 - smoothstep(DISK_IN, DISK_IN + DISK_WIDTH * 0.585, r), 0.9);
         shift *= mix(.699, 1.85, radius_factor);
+        shift *= doppler_intensity;
         disk_color.r *= 1.0 + max(-shift, 0.0) * 4.9;
         disk_color.b *= 1.0 + max(shift, 0.0) * 4.9;
         float positive_shift_mix_factor = 0.75;
         float negative_shift_mix_factor = 0.75;
         if (beaming) {
-          positive_shift_mix_factor = 1.95;
-          negative_shift_mix_factor = -0.985;
+          positive_shift_mix_factor = 1.95 * beaming_intensity;
+          negative_shift_mix_factor = -0.985 * beaming_intensity;
         }
         float intensity = shift > 0.0 
           ? mix(1.0, positive_shift_mix_factor, shift)

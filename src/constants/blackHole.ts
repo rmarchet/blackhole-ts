@@ -79,6 +79,8 @@ export const DEFAULTS = {
     DOPPLER_SHIFT: true,
     INNER_RADIUS: 2.45,
     WIDTH: 4.0,
+    DOPPLER_INTENSITY: 1.0,
+    BEAMING_INTENSITY: 1.0,
   },
   GLOW: {
     INTENSITY: 0.0,

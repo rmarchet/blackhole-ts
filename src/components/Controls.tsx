@@ -88,6 +88,14 @@ export const Controls = ({
     'dopplerShiftEnabled', DISK_DEFAULTS.dopplerShift, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
 
+  const [dopplerIntensity, setDopplerIntensity] = useLocalStorage<number>(
+    'dopplerIntensity', DEFAULTS.DISK.DOPPLER_INTENSITY, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
+  )
+
+  const [beamingIntensity, setBeamingIntensity] = useLocalStorage<number>(
+    'beamingIntensity', DEFAULTS.DISK.BEAMING_INTENSITY, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
+  )
+
   const [blackHoleRotation, setBlackHoleRotation] = useLocalStorage<number>(
     'blackHoleRotation', DEFAULTS.BLACK_HOLE.ROTATION, { reloadOnChange: RELOAD_CONTROLS_ON_CHANGE }
   )
@@ -144,6 +152,8 @@ export const Controls = ({
     setBlackHoleRotation(DEFAULTS.BLACK_HOLE.ROTATION)
     setJetEnabled(DEFAULTS.BLACK_HOLE.RELATIVISTIC_JET)
     setSelectedTexture(DISK_TEXTURES.CHAOTIC.value)
+    setDopplerIntensity(DEFAULTS.DISK.DOPPLER_INTENSITY)
+    setBeamingIntensity(DEFAULTS.DISK.BEAMING_INTENSITY)
         
     // Reset expanded groups state
     setExpandedGroups(DEFAULT_EXPANDED_GROUPS)
@@ -300,7 +310,6 @@ export const Controls = ({
                     />
                   </label>
                 </div>
-
                 {glowEnabled && (
                   <div className="control-group">
                     <label className="slider-label">
@@ -320,17 +329,6 @@ export const Controls = ({
                 )}
 
                 <div className="control-group">
-                  <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Makes one side brighter and the other dimmer.<br>Only works when dopler shift is active">
-                    <span>Beaming</span>
-                    <input
-                      data-augmented-ui="border tl-clip br-clip"
-                      type="checkbox"
-                      checked={beamingEnabled}
-                      onChange={(e) => setBeamingEnabled(e.target.checked)}
-                    />
-                  </label>
-                </div>
-                <div className="control-group">
                   <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Shows red and blue shifts in the accretion disk">
                     <span>Doppler Shift</span>
                     <input
@@ -341,7 +339,55 @@ export const Controls = ({
                     />
                   </label>
                 </div>
-
+                {dopplerShiftEnabled && (
+                  <>
+                    <div className="control-group">
+                      <label className="slider-label">
+                        <span>Doppler Intensity:</span>
+                        <input
+                          type="range"
+                          min={0.0}
+                          max={2.0}
+                          step={0.1}
+                          value={dopplerIntensity}
+                          onChange={(e) => setDopplerIntensity(parseFloat(e.target.value))}
+                          className="slider-input"
+                        />
+                        <span>{dopplerIntensity.toFixed(2)}</span>
+                      </label>
+                    </div>
+                  </>
+                )}
+                <div className="control-group">
+                  <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Makes one side brighter and the other dimmer.<br>Only works when dopler shift is active">
+                    <span>Beaming</span>
+                    <input
+                      data-augmented-ui="border tl-clip br-clip"
+                      type="checkbox"
+                      checked={beamingEnabled}
+                      onChange={(e) => setBeamingEnabled(e.target.checked)}
+                    />
+                  </label>
+                </div>
+                {beamingEnabled && (
+                  <>
+                    <div className="control-group">
+                      <label className="slider-label">
+                        <span>Beaming Intensity:</span>
+                        <input
+                          type="range"
+                          min={0.0}
+                          max={2.0}
+                          step={0.1}
+                          value={beamingIntensity}
+                          onChange={(e) => setBeamingIntensity(parseFloat(e.target.value))}
+                          className="slider-input"
+                        />
+                        <span>{beamingIntensity.toFixed(2)}</span>
+                      </label>
+                    </div>
+                  </>
+                )}
                 <div className="control-group">
                   <label className="checkbox-label" data-tooltip-id="controls-tooltip" data-tooltip-html="Toggle a relativistic jet emitted from the poles.<br>Shown when black hole rotation > 0">
                     <span>Relativistic Jet</span>
