@@ -6,6 +6,7 @@ import compression from 'vite-plugin-compression'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [
     glsl(),
     react(),
@@ -26,7 +27,7 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes('node_modules')) {
             // Put each top-level node_module in its own chunk
-            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+            return id.toString().split('node_modules/')[1].split('/')[0].toString()
           }
         }
       }
